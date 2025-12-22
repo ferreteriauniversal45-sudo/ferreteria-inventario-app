@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ferretería Universal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <header class="header">
+      <img src="logo.png" alt="Ferretería Universal" class="logo">
+      <div id="statusIcon" class="status offline">🌐</div>
+    </header>
+
+    <main>
+      <h1>Control de Inventario</h1>
+      <p class="subtitle">
+        La app funciona offline. Con internet se actualiza el inventario.
+      </p>
+
+      <div class="card">
+        <p><strong>Estado:</strong></p>
+        <p>Productos cargados: <span id="totalProductos">0</span></p>
+        <p>Última actualización: <span id="ultimaActualizacion">—</span></p>
+      </div>
+
+      <button onclick="forzarActualizacion()">Actualizar inventario</button>
+    </main>
+
+    <footer>
+      Ferretería Universal · v0.1
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
