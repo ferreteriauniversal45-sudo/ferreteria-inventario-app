@@ -559,7 +559,14 @@ function abrirEditarMovimiento(id){
 }
 
 function cerrarModal(){
-  $("modal").classList.add("oculto");
+  const modal = document.getElementById("modal");
+  if (!modal) return;
+
+  modal.classList.add("oculto");
+
+  // limpiar campos por seguridad
+  $("editId").value = "";
+  $("editTipo").value = "";
 }
 
 function guardarEdicion(){
