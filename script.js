@@ -71,6 +71,27 @@ function makeId(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 
+// ✅ Descarga compatible con Android WebView (evita crash por XLSX.writeFile)
+function downloadBlob(blob, filename){
+  try{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.remove();
+    }, 400);
+    return true;
+  }catch(e){
+    console.warn("downloadBlob error", e);
+    return false;
+  }
+}
+
 // ==========================
 // UI NAV
 // ==========================
@@ -588,7 +609,7 @@ function deleteMovimiento(id){
 }
 
 // ==========================
-// EXPORT EXCEL
+// EXPORT EXCEL (MEJORADO + CONFIRMAR + LIMPIAR)
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -636,9 +657,47 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
 
   const filename = `reporte_movimientos_${todayISO()}.xlsx`;
-  XLSX.writeFile(wb, filename);
 
-  toast("📤 Excel exportado");
+  // ✅ En vez de XLSX.writeFile (crashea en WebView), generamos Blob
+  try{
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+    const okDownload = downloadBlob(blob, filename);
+    if(!okDownload){
+      toast("No se pudo descargar. Intenta de nuevo.");
+      return;
+    }
+
+    toast("📤 Reporte exportado");
+
+    // ✅ Confirmación antes de limpiar
+    setTimeout(() => {
+      const ok = confirm(
+        "El reporte ya fue generado.\n\n" +
+        "¿Deseas LIMPIAR los datos del día?\n\n" +
+        "Se borrará:\n• Entradas\n• Salidas\n• Eliminaciones\n\n" +
+        "El inventario y catálogo NO se borran."
+      );
+      if(!ok){
+        toast("📌 Datos conservados");
+        return;
+      }
+
+      // ✅ Limpieza diaria (solo movimientos y eliminaciones)
+      localStorage.removeItem(K.MOV);
+      localStorage.removeItem(K.DEL);
+      deltaDirty = true;
+
+      refreshHome();
+      renderHistorial();
+      toast("🧹 Datos del día limpiados");
+    }, 350);
+
+  }catch(err){
+    console.warn(err);
+    toast("Error al exportar Excel.");
+  }
 }
 
 // ==========================
