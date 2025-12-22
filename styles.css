@@ -24,19 +24,18 @@ body{
     #e9edf5;
 }
 
-/* ✅ CONTENEDOR PRINCIPAL (ANTES ERA MARCO DE TELÉFONO)
-   Ahora se adapta a PC/Tablet/Móvil sin borde negro. */
+/* ✅ CONTENEDOR: Responsive real (SIN MARCO negro) */
 .phone-frame{
-  width: min(1100px, calc(100% - 32px));
-  margin: 20px auto;
+  width: min(1200px, calc(100% - 32px));
+  margin: 18px auto;
   background:var(--bg);
-  border-radius: 24px;
+  border-radius: 22px;
   overflow:hidden;
   border: 1px solid rgba(17,24,39,0.08);
   box-shadow: 0 18px 55px rgba(0,0,0,.16);
 }
 
-/* ✅ MÓVIL: pantalla completa */
+/* ✅ MÓVIL: full screen */
 @media(max-width:480px){
   body{ background: var(--bg); }
   .phone-frame{
@@ -48,24 +47,11 @@ body{
   }
 }
 
-/* ✅ TABLET: más ancho, cómodo */
+/* ✅ TABLET: ancho cómodo */
 @media(min-width:481px) and (max-width:899px){
   .phone-frame{
-    width: min(820px, calc(100% - 32px));
-    border-radius: 22px;
-  }
-}
-
-/* ✅ PC grande: más aire y mejor distribución */
-@media(min-width:900px){
-  .container{ padding: 22px 24px; }
-  .brand-logo{ width: 260px; }
-  .grid{ grid-template-columns: repeat(4, 1fr); } /* 4 botones en fila */
-  /* catálogos y buscador en 2 columnas en PC */
-  #catalogList, #searchList{
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0,1fr));
-    gap: 12px;
+    width: min(900px, calc(100% - 32px));
+    border-radius: 20px;
   }
 }
 
@@ -90,8 +76,8 @@ body{
 }
 
 .brand-logo{
-  width:220px;
-  max-height:86px;
+  width:240px;
+  max-height:92px;
   height:auto;
   object-fit:contain;
 }
@@ -138,7 +124,7 @@ body{
 
 .title{
   margin:0 0 8px;
-  font-size:20px;
+  font-size:22px;
   font-weight:900;
 }
 
@@ -161,6 +147,27 @@ body{
   justify-content:space-between;
   gap:10px;
   margin-bottom:12px;
+}
+
+/* ✅ HOME layout: móvil = columna, PC = 2 columnas */
+.home-layout{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.home-left, .home-right{ width:100%; }
+
+.pc-tip{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(11,47,122,.06);
+  border:1px solid rgba(11,47,122,.12);
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.35;
+  display:none; /* solo PC */
 }
 
 /* STATS */
@@ -202,7 +209,7 @@ body{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
-  margin-top:12px;
+  margin-top:0;
 }
 
 .tile{
@@ -420,4 +427,32 @@ body{
   text-align:center;
   color:var(--muted);
   font-size:12px;
+}
+
+/* ✅ MEJORAS EN PC GRANDE */
+@media(min-width:900px){
+  .container{ padding: 22px 24px; }
+
+  .home-layout{
+    flex-direction:row;
+    align-items:flex-start;
+    gap:18px;
+  }
+
+  .home-left{ flex: 1.05; }
+  .home-right{ flex: 0.95; }
+
+  .pc-tip{ display:block; }
+
+  /* Botones en 2x2 pero más grandes */
+  .grid{ grid-template-columns: 1fr 1fr; }
+
+  /* Catálogo y buscador en 2 columnas para aprovechar PC */
+  #catalogList, #searchList, #histList{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 12px;
+  }
+
+  .brand-logo{ width: 280px; }
 }
