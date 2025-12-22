@@ -613,7 +613,7 @@ function deleteMovimiento(id){
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
-    toast("No cargó Excel (XLSX). Abre con internet una vez y recarga.");
+    toast("No cargó Excel");
     return;
   }
 
@@ -621,70 +621,38 @@ function exportExcel(){
   const dels = readJSON(K.DEL, []);
 
   if(movs.length === 0 && dels.length === 0){
-    toast("No hay movimientos para exportar.");
+    toast("No hay movimientos");
     return;
   }
 
-  const entradas = movs.filter(m => m.tipo === "entrada").map(m => ({
-    FECHA: m.fecha || "",
-    CODIGO: m.codigo || "",
-    PRODUCTO: m.producto || "",
-    CANTIDAD: m.cantidad || 0,
-    FACTURA: m.factura || "",
-    PROVEEDOR: m.proveedor || ""
-  }));
-
-  const salidas = movs.filter(m => m.tipo === "salida").map(m => ({
-    FECHA: m.fecha || "",
-    CODIGO: m.codigo || "",
-    PRODUCTO: m.producto || "",
-    CANTIDAD: m.cantidad || 0,
-    FACTURA: m.factura || ""
-  }));
-
-  const ediciones = [{ NOTA:"Edición deshabilitada en esta versión" }];
-
-  const eliminaciones = dels.map(d => ({
-    FECHA_HORA: d.fechaHora || "",
-    TIPO: d.tipo || "",
-    CODIGO: d.codigo || "",
-    PRODUCTO: d.producto || "",
-    CANTIDAD: d.cantidad || 0,
-    DETALLE: d.detalle || ""
-  }));
+  const entradas = movs.filter(m=>m.tipo==="entrada");
+  const salidas = movs.filter(m=>m.tipo==="salida");
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(ediciones), "EDICIONES");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dels), "ELIMINACIONES");
 
-  const filename = `reporte_movimientos_${todayISO()}.xlsx`;
+  const wbout = XLSX.write(wb,{bookType:"xlsx",type:"base64"});
+  const filename = `reporte_${todayISO()}.xlsx`;
 
-  try{
-    const wbout = XLSX.write(wb, { bookType:"xlsx", type:"array" });
-    const blob = new Blob(
-      [wbout],
-      { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
-    );
-
-    downloadBlob(blob, filename);
-
-    // 🧹 LIMPIEZA AUTOMÁTICA (SIN PREGUNTAR)
-    localStorage.removeItem(K.MOV);
-    localStorage.removeItem(K.DEL);
-    deltaDirty = true;
-
-    refreshHome();
-    renderHistorial();
-
-    toast("📤 Reporte exportado y datos limpiados");
-
-  }catch(err){
-    console.warn(err);
-    toast("Error al exportar Excel.");
+  // 👉 ANDROID GUARDA EL ARCHIVO
+  if(window.Android){
+    Android.saveFile(wbout, filename);
+    toast("📥 Archivo guardado en Descargas");
+  }else{
+    XLSX.writeFile(wb, filename); // navegador
   }
+
+  // LIMPIEZA AUTOMÁTICA
+  localStorage.removeItem(K.MOV);
+  localStorage.removeItem(K.DEL);
+  deltaDirty = true;
+
+  refreshHome();
+  renderHistorial();
 }
+
 
 // ==========================
 // INIT
