@@ -617,23 +617,13 @@ function exportExcel(){
     return;
   }
 
-  const ok = confirm(
-    "Se generará el reporte diario.\n\n" +
-    "¿Deseas exportar y LIMPIAR los datos del día?\n\n" +
-    "Esto borrará:\n" +
-    "• Entradas\n" +
-    "• Salidas\n" +
-    "• Eliminaciones\n\n" +
-    "El inventario y catálogo NO se borran."
-  );
-
-  if(!ok){
-    toast("Exportación cancelada");
-    return;
-  }
-
   const movs = readJSON(K.MOV, []);
   const dels = readJSON(K.DEL, []);
+
+  if(movs.length === 0 && dels.length === 0){
+    toast("No hay movimientos para exportar.");
+    return;
+  }
 
   const entradas = movs.filter(m => m.tipo === "entrada").map(m => ({
     FECHA: m.fecha || "",
@@ -652,9 +642,7 @@ function exportExcel(){
     FACTURA: m.factura || ""
   }));
 
-  const ediciones = [{
-    NOTA: "Edición deshabilitada en esta versión. Hoja reservada."
-  }];
+  const ediciones = [{ NOTA:"Edición deshabilitada en esta versión" }];
 
   const eliminaciones = dels.map(d => ({
     FECHA_HORA: d.fechaHora || "",
@@ -680,13 +668,9 @@ function exportExcel(){
       { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
     );
 
-    const okDownload = downloadBlob(blob, filename);
-    if(!okDownload){
-      toast("No se pudo descargar el Excel.");
-      return;
-    }
+    downloadBlob(blob, filename);
 
-    // ✅ LIMPIEZA SEGURA (YA CONFIRMADA)
+    // 🧹 LIMPIEZA AUTOMÁTICA (SIN PREGUNTAR)
     localStorage.removeItem(K.MOV);
     localStorage.removeItem(K.DEL);
     deltaDirty = true;
