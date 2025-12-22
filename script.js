@@ -9,10 +9,10 @@ const VERSION_URL = `${BASE_URL}/inventario_version.json`;
 // STORAGE KEYS
 // ==========================
 const K = {
-  BASE: "fu_base_inv",         // Inventario base descargado (obj por código)
-  VER: "fu_base_ver",          // Versión descargada (string)
-  MOV: "fu_movimientos",       // Movimientos (entradas+salidas)
-  DEL: "fu_eliminaciones"      // Eliminaciones (log)
+  BASE: "fu_base_inv",
+  VER: "fu_base_ver",
+  MOV: "fu_movimientos",
+  DEL: "fu_eliminaciones"
 };
 
 const $ = (id) => document.getElementById(id);
@@ -20,7 +20,6 @@ const $ = (id) => document.getElementById(id);
 let currentSearchContext = null; // "entrada" | "salida"
 let historialTab = "mov";        // "mov" | "del"
 
-// cache para rendimiento
 let baseCache = {};
 let deltaDirty = true;
 let deltaCache = { ent: {}, sal: {} };
@@ -56,7 +55,7 @@ function toast(msg){
   t.textContent = msg;
   t.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 1500);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1600);
 }
 
 function escapeHtml(str){
@@ -96,9 +95,6 @@ window.addEventListener("offline", () => setNetworkState(false));
 
 // ==========================
 // INVENTORY NORMALIZATION
-// Acepta:
-// 1) {"A001": 10}
-// 2) {"A001": {"producto":"Martillo","departamento":"Herr","stock":10}}
 // ==========================
 function normalizeBase(inv){
   const out = {};
@@ -131,7 +127,7 @@ function normalizeBase(inv){
 }
 
 // ==========================
-// DELTAS (entradas/salidas)
+// DELTAS
 // ==========================
 function rebuildDelta(){
   const movs = readJSON(K.MOV, []);
@@ -150,7 +146,6 @@ function rebuildDelta(){
 
 function getStock(code){
   if(deltaDirty) rebuildDelta();
-
   const c = String(code||"").trim().toUpperCase();
   const base = baseCache[c]?.stock ?? 0;
   const ent = deltaCache.ent[c] || 0;
@@ -159,7 +154,7 @@ function getStock(code){
 }
 
 // ==========================
-// SYNC INVENTARIO BASE
+// SYNC
 // ==========================
 let syncing = false;
 
@@ -193,7 +188,6 @@ async function syncBase(showMsg){
       localStorage.setItem(K.VER, remoteVer);
 
       baseCache = normalized;
-      // no tocamos movimientos: así NO pierdes lo que registraste
       if(showMsg) toast("✅ Inventario actualizado");
     }else{
       baseCache = readJSON(K.BASE, {});
@@ -204,7 +198,6 @@ async function syncBase(showMsg){
     refreshHome();
 
   }catch(err){
-    // offline o error: usar local
     baseCache = readJSON(K.BASE, {});
     setNetworkState(navigator.onLine);
     refreshHome();
@@ -228,7 +221,6 @@ function refreshHome(){
   const total = Object.keys(baseCache || {}).length;
   $("homeProductos").textContent = String(total);
 
-  // movimientos del día
   const movs = readJSON(K.MOV, []);
   const h = todayISO();
   const movHoy = movs.filter(m => String(m.fecha||"").slice(0,10) === h).length;
@@ -236,7 +228,7 @@ function refreshHome(){
 }
 
 // ==========================
-// CATALOGO
+// CATALOGO (TABLA)
 // ==========================
 function renderCatalog(query){
   const list = $("catalogList");
@@ -247,12 +239,15 @@ function renderCatalog(query){
   const entries = Object.entries(baseCache || {});
   const total = entries.length;
 
-  // performance: si hay muchos productos, pedir 2 caracteres
   if(total > 500 && q.length < 2){
     info.textContent = "Escribe al menos 2 letras/números para buscar (catálogo grande).";
     return;
   }
-  info.textContent = total > 0 ? "" : "No hay inventario cargado. Pulsa 'Actualizar inventario'.";
+
+  if(total === 0){
+    info.textContent = "No hay inventario cargado. Pulsa 'Actualizar inventario'.";
+    return;
+  }
 
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
@@ -260,39 +255,56 @@ function renderCatalog(query){
   });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="item"><div class="meta">Sin resultados.</div></div>`;
+    info.textContent = "Sin resultados.";
     return;
   }
 
-  // limitar render si es enorme
   const show = filtered.slice(0, 250);
+  if(filtered.length > show.length){
+    info.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
+  }else{
+    info.textContent = `Resultados: ${filtered.length}`;
+  }
 
   for(const [code, data] of show){
     const stock = getStock(code);
-    const el = document.createElement("div");
-    el.className = "item";
-    el.innerHTML = `
-      <div class="item-top">
-        <div class="code">${escapeHtml(code)}</div>
-        <div class="badge">Stock: ${escapeHtml(String(stock))}</div>
-      </div>
-      <div class="name">${escapeHtml(data.producto || "(sin nombre)")}</div>
-      <div class="meta">${escapeHtml(data.departamento || "")}</div>
-    `;
-    list.appendChild(el);
-  }
 
-  if(filtered.length > show.length){
-    const more = document.createElement("div");
-    more.className = "note";
-    more.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
-    list.appendChild(more);
+    const row = document.createElement("div");
+    row.className = "trow cols-catalog";
+    row.innerHTML = `
+      <div class="cell" data-label="Código">${escapeHtml(code)}</div>
+      <div class="cell wrap" data-label="Producto">${escapeHtml(data.producto || "(sin nombre)")}</div>
+      <div class="cell" data-label="Departamento">${escapeHtml(data.departamento || "")}</div>
+      <div class="cell right" data-label="Stock">${escapeHtml(String(stock))}</div>
+    `;
+    list.appendChild(row);
   }
 }
 
 // ==========================
-// BUSCADOR (B2)
+// BUSCADOR (TABLA) (B2)
 // ==========================
+function selectProduct(code){
+  const data = baseCache[code];
+  if(!data) return;
+
+  if(currentSearchContext === "entrada"){
+    $("entradaCodigo").value = code;
+    $("entradaProducto").value = data.producto || "";
+    showScreen("entradaScreen");
+    return;
+  }
+  if(currentSearchContext === "salida"){
+    $("salidaCodigo").value = code;
+    $("salidaProducto").value = data.producto || "";
+    updateSalidaStockHint();
+    showScreen("salidaScreen");
+    return;
+  }
+
+  showScreen("homeScreen");
+}
+
 function renderSearch(query){
   const list = $("searchList");
   const info = $("searchInfo");
@@ -306,7 +318,6 @@ function renderSearch(query){
     info.textContent = "Escribe al menos 2 letras/números para buscar.";
     return;
   }
-  info.textContent = "";
 
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
@@ -314,49 +325,39 @@ function renderSearch(query){
   });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="item"><div class="meta">Sin resultados.</div></div>`;
+    info.textContent = "Sin resultados.";
     return;
   }
 
   const show = filtered.slice(0, 250);
+  if(filtered.length > show.length){
+    info.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
+  }else{
+    info.textContent = `Resultados: ${filtered.length}`;
+  }
 
   for(const [code, data] of show){
     const stock = getStock(code);
-    const el = document.createElement("div");
-    el.className = "item";
-    el.innerHTML = `
-      <div class="item-top">
-        <div class="code">${escapeHtml(code)}</div>
-        <div class="badge">Stock: ${escapeHtml(String(stock))}</div>
-      </div>
-      <div class="name">${escapeHtml(data.producto || "(sin nombre)")}</div>
-      <div class="meta">${escapeHtml(data.departamento || "")}</div>
-      <div class="meta">Toca para seleccionar</div>
-    `;
-    el.addEventListener("click", () => {
-      if(currentSearchContext === "entrada"){
-        $("entradaCodigo").value = code;
-        $("entradaProducto").value = data.producto || "";
-        showScreen("entradaScreen");
-        return;
-      }
-      if(currentSearchContext === "salida"){
-        $("salidaCodigo").value = code;
-        $("salidaProducto").value = data.producto || "";
-        updateSalidaStockHint();
-        showScreen("salidaScreen");
-        return;
-      }
-      showScreen("homeScreen");
-    });
-    list.appendChild(el);
-  }
 
-  if(filtered.length > show.length){
-    const more = document.createElement("div");
-    more.className = "note";
-    more.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
-    list.appendChild(more);
+    const row = document.createElement("div");
+    row.className = "trow cols-search selectable";
+    row.innerHTML = `
+      <div class="cell" data-label="Código">${escapeHtml(code)}</div>
+      <div class="cell wrap" data-label="Producto">${escapeHtml(data.producto || "(sin nombre)")}</div>
+      <div class="cell" data-label="Departamento">${escapeHtml(data.departamento || "")}</div>
+      <div class="cell right" data-label="Stock">${escapeHtml(String(stock))}</div>
+      <div class="cell right" data-label="">
+        <button class="btn small row-action" type="button">Seleccionar</button>
+      </div>
+    `;
+
+    row.addEventListener("click", () => selectProduct(code));
+    row.querySelector(".row-action").addEventListener("click", (e) => {
+      e.stopPropagation();
+      selectProduct(code);
+    });
+
+    list.appendChild(row);
   }
 }
 
@@ -465,12 +466,16 @@ function saveSalida(){
 }
 
 // ==========================
-// HISTORIAL (D) + ELIMINAR
+// HISTORIAL (TABLA) + ELIMINAR
 // ==========================
 function setHistTab(tab){
   historialTab = tab;
   $("tabMov").classList.toggle("active", tab === "mov");
   $("tabDel").classList.toggle("active", tab === "del");
+
+  $("histHeadMov").classList.toggle("hidden", tab !== "mov");
+  $("histHeadDel").classList.toggle("hidden", tab !== "del");
+
   renderHistorial();
 }
 
@@ -488,39 +493,37 @@ function renderHistorial(){
     });
 
     if(filtered.length === 0){
-      list.innerHTML = `<div class="item"><div class="meta">Sin movimientos.</div></div>`;
+      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin movimientos.</div></div>`;
       return;
     }
 
     for(const m of filtered){
-      const el = document.createElement("div");
-      el.className = "item";
-      const badge = m.tipo === "entrada" ? "ENTRADA" : "SALIDA";
-      const detail = m.tipo === "entrada"
-        ? `Factura: ${escapeHtml(m.factura||"")} · Proveedor: ${escapeHtml(m.proveedor||"")}`
-        : `Factura: ${escapeHtml(m.factura||"")}`;
+      const row = document.createElement("div");
+      row.className = "trow cols-hmov";
 
-      el.innerHTML = `
-        <div class="item-top">
-          <div class="code">${badge} · ${escapeHtml(m.codigo||"")}</div>
-          <div class="badge">${escapeHtml(String(m.cantidad||0))}</div>
-        </div>
-        <div class="name">${escapeHtml(m.producto||"")}</div>
-        <div class="meta">Fecha: ${escapeHtml(m.fecha||"")}</div>
-        <div class="meta">${detail}</div>
-        <div style="margin-top:10px;">
-          <button class="btn danger" type="button" data-del="${escapeHtml(m.id)}">🗑️ Eliminar</button>
+      const tipo = m.tipo === "entrada" ? "ENTRADA" : "SALIDA";
+      const proveedor = m.tipo === "entrada" ? (m.proveedor || "") : "";
+
+      row.innerHTML = `
+        <div class="cell" data-label="Tipo">${escapeHtml(tipo)}</div>
+        <div class="cell" data-label="Código">${escapeHtml(m.codigo||"")}</div>
+        <div class="cell wrap" data-label="Producto">${escapeHtml(m.producto||"")}</div>
+        <div class="cell right" data-label="Cant.">${escapeHtml(String(m.cantidad||0))}</div>
+        <div class="cell" data-label="Fecha">${escapeHtml(m.fecha||"")}</div>
+        <div class="cell" data-label="Factura">${escapeHtml(m.factura||"")}</div>
+        <div class="cell" data-label="Proveedor">${escapeHtml(proveedor)}</div>
+        <div class="cell right" data-label="">
+          <button class="btn small danger row-action" type="button">Eliminar</button>
         </div>
       `;
 
-      el.querySelector("[data-del]").addEventListener("click", () => deleteMovimiento(m.id));
-      list.appendChild(el);
+      row.querySelector(".row-action").addEventListener("click", () => deleteMovimiento(m.id));
+      list.appendChild(row);
     }
 
     return;
   }
 
-  // eliminaciones
   const dels = readJSON(K.DEL, []).slice().sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
   const filtered = dels.filter(d => {
     const c = String(d.codigo||"").toLowerCase();
@@ -529,24 +532,22 @@ function renderHistorial(){
   });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="item"><div class="meta">Sin eliminaciones.</div></div>`;
+    list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin eliminaciones.</div></div>`;
     return;
   }
 
   for(const d of filtered){
-    const el = document.createElement("div");
-    el.className = "item";
-    el.innerHTML = `
-      <div class="item-top">
-        <div class="code">ELIMINADO · ${escapeHtml(d.tipo||"")}</div>
-        <div class="badge">${escapeHtml(d.codigo||"")}</div>
-      </div>
-      <div class="name">${escapeHtml(d.producto||"")}</div>
-      <div class="meta">${escapeHtml(d.fechaHora||"")}</div>
-      <div class="meta">Cantidad: ${escapeHtml(String(d.cantidad||0))}</div>
-      <div class="meta">${escapeHtml(d.detalle||"")}</div>
+    const row = document.createElement("div");
+    row.className = "trow cols-hdel";
+    row.innerHTML = `
+      <div class="cell" data-label="Fecha/Hora">${escapeHtml(d.fechaHora||"")}</div>
+      <div class="cell" data-label="Tipo">${escapeHtml(d.tipo||"")}</div>
+      <div class="cell" data-label="Código">${escapeHtml(d.codigo||"")}</div>
+      <div class="cell wrap" data-label="Producto">${escapeHtml(d.producto||"")}</div>
+      <div class="cell right" data-label="Cant.">${escapeHtml(String(d.cantidad||0))}</div>
+      <div class="cell wrap" data-label="Detalle">${escapeHtml(d.detalle||"")}</div>
     `;
-    list.appendChild(el);
+    list.appendChild(row);
   }
 }
 
@@ -587,8 +588,7 @@ function deleteMovimiento(id){
 }
 
 // ==========================
-// EXPORT EXCEL (E)
-// 1 archivo, 4 hojas: ENTRADAS, SALIDAS, EDICIONES (vacía), ELIMINACIONES
+// EXPORT EXCEL
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -616,7 +616,6 @@ function exportExcel(){
     FACTURA: m.factura || ""
   }));
 
-  // EDICIONES: no aplica (sin editar)
   const ediciones = [{
     NOTA: "Edición deshabilitada en esta versión. Hoja reservada."
   }];
@@ -643,20 +642,17 @@ function exportExcel(){
 }
 
 // ==========================
-// INIT + EVENTS
+// INIT
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
-  // cargar inventario base local
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
   refreshHome();
   showScreen("homeScreen");
 
-  // default fechas
   $("entradaFecha").value = todayISO();
   $("salidaFecha").value = todayISO();
 
-  // botones home
   $("btnSync").addEventListener("click", () => syncBase(true));
   $("btnExport").addEventListener("click", exportExcel);
 
@@ -665,6 +661,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("catalogSearch").value = "";
     renderCatalog("");
   });
+
   $("btnEntrada").addEventListener("click", () => {
     showScreen("entradaScreen");
     $("entradaFecha").value = todayISO();
@@ -674,6 +671,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("entradaProveedor").value = "";
     $("entradaFactura").value = "";
   });
+
   $("btnSalida").addEventListener("click", () => {
     showScreen("salidaScreen");
     $("salidaFecha").value = todayISO();
@@ -683,38 +681,35 @@ document.addEventListener("DOMContentLoaded", () => {
     $("salidaFactura").value = "";
     updateSalidaStockHint();
   });
+
   $("btnHistorial").addEventListener("click", () => {
     showScreen("historialScreen");
-    setHistTab("mov");
     $("histSearch").value = "";
-    renderHistorial();
+    setHistTab("mov");
   });
 
-  // back buttons
   $("btnBackCatalog").addEventListener("click", () => showScreen("homeScreen"));
   $("btnBackEntrada").addEventListener("click", () => showScreen("homeScreen"));
   $("btnBackSalida").addEventListener("click", () => showScreen("homeScreen"));
+  $("btnBackHistorial").addEventListener("click", () => showScreen("homeScreen"));
+
   $("btnBackSearch").addEventListener("click", () => {
     if(currentSearchContext === "entrada") showScreen("entradaScreen");
     else if(currentSearchContext === "salida") showScreen("salidaScreen");
     else showScreen("homeScreen");
   });
-  $("btnBackHistorial").addEventListener("click", () => showScreen("homeScreen"));
 
-  // catalog input
   $("catalogSearch").addEventListener("input", (e) => renderCatalog(e.target.value));
-
-  // entrada/salida typing
   $("entradaCodigo").addEventListener("input", () => fillProductoFromCode("entrada"));
   $("salidaCodigo").addEventListener("input", () => fillProductoFromCode("salida"));
 
-  // buscador buttons
   $("btnBuscarEntrada").addEventListener("click", () => {
     currentSearchContext = "entrada";
     showScreen("searchScreen");
     $("searchInput").value = "";
     renderSearch("");
   });
+
   $("btnBuscarSalida").addEventListener("click", () => {
     currentSearchContext = "salida";
     showScreen("searchScreen");
@@ -724,11 +719,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("searchInput").addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // guardar
   $("btnGuardarEntrada").addEventListener("click", saveEntrada);
   $("btnGuardarSalida").addEventListener("click", saveSalida);
 
-  // historial tabs
   $("tabMov").addEventListener("click", () => setHistTab("mov"));
   $("tabDel").addEventListener("click", () => setHistTab("del"));
   $("histSearch").addEventListener("input", renderHistorial);
