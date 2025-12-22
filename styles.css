@@ -74,3 +74,33 @@ footer {
 .rotar {
   animation: girar 1s linear infinite;
 }
+.secondary {
+  background: #ddd;
+  color: #333;
+  margin-top: 10px;
+}
+
+.catalogo {
+  margin-top: 20px;
+}
+
+.catalogo input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.producto {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.producto strong {
+  display: block;
+}
+
+.oculto {
+  display: none;
+}
