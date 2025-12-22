@@ -671,18 +671,6 @@ function exportExcel(){
 
     toast("📤 Reporte exportado");
 
-    // ✅ Confirmación antes de limpiar
-    setTimeout(() => {
-      const ok = confirm(
-        "El reporte ya fue generado.\n\n" +
-        "¿Deseas LIMPIAR los datos del día?\n\n" +
-        "Se borrará:\n• Entradas\n• Salidas\n• Eliminaciones\n\n" +
-        "El inventario y catálogo NO se borran."
-      );
-      if(!ok){
-        toast("📌 Datos conservados");
-        return;
-      }
 
       // ✅ Limpieza diaria (solo movimientos y eliminaciones)
       localStorage.removeItem(K.MOV);
