@@ -636,21 +636,7 @@ function exportExcel(){
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
 
   const filename = `reporte_movimientos_${todayISO()}.xlsx`;
-const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-const blob = new Blob([wbout], { type: "application/octet-stream" });
-
-const url = URL.createObjectURL(blob);
-const a = document.createElement("a");
-a.href = url;
-a.download = filename;
-document.body.appendChild(a);
-a.click();
-
-setTimeout(() => {
-  URL.revokeObjectURL(url);
-  a.remove();
-}, 100);
-
+  XLSX.writeFile(wb, filename);
 
   toast("📤 Excel exportado");
 }
