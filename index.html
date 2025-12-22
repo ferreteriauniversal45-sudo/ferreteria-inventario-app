@@ -28,6 +28,25 @@
       </div>
 
       <button onclick="forzarActualizacion()">Actualizar inventario</button>
+      <button onclick="abrirCatalogo()" class="secondary">
+  📦 Ver catálogo
+</button>
+
+<div id="catalogo" class="catalogo oculto">
+  <input
+    type="text"
+    id="buscador"
+    placeholder="Buscar por código o nombre..."
+    oninput="filtrarCatalogo()"
+  />
+
+  <div id="listaProductos"></div>
+
+  <button onclick="cerrarCatalogo()" class="secondary">
+    ⬅ Volver
+  </button>
+</div>
+
     </main>
 
     <footer>
