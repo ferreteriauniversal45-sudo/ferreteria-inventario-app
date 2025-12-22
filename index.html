@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0b2f7a">
+  <title>Ferretería Universal</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <div class="phone-frame">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="header-spacer"></div>
+
+        <div class="brand-center">
+          <img src="logo.png" class="brand-logo" alt="Ferretería Universal" onerror="this.style.display='none'">
+        </div>
+
+        <div id="netIcon" class="net-icon offline" title="Sin conexión" aria-label="Estado de red" role="img">🌍</div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="container">
+
+      <!-- HOME -->
+      <section id="homeScreen" class="screen">
+        <div class="card hero">
+          <h1 class="title">Control de Inventario</h1>
+          <p class="subtitle">
+            Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde GitHub y se actualiza.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Productos</div>
+              <div class="stat-value" id="homeProductos">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Versión</div>
+              <div class="stat-value small" id="homeVersion">—</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Mov. hoy</div>
+              <div class="stat-value" id="homeMovHoy">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Estado</div>
+              <div class="stat-value" id="homeEstado">OFF</div>
+            </div>
+          </div>
+
+          <button class="btn primary" id="btnSync" type="button">Actualizar inventario</button>
+
+          <div class="grid">
+            <button class="tile" id="btnCatalogo" type="button">
+              <div class="tile-emoji">📦</div>
+              <div class="tile-title">Catálogo</div>
+              <div class="tile-desc">Buscar productos</div>
+            </button>
+
+            <button class="tile" id="btnEntrada" type="button">
+              <div class="tile-emoji">➕</div>
+              <div class="tile-title">Entradas</div>
+              <div class="tile-desc">Registrar ingreso</div>
+            </button>
+
+            <button class="tile" id="btnSalida" type="button">
+              <div class="tile-emoji">➖</div>
+              <div class="tile-title">Salidas</div>
+              <div class="tile-desc">Registrar salida</div>
+            </button>
+
+            <button class="tile" id="btnHistorial" type="button">
+              <div class="tile-emoji">📜</div>
+              <div class="tile-title">Historial</div>
+              <div class="tile-desc">Mov. y eliminaciones</div>
+            </button>
+          </div>
+
+          <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
+          <p class="hint">
+            El Excel se genera en el teléfono (descarga). En Android suele quedar en <b>Descargas</b>.
+          </p>
+        </div>
+      </section>
+
+      <!-- CATALOGO -->
+      <section id="catalogScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Catálogo</h2>
+            <button class="btn small" id="btnBackCatalog" type="button">⬅</button>
+          </div>
+
+          <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
+          <div id="catalogInfo" class="note"></div>
+
+          <div id="catalogList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- ENTRADAS -->
+      <section id="entradaScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Entrada</h2>
+            <button class="btn small" id="btnBackEntrada" type="button">⬅</button>
+          </div>
+
+          <div class="field">
+            <label class="label">Código</label>
+            <div class="input-row">
+              <input id="entradaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
+              <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Producto</label>
+            <input id="entradaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label">Cantidad</label>
+            <input id="entradaCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 10">
+          </div>
+
+          <div class="field">
+            <label class="label">Proveedor</label>
+            <input id="entradaProveedor" class="input" placeholder="Ej: Proveedor XYZ">
+          </div>
+
+          <div class="field">
+            <label class="label">Factura</label>
+            <input id="entradaFactura" class="input" placeholder="Ej: FAC-001">
+          </div>
+
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input id="entradaFecha" class="input" type="date">
+          </div>
+
+          <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar entrada</button>
+        </div>
+      </section>
+
+      <!-- SALIDAS -->
+      <section id="salidaScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Salida</h2>
+            <button class="btn small" id="btnBackSalida" type="button">⬅</button>
+          </div>
+
+          <div class="field">
+            <label class="label">Código</label>
+            <div class="input-row">
+              <input id="salidaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
+              <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Producto</label>
+            <input id="salidaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label">Cantidad</label>
+            <input id="salidaCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 2">
+            <div class="note" id="salidaStockInfo"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Factura</label>
+            <input id="salidaFactura" class="input" placeholder="Ej: FAC-123">
+          </div>
+
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input id="salidaFecha" class="input" type="date">
+          </div>
+
+          <button class="btn primary" id="btnGuardarSalida" type="button">Guardar salida</button>
+        </div>
+      </section>
+
+      <!-- BUSCADOR (B2) -->
+      <section id="searchScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Buscar producto</h2>
+            <button class="btn small" id="btnBackSearch" type="button">⬅</button>
+          </div>
+
+          <input id="searchInput" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
+          <div id="searchInfo" class="note"></div>
+          <div id="searchList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- HISTORIAL (D) -->
+      <section id="historialScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Historial</h2>
+            <button class="btn small" id="btnBackHistorial" type="button">⬅</button>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active" id="tabMov" type="button">Movimientos</button>
+            <button class="tab" id="tabDel" type="button">Eliminaciones</button>
+          </div>
+
+          <input id="histSearch" class="input" placeholder="Filtrar por código o producto..." autocomplete="off">
+          <div id="histList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- TOAST -->
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </main>
+
+    <footer class="footer">
+      Ferretería Universal · v1.2 · Sin edición (solo eliminar)
+    </footer>
+  </div>
+
+  <!-- Librería Excel (SheetJS) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <script src="./script.js"></script>
+</body>
+</html>
