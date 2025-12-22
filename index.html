@@ -1,249 +1,201 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b2f7a">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ferretería Universal</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
-
 <body>
-  <div class="phone-frame">
-    <!-- HEADER -->
-    <header class="app-header">
-      <div class="header-top">
-        <div class="header-spacer"></div>
 
-        <div class="brand-center">
-          <img src="logo.jpg" class="brand-logo" alt="Ferretería Universal">
-        </div>
+  <div class="app">
 
-        <div id="netIcon" class="net-icon offline" title="Sin conexión" aria-label="Estado de red" role="img">
-          🌍
-        </div>
-      </div>
+    <header class="header">
+      <img src="logo.png" alt="Ferretería Universal" class="logo" onerror="this.style.display='none'">
+      <div id="statusIcon" class="status offline" title="Estado de red">🌐</div>
     </header>
 
-    <!-- MAIN -->
-    <main class="container">
-      <!-- HOME -->
-      <section id="homeScreen" class="screen">
-        <section class="card hero">
-          <h1 class="title">Control de Inventario</h1>
-          <p class="subtitle">
-            Trabaja <b>offline</b> (entradas, salidas e inventario). Cuando haya internet,
-            podrás <b>actualizar el catálogo</b> (lo haremos en el siguiente paso).
-          </p>
+    <!-- HOME -->
+    <main id="home">
+      <h1>Control de Inventario</h1>
+      <p class="subtitle">
+        Funciona offline. Con internet se actualiza el inventario maestro desde GitHub.
+      </p>
 
-          <div class="stats">
-            <div class="stat">
-              <div class="stat-label">Catálogo</div>
-              <div class="stat-value" id="homeCatalogCount">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Inicial</div>
-              <div class="stat-value" id="homeInicialCount">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Entradas</div>
-              <div class="stat-value" id="homeEntradaCount">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Salidas</div>
-              <div class="stat-value" id="homeSalidaCount">0</div>
-            </div>
-          </div>
+      <div class="card">
+        <p><strong>Resumen</strong></p>
+        <p>Productos cargados: <span id="totalProductos">0</span></p>
+        <p>Última actualización: <span id="ultimaActualizacion">—</span></p>
+        <p>Movimientos hoy: <span id="movHoy">0</span></p>
+      </div>
 
-          <div class="meta">
-            <span class="chip">Última actualización:</span>
-            <span class="meta-value" id="homeLastSync">—</span>
-          </div>
+      <button id="btnActualizar" onclick="forzarActualizacion()">Actualizar inventario</button>
 
-          <div class="row-actions">
-            <button class="btn primary" id="btnDemo" type="button">Cargar demo</button>
-            <button class="btn ghost" id="btnReset" type="button">Borrar datos</button>
-          </div>
-        </section>
+      <button class="secondary" onclick="abrirCatalogo()">📦 Catálogo</button>
+      <button class="secondary" onclick="abrirEntradas()">➕ Entradas</button>
+      <button class="secondary" onclick="abrirSalidas()">➖ Salidas</button>
+      <button class="secondary" onclick="abrirHistorial()">📜 Historial</button>
 
-        <section class="grid">
-          <button class="tile" id="btnCatalogo" type="button">
-            <div class="tile-emoji">📦</div>
-            <div class="tile-title">Catálogo</div>
-            <div class="tile-desc">Buscar productos</div>
-          </button>
+      <button class="export" onclick="exportarExcel()">
+        📤 Exportar reporte diario (Excel)
+      </button>
 
-          <button class="tile" id="btnEntrada" type="button">
-            <div class="tile-emoji">➕</div>
-            <div class="tile-title">Entrada</div>
-            <div class="tile-desc">Registrar ingreso</div>
-          </button>
-
-          <button class="tile" id="btnSalida" type="button">
-            <div class="tile-emoji">➖</div>
-            <div class="tile-title">Salida</div>
-            <div class="tile-desc">Registrar salida</div>
-          </button>
-
-          <button class="tile" id="btnInventario" type="button">
-            <div class="tile-emoji">📊</div>
-            <div class="tile-title">Inventario</div>
-            <div class="tile-desc">Stock actual</div>
-          </button>
-        </section>
-      </section>
-
-      <!-- CATALOGO -->
-      <section id="catalogScreen" class="screen hidden">
-        <section class="card">
-          <div class="screen-head">
-            <h2 class="h2">Catálogo</h2>
-            <button class="btn small" id="btnBackFromCatalog" type="button">⬅</button>
-          </div>
-
-          <input
-            id="catalogSearchInput"
-            class="input"
-            placeholder="Buscar por código o producto..."
-            autocomplete="off"
-          >
-
-          <div id="catalogList" class="list"></div>
-        </section>
-      </section>
-
-      <!-- ENTRADA -->
-      <section id="entradaScreen" class="screen hidden">
-        <section class="card">
-          <div class="screen-head">
-            <h2 class="h2">Entrada</h2>
-            <button class="btn small" id="btnVolverEntrada" type="button">⬅</button>
-          </div>
-
-          <div class="field">
-            <label class="label" for="entradaCodigo">Código</label>
-            <div class="input-row">
-              <input id="entradaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
-              <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label" for="entradaProducto">Producto</label>
-            <input id="entradaProducto" class="input" placeholder="Se llena automáticamente" readonly>
-          </div>
-
-          <div class="field">
-            <label class="label" for="entradaCantidad">Cantidad</label>
-            <input id="entradaCantidad" type="number" min="1" inputmode="numeric" class="input" placeholder="Ej: 10">
-          </div>
-
-          <div class="field">
-            <label class="label" for="entradaFactura">Referencia de factura</label>
-            <input id="entradaFactura" class="input" placeholder="Ej: FAC-001" autocomplete="off">
-          </div>
-
-          <div class="field">
-            <label class="label" for="entradaProveedor">Proveedor</label>
-            <input id="entradaProveedor" class="input" placeholder="Nombre del proveedor" autocomplete="off">
-          </div>
-
-          <div class="field">
-            <label class="label" for="entradaFecha">Fecha de recepción</label>
-            <input id="entradaFecha" type="date" class="input">
-          </div>
-
-          <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar entrada</button>
-        </section>
-      </section>
-
-      <!-- SALIDA -->
-      <section id="salidaScreen" class="screen hidden">
-        <section class="card">
-          <div class="screen-head">
-            <h2 class="h2">Salida</h2>
-            <button class="btn small" id="btnVolverSalida" type="button">⬅</button>
-          </div>
-
-          <div class="field">
-            <label class="label" for="salidaCodigo">Código</label>
-            <div class="input-row">
-              <input id="salidaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
-              <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label" for="salidaProducto">Producto</label>
-            <input id="salidaProducto" class="input" placeholder="Se llena automáticamente" readonly>
-          </div>
-
-          <div class="field">
-            <label class="label" for="salidaCantidad">Cantidad</label>
-            <input id="salidaCantidad" type="number" min="1" inputmode="numeric" class="input" placeholder="Ej: 2">
-          </div>
-
-          <div class="field">
-            <label class="label" for="salidaFactura">Referencia de factura</label>
-            <input id="salidaFactura" class="input" placeholder="Ej: FAC-123" autocomplete="off">
-          </div>
-
-          <div class="field">
-            <label class="label" for="salidaFecha">Fecha</label>
-            <input id="salidaFecha" type="date" class="input">
-          </div>
-
-          <button class="btn primary" id="btnGuardarSalida" type="button">Registrar salida</button>
-        </section>
-      </section>
-
-      <!-- INVENTARIO -->
-      <section id="inventarioScreen" class="screen hidden">
-        <section class="card">
-          <div class="screen-head">
-            <h2 class="h2">Inventario</h2>
-            <button class="btn small" id="btnVolverInventario" type="button">⬅</button>
-          </div>
-
-          <input
-            id="inventarioSearchInput"
-            class="input"
-            placeholder="Filtrar por código o producto..."
-            autocomplete="off"
-          >
-
-          <div id="inventarioList" class="list"></div>
-        </section>
-      </section>
-
-      <!-- BUSCADOR DE PRODUCTOS (GLOBAL) -->
-      <section id="productSearchScreen" class="screen hidden">
-        <section class="card">
-          <div class="screen-head">
-            <h2 class="h2">Buscar producto</h2>
-            <button class="btn small" id="btnCloseSearch" type="button">⬅</button>
-          </div>
-
-          <input
-            id="productSearchInput"
-            class="input"
-            placeholder="Buscar por código o nombre..."
-            autocomplete="off"
-          >
-
-          <div id="productSearchList" class="list"></div>
-        </section>
-      </section>
-
-      <!-- TOAST -->
-      <div id="toast" class="toast" aria-live="polite"></div>
+      <p class="mini">
+        Sugerencia: al final del día exporta el Excel y envíalo. Tú lo cargas en la PC y luego actualizas el inventario maestro.
+      </p>
     </main>
 
-    <footer class="footer">
-      Ferretería Universal • v0.5
+    <!-- CATALOGO -->
+    <section id="catalogo" class="panel oculto">
+      <div class="panelHead">
+        <h2>Catálogo</h2>
+        <button class="chipBtn" onclick="cerrarCatalogo()">✕</button>
+      </div>
+
+      <input type="text" id="buscadorCatalogo" placeholder="Buscar por código o nombre..." oninput="filtrarCatalogo()">
+      <div id="listaProductos"></div>
+
+      <button class="secondary" onclick="cerrarCatalogo()">⬅ Volver</button>
+    </section>
+
+    <!-- ENTRADAS -->
+    <section id="entradas" class="panel oculto">
+      <div class="panelHead">
+        <h2>Registrar entrada</h2>
+        <button class="chipBtn" onclick="cerrarEntradas()">✕</button>
+      </div>
+
+      <label>Código</label>
+      <div class="row">
+        <input id="entradaCodigo" placeholder="Código (Ej: A001)" oninput="autollenarProducto('entrada')">
+        <button class="iconBtn" onclick="abrirBuscador('entrada')" title="Buscar">🔍</button>
+      </div>
+
+      <label>Producto</label>
+      <input id="entradaProducto" placeholder="Se llena automáticamente" disabled>
+
+      <label>Cantidad</label>
+      <input id="entradaCantidad" type="number" min="1" placeholder="Ej: 10">
+
+      <label>Proveedor</label>
+      <input id="entradaProveedor" placeholder="Ej: Proveedor XYZ">
+
+      <label>Factura</label>
+      <input id="entradaFactura" placeholder="Ej: FAC-001">
+
+      <label>Fecha</label>
+      <input id="entradaFecha" type="date">
+
+      <button onclick="guardarEntrada()">💾 Guardar entrada</button>
+      <button class="secondary" onclick="cerrarEntradas()">⬅ Volver</button>
+    </section>
+
+    <!-- SALIDAS -->
+    <section id="salidas" class="panel oculto">
+      <div class="panelHead">
+        <h2>Registrar salida</h2>
+        <button class="chipBtn" onclick="cerrarSalidas()">✕</button>
+      </div>
+
+      <label>Código</label>
+      <div class="row">
+        <input id="salidaCodigo" placeholder="Código (Ej: A001)" oninput="autollenarProducto('salida')">
+        <button class="iconBtn" onclick="abrirBuscador('salida')" title="Buscar">🔍</button>
+      </div>
+
+      <label>Producto</label>
+      <input id="salidaProducto" placeholder="Se llena automáticamente" disabled>
+
+      <label>Cantidad</label>
+      <input id="salidaCantidad" type="number" min="1" placeholder="Ej: 2">
+
+      <label>Factura</label>
+      <input id="salidaFactura" placeholder="Ej: FAC-123">
+
+      <label>Fecha</label>
+      <input id="salidaFecha" type="date">
+
+      <button onclick="guardarSalida()">💾 Guardar salida</button>
+      <button class="secondary" onclick="cerrarSalidas()">⬅ Volver</button>
+    </section>
+
+    <!-- BUSCADOR (B2) -->
+    <section id="buscador" class="panel oculto">
+      <div class="panelHead">
+        <h2>Buscar producto</h2>
+        <button class="chipBtn" onclick="cerrarBuscador()">✕</button>
+      </div>
+
+      <input type="text" id="buscadorInput" placeholder="Buscar por código o nombre..." oninput="filtrarBuscador()">
+      <div id="buscadorLista"></div>
+
+      <button class="secondary" onclick="cerrarBuscador()">⬅ Volver</button>
+    </section>
+
+    <!-- HISTORIAL (D) -->
+    <section id="historial" class="panel oculto">
+      <div class="panelHead">
+        <h2>Historial</h2>
+        <button class="chipBtn" onclick="cerrarHistorial()">✕</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" id="tabMov" onclick="setHistTab('mov')">Movimientos</button>
+        <button class="tab" id="tabEdit" onclick="setHistTab('edit')">Ediciones</button>
+        <button class="tab" id="tabDel" onclick="setHistTab('del')">Eliminaciones</button>
+      </div>
+
+      <input type="text" id="histSearch" placeholder="Filtrar por código o producto..." oninput="renderHistorial()">
+
+      <div id="histList"></div>
+
+      <button class="secondary" onclick="cerrarHistorial()">⬅ Volver</button>
+    </section>
+
+    <!-- MODAL EDITAR MOVIMIENTO -->
+    <div id="modal" class="modal oculto" role="dialog" aria-modal="true">
+      <div class="modalBox">
+        <div class="modalHead">
+          <h3 id="modalTitle">Editar</h3>
+          <button class="chipBtn" onclick="cerrarModal()">✕</button>
+        </div>
+
+        <input type="hidden" id="editId">
+        <input type="hidden" id="editTipo">
+
+        <label>Código</label>
+        <input id="editCodigo" disabled>
+
+        <label>Producto</label>
+        <input id="editProducto" disabled>
+
+        <label>Cantidad</label>
+        <input id="editCantidad" type="number" min="1">
+
+        <label>Factura</label>
+        <input id="editFactura">
+
+        <div id="editProveedorWrap">
+          <label>Proveedor</label>
+          <input id="editProveedor">
+        </div>
+
+        <label>Fecha</label>
+        <input id="editFecha" type="date">
+
+        <button onclick="guardarEdicion()">Guardar cambios</button>
+        <button class="secondary" onclick="cerrarModal()">Cancelar</button>
+      </div>
+    </div>
+
+    <footer>
+      Ferretería Universal · v1.0
     </footer>
   </div>
 
-  <script src="script.js"></script>
+  <!-- SheetJS para exportar Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <script src="./script.js"></script>
 </body>
 </html>
