@@ -27,66 +27,80 @@
     <main class="container">
 
       <!-- HOME -->
-      <section id="homeScreen" class="screen">
-        <div class="card hero">
-          <h1 class="title">Control de Inventario</h1>
-          <p class="subtitle">
-            Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde Computadora de Auditoria y se actualiza.
-          </p>
+   <section id="homeScreen" class="screen">
+  <div class="card hero">
 
-          <div class="stats">
-            <div class="stat">
-              <div class="stat-label">Productos</div>
-              <div class="stat-value" id="homeProductos">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Ultima Actualizacion</div>
-              <div class="stat-value small" id="homeVersion">—</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Mov. hoy</div>
-              <div class="stat-value" id="homeMovHoy">0</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Estado</div>
-              <div class="stat-value" id="homeEstado">OFF</div>
-            </div>
+    <div class="home-layout">
+      <!-- COLUMNA IZQUIERDA -->
+      <div class="home-left">
+        <h1 class="title">Control de Inventario</h1>
+        <p class="subtitle">
+          Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde GitHub y se actualiza.
+        </p>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Productos</div>
+            <div class="stat-value" id="homeProductos">0</div>
           </div>
-
-          <button class="btn primary" id="btnSync" type="button">Solicitar Actualizacion</button>
-
-          <div class="grid">
-            <button class="tile" id="btnCatalogo" type="button">
-              <div class="tile-emoji">📦</div>
-              <div class="tile-title">Catálogo</div>
-              <div class="tile-desc">Buscar productos</div>
-            </button>
-
-            <button class="tile" id="btnEntrada" type="button">
-              <div class="tile-emoji">➕</div>
-              <div class="tile-title">Entradas</div>
-              <div class="tile-desc">Registrar ingreso</div>
-            </button>
-
-            <button class="tile" id="btnSalida" type="button">
-              <div class="tile-emoji">➖</div>
-              <div class="tile-title">Salidas</div>
-              <div class="tile-desc">Registrar salida</div>
-            </button>
-
-            <button class="tile" id="btnHistorial" type="button">
-              <div class="tile-emoji">📜</div>
-              <div class="tile-title">Historial</div>
-              <div class="tile-desc">Mov. y eliminaciones</div>
-            </button>
+          <div class="stat">
+            <div class="stat-label">Versión</div>
+            <div class="stat-value small" id="homeVersion">—</div>
           </div>
-
-          <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
-          <p class="hint">
-            Ferreteria Universal Creador de aplicacion:Carlos Tercero Version de app. V.01
-          </p>
+          <div class="stat">
+            <div class="stat-label">Mov. hoy</div>
+            <div class="stat-value" id="homeMovHoy">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Estado</div>
+            <div class="stat-value" id="homeEstado">OFF</div>
+          </div>
         </div>
-      </section>
+
+        <button class="btn primary" id="btnSync" type="button">Actualizar inventario</button>
+
+        <div class="pc-tip">
+          En PC verás el panel tipo “dashboard”. En móvil se acomoda como app.
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA -->
+      <div class="home-right">
+        <div class="grid">
+          <button class="tile" id="btnCatalogo" type="button">
+            <div class="tile-emoji">📦</div>
+            <div class="tile-title">Catálogo</div>
+            <div class="tile-desc">Buscar productos</div>
+          </button>
+
+          <button class="tile" id="btnEntrada" type="button">
+            <div class="tile-emoji">➕</div>
+            <div class="tile-title">Entradas</div>
+            <div class="tile-desc">Registrar ingreso</div>
+          </button>
+
+          <button class="tile" id="btnSalida" type="button">
+            <div class="tile-emoji">➖</div>
+            <div class="tile-title">Salidas</div>
+            <div class="tile-desc">Registrar salida</div>
+          </button>
+
+          <button class="tile" id="btnHistorial" type="button">
+            <div class="tile-emoji">📜</div>
+            <div class="tile-title">Historial</div>
+            <div class="tile-desc">Mov. y eliminaciones</div>
+          </button>
+        </div>
+
+        <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
+        <p class="hint">
+          El Excel se genera en el teléfono (descarga). En Android suele quedar en <b>Descargas</b>.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       <!-- CATALOGO -->
       <section id="catalogScreen" class="screen hidden">
