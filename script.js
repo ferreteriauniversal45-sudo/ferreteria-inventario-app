@@ -804,7 +804,13 @@ window.addEventListener("online", () => setEstado(true));
 window.addEventListener("offline", () => setEstado(false));
 
 window.addEventListener("load", () => {
-  // cargar local primero
+  // 🔒 Asegurar que el modal SIEMPRE arranque cerrado
+  const modal = document.getElementById("modal");
+  if (modal) {
+    modal.classList.add("oculto");
+  }
+
+  // cargar inventario local primero
   inventarioCache = readJSON(K.INV, {});
   refreshHome();
   setEstado(navigator.onLine);
@@ -812,3 +818,4 @@ window.addEventListener("load", () => {
   // luego intentar sync silencioso
   cargarInventario(false);
 });
+
