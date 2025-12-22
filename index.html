@@ -1,58 +1,247 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b2f7a">
   <title>Ferretería Universal</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
+  <div class="phone-frame">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="header-spacer"></div>
 
-  <div class="app">
+        <div class="brand-center">
+          <img src="logo.jpg" class="brand-logo" alt="Ferretería Universal">
+        </div>
 
-    <header class="header">
-      <img src="logo.png" alt="Ferretería Universal" class="logo">
-      <div id="statusIcon" class="status offline">🌐</div>
+        <div id="netIcon" class="net-icon offline" title="Sin conexión" aria-label="Estado de red" role="img">
+          🌍
+        </div>
+      </div>
     </header>
 
-    <main>
-      <h1>Control de Inventario</h1>
-      <p class="subtitle">
-        La app funciona offline. Con internet se actualiza el inventario.
-      </p>
+    <!-- MAIN -->
+    <main class="container">
+      <!-- HOME -->
+      <section id="homeScreen" class="screen">
+        <section class="card hero">
+          <h1 class="title">Control de Inventario</h1>
+          <p class="subtitle">
+            Trabaja <b>offline</b> (entradas, salidas e inventario). Cuando haya internet,
+            podrás <b>actualizar el catálogo</b> (lo haremos en el siguiente paso).
+          </p>
 
-      <div class="card">
-        <p><strong>Estado:</strong></p>
-        <p>Productos cargados: <span id="totalProductos">0</span></p>
-        <p>Última actualización: <span id="ultimaActualizacion">—</span></p>
-      </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Catálogo</div>
+              <div class="stat-value" id="homeCatalogCount">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Inicial</div>
+              <div class="stat-value" id="homeInicialCount">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Entradas</div>
+              <div class="stat-value" id="homeEntradaCount">0</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Salidas</div>
+              <div class="stat-value" id="homeSalidaCount">0</div>
+            </div>
+          </div>
 
-      <button onclick="forzarActualizacion()">Actualizar inventario</button>
-      <button onclick="abrirCatalogo()" class="secondary">
-  📦 Ver catálogo
-</button>
+          <div class="meta">
+            <span class="chip">Última actualización:</span>
+            <span class="meta-value" id="homeLastSync">—</span>
+          </div>
 
-<div id="catalogo" class="catalogo oculto">
-  <input
-    type="text"
-    id="buscador"
-    placeholder="Buscar por código o nombre..."
-    oninput="filtrarCatalogo()"
-  />
+          <div class="row-actions">
+            <button class="btn primary" id="btnDemo" type="button">Cargar demo</button>
+            <button class="btn ghost" id="btnReset" type="button">Borrar datos</button>
+          </div>
+        </section>
 
-  <div id="listaProductos"></div>
+        <section class="grid">
+          <button class="tile" id="btnCatalogo" type="button">
+            <div class="tile-emoji">📦</div>
+            <div class="tile-title">Catálogo</div>
+            <div class="tile-desc">Buscar productos</div>
+          </button>
 
-  <button onclick="cerrarCatalogo()" class="secondary">
-    ⬅ Volver
-  </button>
-</div>
+          <button class="tile" id="btnEntrada" type="button">
+            <div class="tile-emoji">➕</div>
+            <div class="tile-title">Entrada</div>
+            <div class="tile-desc">Registrar ingreso</div>
+          </button>
 
+          <button class="tile" id="btnSalida" type="button">
+            <div class="tile-emoji">➖</div>
+            <div class="tile-title">Salida</div>
+            <div class="tile-desc">Registrar salida</div>
+          </button>
+
+          <button class="tile" id="btnInventario" type="button">
+            <div class="tile-emoji">📊</div>
+            <div class="tile-title">Inventario</div>
+            <div class="tile-desc">Stock actual</div>
+          </button>
+        </section>
+      </section>
+
+      <!-- CATALOGO -->
+      <section id="catalogScreen" class="screen hidden">
+        <section class="card">
+          <div class="screen-head">
+            <h2 class="h2">Catálogo</h2>
+            <button class="btn small" id="btnBackFromCatalog" type="button">⬅</button>
+          </div>
+
+          <input
+            id="catalogSearchInput"
+            class="input"
+            placeholder="Buscar por código o producto..."
+            autocomplete="off"
+          >
+
+          <div id="catalogList" class="list"></div>
+        </section>
+      </section>
+
+      <!-- ENTRADA -->
+      <section id="entradaScreen" class="screen hidden">
+        <section class="card">
+          <div class="screen-head">
+            <h2 class="h2">Entrada</h2>
+            <button class="btn small" id="btnVolverEntrada" type="button">⬅</button>
+          </div>
+
+          <div class="field">
+            <label class="label" for="entradaCodigo">Código</label>
+            <div class="input-row">
+              <input id="entradaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
+              <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="entradaProducto">Producto</label>
+            <input id="entradaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label" for="entradaCantidad">Cantidad</label>
+            <input id="entradaCantidad" type="number" min="1" inputmode="numeric" class="input" placeholder="Ej: 10">
+          </div>
+
+          <div class="field">
+            <label class="label" for="entradaFactura">Referencia de factura</label>
+            <input id="entradaFactura" class="input" placeholder="Ej: FAC-001" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label class="label" for="entradaProveedor">Proveedor</label>
+            <input id="entradaProveedor" class="input" placeholder="Nombre del proveedor" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label class="label" for="entradaFecha">Fecha de recepción</label>
+            <input id="entradaFecha" type="date" class="input">
+          </div>
+
+          <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar entrada</button>
+        </section>
+      </section>
+
+      <!-- SALIDA -->
+      <section id="salidaScreen" class="screen hidden">
+        <section class="card">
+          <div class="screen-head">
+            <h2 class="h2">Salida</h2>
+            <button class="btn small" id="btnVolverSalida" type="button">⬅</button>
+          </div>
+
+          <div class="field">
+            <label class="label" for="salidaCodigo">Código</label>
+            <div class="input-row">
+              <input id="salidaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
+              <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="salidaProducto">Producto</label>
+            <input id="salidaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label" for="salidaCantidad">Cantidad</label>
+            <input id="salidaCantidad" type="number" min="1" inputmode="numeric" class="input" placeholder="Ej: 2">
+          </div>
+
+          <div class="field">
+            <label class="label" for="salidaFactura">Referencia de factura</label>
+            <input id="salidaFactura" class="input" placeholder="Ej: FAC-123" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label class="label" for="salidaFecha">Fecha</label>
+            <input id="salidaFecha" type="date" class="input">
+          </div>
+
+          <button class="btn primary" id="btnGuardarSalida" type="button">Registrar salida</button>
+        </section>
+      </section>
+
+      <!-- INVENTARIO -->
+      <section id="inventarioScreen" class="screen hidden">
+        <section class="card">
+          <div class="screen-head">
+            <h2 class="h2">Inventario</h2>
+            <button class="btn small" id="btnVolverInventario" type="button">⬅</button>
+          </div>
+
+          <input
+            id="inventarioSearchInput"
+            class="input"
+            placeholder="Filtrar por código o producto..."
+            autocomplete="off"
+          >
+
+          <div id="inventarioList" class="list"></div>
+        </section>
+      </section>
+
+      <!-- BUSCADOR DE PRODUCTOS (GLOBAL) -->
+      <section id="productSearchScreen" class="screen hidden">
+        <section class="card">
+          <div class="screen-head">
+            <h2 class="h2">Buscar producto</h2>
+            <button class="btn small" id="btnCloseSearch" type="button">⬅</button>
+          </div>
+
+          <input
+            id="productSearchInput"
+            class="input"
+            placeholder="Buscar por código o nombre..."
+            autocomplete="off"
+          >
+
+          <div id="productSearchList" class="list"></div>
+        </section>
+      </section>
+
+      <!-- TOAST -->
+      <div id="toast" class="toast" aria-live="polite"></div>
     </main>
 
-    <footer>
-      Ferretería Universal · v0.1
+    <footer class="footer">
+      Ferretería Universal • v0.5
     </footer>
-
   </div>
 
   <script src="script.js"></script>
