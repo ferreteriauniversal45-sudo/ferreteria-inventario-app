@@ -71,3 +71,50 @@ function forzarActualizacion() {
 
 window.addEventListener("load", () => cargarInventario(false));
 
+let inventarioCache = {};
+
+function abrirCatalogo() {
+  document.querySelector("main").classList.add("oculto");
+  document.getElementById("catalogo").classList.remove("oculto");
+
+  inventarioCache = JSON.parse(localStorage.getItem("inventario") || "{}");
+  renderCatalogo(Object.entries(inventarioCache));
+}
+
+function cerrarCatalogo() {
+  document.getElementById("catalogo").classList.add("oculto");
+  document.querySelector("main").classList.remove("oculto");
+}
+
+function renderCatalogo(lista) {
+  const contenedor = document.getElementById("listaProductos");
+  contenedor.innerHTML = "";
+
+  if (lista.length === 0) {
+    contenedor.innerHTML = "<p>No se encontraron productos</p>";
+    return;
+  }
+
+  lista.forEach(([codigo, data]) => {
+    const div = document.createElement("div");
+    div.className = "producto";
+    div.innerHTML = `
+      <strong>${codigo} — ${data.producto}</strong>
+      <span>${data.departamento}</span>
+      <span>Stock: ${data.stock}</span>
+    `;
+    contenedor.appendChild(div);
+  });
+}
+
+function filtrarCatalogo() {
+  const texto = document.getElementById("buscador").value.toLowerCase();
+
+  const filtrados = Object.entries(inventarioCache).filter(
+    ([codigo, data]) =>
+      codigo.toLowerCase().includes(texto) ||
+      data.producto.toLowerCase().includes(texto)
+  );
+
+  renderCatalogo(filtrados);
+}
