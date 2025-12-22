@@ -27,77 +27,81 @@
     <main class="container">
 
       <!-- HOME -->
-   <section id="homeScreen" class="screen">
-  <div class="card hero">
+      <section id="homeScreen" class="screen">
+        <div class="card hero">
 
-    <div class="home-layout">
-      <!-- COLUMNA IZQUIERDA -->
-      <div class="home-left">
-        <h1 class="title">Control de Inventario</h1>
-        <p class="subtitle">
-          Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde GitHub y se actualiza.
-        </p>
+          <div class="home-layout">
+            <!-- IZQUIERDA -->
+            <div class="home-left">
+              <h1 class="title">Control de Inventario</h1>
+              <p class="subtitle">
+                Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde GitHub y se actualiza.
+              </p>
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-label">Productos</div>
-            <div class="stat-value" id="homeProductos">0</div>
+              <div class="stats">
+                <div class="stat">
+                  <div class="stat-label">Productos</div>
+                  <div class="stat-value" id="homeProductos">0</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Versión</div>
+                  <div class="stat-value small" id="homeVersion">—</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Mov. hoy</div>
+                  <div class="stat-value" id="homeMovHoy">0</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Estado</div>
+                  <div class="stat-value" id="homeEstado">OFF</div>
+                </div>
+              </div>
+
+              <button class="btn primary" id="btnSync" type="button">Actualizar inventario</button>
+
+              <div class="pc-tip">
+                En PC verás catálogo / historial en formato tabla tipo Excel. En móvil se ve como app.
+              </div>
+            </div>
+
+            <!-- DERECHA -->
+            <div class="home-right">
+              <div class="grid">
+                <button class="tile" id="btnCatalogo" type="button">
+                  <div class="tile-emoji">📦</div>
+                  <div class="tile-title">Catálogo</div>
+                  <div class="tile-desc">Buscar productos</div>
+                </button>
+
+                <button class="tile" id="btnEntrada" type="button">
+                  <div class="tile-emoji">➕</div>
+                  <div class="tile-title">Entradas</div>
+                  <div class="tile-desc">Registrar ingreso</div>
+                </button>
+
+                <button class="tile" id="btnSalida" type="button">
+                  <div class="tile-emoji">➖</div>
+                  <div class="tile-title">Salidas</div>
+                  <div class="tile-desc">Registrar salida</div>
+                </button>
+
+                <button class="tile" id="btnHistorial" type="button">
+                  <div class="tile-emoji">📜</div>
+                  <div class="tile-title">Historial</div>
+                  <div class="tile-desc">Mov. y eliminaciones</div>
+                </button>
+              </div>
+
+              <!-- ✅ Separado más abajo en móviles con CSS -->
+              <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
+              <p class="hint">
+                El Excel se genera en el teléfono (descarga). En Android suele quedar en <b>Descargas</b>.
+              </p>
+            </div>
           </div>
-          <div class="stat">
-            <div class="stat-label">Versión</div>
-            <div class="stat-value small" id="homeVersion">—</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Mov. hoy</div>
-            <div class="stat-value" id="homeMovHoy">0</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Estado</div>
-            <div class="stat-value" id="homeEstado">OFF</div>
-          </div>
+
         </div>
-
-        <button class="btn primary" id="btnSync" type="button">Actualizar inventario</button>
-
-      </div>
-
-      <!-- COLUMNA DERECHA -->
-      <div class="home-right">
-        <div class="grid">
-          <button class="tile" id="btnCatalogo" type="button">
-            <div class="tile-emoji">📦</div>
-            <div class="tile-title">Catálogo</div>
-            <div class="tile-desc">Buscar productos</div>
-          </button>
-
-          <button class="tile" id="btnEntrada" type="button">
-            <div class="tile-emoji">➕</div>
-            <div class="tile-title">Entradas</div>
-            <div class="tile-desc">Registrar ingreso</div>
-          </button>
-
-          <button class="tile" id="btnSalida" type="button">
-            <div class="tile-emoji">➖</div>
-            <div class="tile-title">Salidas</div>
-            <div class="tile-desc">Registrar salida</div>
-          </button>
-
-          <button class="tile" id="btnHistorial" type="button">
-            <div class="tile-emoji">📜</div>
-            <div class="tile-title">Historial</div>
-            <div class="tile-desc">Mov. y eliminaciones</div>
-          </button>
-        </div>
-
-        <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
-        <p class="hint">
-          El Excel se genera en el teléfono (descarga). En Android suele quedar en <b>Descargas</b>.
-        </p>
-      </div>
-    </div>
-
-  </div>
-</section>
+      </section>
 
       <!-- CATALOGO -->
       <section id="catalogScreen" class="screen hidden">
@@ -110,7 +114,16 @@
           <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
           <div id="catalogInfo" class="note"></div>
 
-          <div id="catalogList" class="list"></div>
+          <!-- ✅ Tabla en PC, tarjetas en móvil -->
+          <div class="table-wrap">
+            <div class="table-head cols-catalog">
+              <div>Código</div>
+              <div>Producto</div>
+              <div>Departamento</div>
+              <div class="right">Stock</div>
+            </div>
+            <div id="catalogList" class="table-body"></div>
+          </div>
         </div>
       </section>
 
@@ -210,11 +223,21 @@
 
           <input id="searchInput" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
           <div id="searchInfo" class="note"></div>
-          <div id="searchList" class="list"></div>
+
+          <div class="table-wrap">
+            <div class="table-head cols-search">
+              <div>Código</div>
+              <div>Producto</div>
+              <div>Departamento</div>
+              <div class="right">Stock</div>
+              <div class="right">Acción</div>
+            </div>
+            <div id="searchList" class="table-body"></div>
+          </div>
         </div>
       </section>
 
-      <!-- HISTORIAL (D) -->
+      <!-- HISTORIAL -->
       <section id="historialScreen" class="screen hidden">
         <div class="card">
           <div class="screen-head">
@@ -228,7 +251,30 @@
           </div>
 
           <input id="histSearch" class="input" placeholder="Filtrar por código o producto..." autocomplete="off">
-          <div id="histList" class="list"></div>
+
+          <div class="table-wrap">
+            <div id="histHeadMov" class="table-head cols-hmov">
+              <div>Tipo</div>
+              <div>Código</div>
+              <div>Producto</div>
+              <div class="right">Cant.</div>
+              <div>Fecha</div>
+              <div>Factura</div>
+              <div>Proveedor</div>
+              <div class="right">Acción</div>
+            </div>
+
+            <div id="histHeadDel" class="table-head cols-hdel hidden">
+              <div>Fecha/Hora</div>
+              <div>Tipo</div>
+              <div>Código</div>
+              <div>Producto</div>
+              <div class="right">Cant.</div>
+              <div>Detalle</div>
+            </div>
+
+            <div id="histList" class="table-body"></div>
+          </div>
         </div>
       </section>
 
@@ -237,13 +283,12 @@
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v1.2 ·
+      Ferretería Universal · v1.3 · Sin edición (solo eliminar)
     </footer>
   </div>
 
-  <!-- Librería Excel (SheetJS) -->
+  <!-- Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
   <script src="./script.js"></script>
 </body>
 </html>
