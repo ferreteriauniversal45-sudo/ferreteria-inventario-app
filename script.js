@@ -617,6 +617,21 @@ function exportExcel(){
     return;
   }
 
+  const ok = confirm(
+    "Se generará el reporte diario.\n\n" +
+    "¿Deseas exportar y LIMPIAR los datos del día?\n\n" +
+    "Esto borrará:\n" +
+    "• Entradas\n" +
+    "• Salidas\n" +
+    "• Eliminaciones\n\n" +
+    "El inventario y catálogo NO se borran."
+  );
+
+  if(!ok){
+    toast("Exportación cancelada");
+    return;
+  }
+
   const movs = readJSON(K.MOV, []);
   const dels = readJSON(K.DEL, []);
 
@@ -658,29 +673,28 @@ function exportExcel(){
 
   const filename = `reporte_movimientos_${todayISO()}.xlsx`;
 
-  // ✅ En vez de XLSX.writeFile (crashea en WebView), generamos Blob
   try{
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const wbout = XLSX.write(wb, { bookType:"xlsx", type:"array" });
+    const blob = new Blob(
+      [wbout],
+      { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
+    );
 
     const okDownload = downloadBlob(blob, filename);
     if(!okDownload){
-      toast("No se pudo descargar. Intenta de nuevo.");
+      toast("No se pudo descargar el Excel.");
       return;
     }
 
-    toast("📤 Reporte exportado");
+    // ✅ LIMPIEZA SEGURA (YA CONFIRMADA)
+    localStorage.removeItem(K.MOV);
+    localStorage.removeItem(K.DEL);
+    deltaDirty = true;
 
+    refreshHome();
+    renderHistorial();
 
-      // ✅ Limpieza diaria (solo movimientos y eliminaciones)
-      localStorage.removeItem(K.MOV);
-      localStorage.removeItem(K.DEL);
-      deltaDirty = true;
-
-      refreshHome();
-      renderHistorial();
-      toast("🧹 Datos del día limpiados");
-    }, 350);
+    toast("📤 Reporte exportado y datos limpiados");
 
   }catch(err){
     console.warn(err);
