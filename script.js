@@ -25,6 +25,12 @@ let deltaDirty = true;
 let deltaCache = { ent: {}, sal: {} };
 
 // ==========================
+// CATALOGO FILTERS (UI STATE)
+// ==========================
+let filtroDepartamento = "";
+let filtroStock = false;
+
+// ==========================
 // HELPERS
 // ==========================
 function readJSON(key, fallback){
@@ -148,6 +154,38 @@ function normalizeBase(inv){
 }
 
 // ==========================
+// CATALOGO FILTERS (DEPARTAMENTOS)
+// ==========================
+function cargarDepartamentos(){
+  const select = $("filterDepartamento");
+  if(!select) return;
+
+  const prev = (filtroDepartamento || select.value || "").trim();
+
+  const depsSet = new Set();
+  for(const code of Object.keys(baseCache || {})){
+    const dep = baseCache[code]?.departamento;
+    if(dep) depsSet.add(String(dep));
+  }
+
+  const deps = Array.from(depsSet).sort((a,b) =>
+    a.localeCompare(b, "es", { sensitivity: "base" })
+  );
+
+  select.innerHTML = `<option value="">Todos los departamentos</option>`;
+  for(const dep of deps){
+    const opt = document.createElement("option");
+    opt.value = dep;
+    opt.textContent = dep;
+    select.appendChild(opt);
+  }
+
+  const finalVal = depsSet.has(prev) ? prev : "";
+  select.value = finalVal;
+  filtroDepartamento = finalVal;
+}
+
+// ==========================
 // DELTAS
 // ==========================
 function rebuildDelta(){
@@ -216,12 +254,27 @@ async function syncBase(showMsg){
     }
 
     setNetworkState(true);
+    cargarDepartamentos();
     refreshHome();
+
+    // si estás viendo catálogo, refrescarlo
+    const cat = $("catalogScreen");
+    if(cat && !cat.classList.contains("hidden")){
+      renderCatalog($("catalogSearch")?.value || "");
+    }
 
   }catch(err){
     baseCache = readJSON(K.BASE, {});
     setNetworkState(navigator.onLine);
+    cargarDepartamentos();
     refreshHome();
+
+    // si estás viendo catálogo, refrescarlo
+    const cat = $("catalogScreen");
+    if(cat && !cat.classList.contains("hidden")){
+      renderCatalog($("catalogSearch")?.value || "");
+    }
+
     if(showMsg) toast("⚠️ Sin internet: usando inventario local");
     console.warn(err);
   }
@@ -249,27 +302,41 @@ function refreshHome(){
 }
 
 // ==========================
-// CATALOGO (TABLA)
+// CATALOGO (TABLA) + FILTROS
 // ==========================
 function renderCatalog(query){
   const list = $("catalogList");
   const info = $("catalogInfo");
+  if(!list || !info) return;
+
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
-  const entries = Object.entries(baseCache || {});
-  const total = entries.length;
+  const entriesAll = Object.entries(baseCache || {});
+  const baseTotal = entriesAll.length;
 
-  if(total > 500 && q.length < 2){
+  if(baseTotal > 500 && q.length < 2 && !filtroDepartamento && !filtroStock){
     info.textContent = "Escribe al menos 2 letras/números para buscar (catálogo grande).";
     return;
   }
 
-  if(total === 0){
+  if(baseTotal === 0){
     info.textContent = "No hay inventario cargado. Pulsa 'Actualizar inventario'.";
     return;
   }
 
+  // 1) filtro por departamento
+  let entries = entriesAll;
+  if(filtroDepartamento){
+    entries = entries.filter(([_, data]) => String(data?.departamento || "") === filtroDepartamento);
+  }
+
+  // 2) filtro con stock
+  if(filtroStock){
+    entries = entries.filter(([code]) => getStock(code) > 0);
+  }
+
+  // 3) búsqueda por código o nombre
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
     return code.toLowerCase().includes(q) || name.includes(q);
@@ -653,13 +720,13 @@ function exportExcel(){
   renderHistorial();
 }
 
-
 // ==========================
 // INIT
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
+  cargarDepartamentos();
   refreshHome();
   showScreen("homeScreen");
 
@@ -672,6 +739,18 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnCatalogo").addEventListener("click", () => {
     showScreen("catalogScreen");
     $("catalogSearch").value = "";
+
+    // reset filtros al abrir Catálogo
+    filtroDepartamento = "";
+    filtroStock = false;
+
+    const selDep = $("filterDepartamento");
+    if(selDep) selDep.value = "";
+
+    const btnStock = $("btnFilterStock");
+    if(btnStock) btnStock.classList.remove("active");
+
+    cargarDepartamentos();
     renderCatalog("");
   });
 
@@ -738,6 +817,39 @@ document.addEventListener("DOMContentLoaded", () => {
   $("tabMov").addEventListener("click", () => setHistTab("mov"));
   $("tabDel").addEventListener("click", () => setHistTab("del"));
   $("histSearch").addEventListener("input", renderHistorial);
+
+  // ==========================
+  // EVENTOS FILTROS CATALOGO
+  // ==========================
+  const selDep = $("filterDepartamento");
+  if(selDep){
+    selDep.addEventListener("change", (e) => {
+      filtroDepartamento = e.target.value || "";
+      renderCatalog($("catalogSearch")?.value || "");
+    });
+  }
+
+  const btnStock = $("btnFilterStock");
+  if(btnStock){
+    btnStock.addEventListener("click", () => {
+      filtroStock = !filtroStock;
+      btnStock.classList.toggle("active", filtroStock);
+      renderCatalog($("catalogSearch")?.value || "");
+    });
+  }
+
+  const btnClear = $("btnClearFilters");
+  if(btnClear){
+    btnClear.addEventListener("click", () => {
+      filtroDepartamento = "";
+      filtroStock = false;
+
+      if(selDep) selDep.value = "";
+      if(btnStock) btnStock.classList.remove("active");
+
+      renderCatalog($("catalogSearch")?.value || "");
+    });
+  }
 
   // sync silencioso al iniciar
   syncBase(false);
