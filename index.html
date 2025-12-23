@@ -99,18 +99,33 @@
         </div>
       </section>
 
-      <!-- CATALOGO -->
+     <!-- CATALOGO -->
       <section id="catalogScreen" class="screen hidden">
         <div class="card">
           <div class="screen-head">
             <h2 class="h2">Catálogo</h2>
-            <button class="btn small" id="btnBackCatalog" type="button">⬅</button>
+            <button class="btn small" id="btnBackCatalog">⬅</button>
           </div>
 
-          <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
+          <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
+
+          <!-- 🔽 FILTROS -->
+          <div class="filters">
+            <select id="filterDepartamento" class="input small">
+              <option value="">Todos los departamentos</option>
+            </select>
+
+            <button class="btn small" id="btnFilterStock">
+              📦 Con stock
+            </button>
+
+            <button class="btn small ghost" id="btnClearFilters">
+              ❌ Quitar filtros
+            </button>
+          </div>
+
           <div id="catalogInfo" class="note"></div>
 
-          <!-- ✅ Tabla en PC, tarjetas en móvil -->
           <div class="table-wrap">
             <div class="table-head cols-catalog">
               <div>Código</div>
