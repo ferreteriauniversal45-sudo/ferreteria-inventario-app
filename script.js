@@ -29,6 +29,29 @@ let deltaCache = { ent: {}, sal: {} };
 // ==========================
 let filtroDepartamento = "";
 let filtroStock = false;
+const CATALOG_INITIAL_LIMIT = 80;  // cuantos productos mostrar al entrar sin buscar
+const CATALOG_MAX_RENDER = 250;    // límite cuando ya estás buscando
+
+// ==========================
+// FACTURAS MULTI-ITEM (DRAFTS)
+// ==========================
+let entradaItems = []; // [{codigo, cantidad}]
+let salidaItems  = []; // [{codigo, cantidad}]
+
+function sumItems(items, code){
+  const c = String(code || "").trim().toUpperCase();
+  return items.reduce((acc, it) => acc + (it.codigo === c ? Number(it.cantidad || 0) : 0), 0);
+}
+
+function clearEntradaDraft(){
+  entradaItems = [];
+  renderEntradaItems();
+}
+function clearSalidaDraft(){
+  salidaItems = [];
+  renderSalidaItems();
+  updateSalidaStockHint();
+}
 
 // ==========================
 // HELPERS
@@ -58,6 +81,7 @@ function nowISO(){
 let toastTimer = null;
 function toast(msg){
   const t = $("toast");
+  if(!t) return;
   t.textContent = msg;
   t.classList.add("show");
   clearTimeout(toastTimer);
@@ -104,7 +128,8 @@ function downloadBlob(blob, filename){
 const screens = ["homeScreen","catalogScreen","entradaScreen","salidaScreen","searchScreen","historialScreen"];
 function showScreen(id){
   for(const s of screens){
-    $(s).classList.toggle("hidden", s !== id);
+    const el = $(s);
+    if(el) el.classList.toggle("hidden", s !== id);
   }
 }
 
@@ -113,9 +138,12 @@ function showScreen(id){
 // ==========================
 function setNetworkState(isOnline){
   const icon = $("netIcon");
-  icon.classList.toggle("online", !!isOnline);
-  icon.classList.toggle("offline", !isOnline);
-  $("homeEstado").textContent = isOnline ? "ON" : "OFF";
+  if(icon){
+    icon.classList.toggle("online", !!isOnline);
+    icon.classList.toggle("offline", !isOnline);
+  }
+  const estado = $("homeEstado");
+  if(estado) estado.textContent = isOnline ? "ON" : "OFF";
 }
 window.addEventListener("online", () => setNetworkState(true));
 window.addEventListener("offline", () => setNetworkState(false));
@@ -224,9 +252,11 @@ async function syncBase(showMsg){
   const btn = $("btnSync");
   const icon = $("netIcon");
 
-  btn.disabled = true;
-  btn.textContent = "Actualizando...";
-  icon.classList.add("spin");
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Actualizando...";
+  }
+  if(icon) icon.classList.add("spin");
 
   try{
     const verRes = await fetch(VERSION_URL, { cache: "no-store" });
@@ -269,7 +299,6 @@ async function syncBase(showMsg){
     cargarDepartamentos();
     refreshHome();
 
-    // si estás viendo catálogo, refrescarlo
     const cat = $("catalogScreen");
     if(cat && !cat.classList.contains("hidden")){
       renderCatalog($("catalogSearch")?.value || "");
@@ -279,9 +308,11 @@ async function syncBase(showMsg){
     console.warn(err);
   }
 
-  btn.disabled = false;
-  btn.textContent = "Actualizar inventario";
-  icon.classList.remove("spin");
+  if(btn){
+    btn.disabled = false;
+    btn.textContent = "Actualizar inventario";
+  }
+  if(icon) icon.classList.remove("spin");
   syncing = false;
 }
 
@@ -290,15 +321,15 @@ async function syncBase(showMsg){
 // ==========================
 function refreshHome(){
   const ver = localStorage.getItem(K.VER) || "—";
-  $("homeVersion").textContent = ver;
+  if($("homeVersion")) $("homeVersion").textContent = ver;
 
   const total = Object.keys(baseCache || {}).length;
-  $("homeProductos").textContent = String(total);
+  if($("homeProductos")) $("homeProductos").textContent = String(total);
 
   const movs = readJSON(K.MOV, []);
   const h = todayISO();
   const movHoy = movs.filter(m => String(m.fecha||"").slice(0,10) === h).length;
-  $("homeMovHoy").textContent = String(movHoy);
+  if($("homeMovHoy")) $("homeMovHoy").textContent = String(movHoy);
 }
 
 // ==========================
@@ -312,31 +343,54 @@ function renderCatalog(query){
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
-  const entriesAll = Object.entries(baseCache || {});
-  const baseTotal = entriesAll.length;
 
-  if(baseTotal > 500 && q.length < 2 && !filtroDepartamento && !filtroStock){
-    info.textContent = "Escribe al menos 2 letras/números para buscar (catálogo grande).";
-    return;
-  }
+  // Base
+  let entries = Object.entries(baseCache || {});
+  const baseTotal = entries.length;
 
   if(baseTotal === 0){
     info.textContent = "No hay inventario cargado. Pulsa 'Actualizar inventario'.";
     return;
   }
 
-  // 1) filtro por departamento
-  let entries = entriesAll;
-  if(filtroDepartamento){
+  // ✅ Aplicar filtros (si existen en tu script)
+  if(typeof filtroDepartamento !== "undefined" && filtroDepartamento){
     entries = entries.filter(([_, data]) => String(data?.departamento || "") === filtroDepartamento);
   }
-
-  // 2) filtro con stock
-  if(filtroStock){
+  if(typeof filtroStock !== "undefined" && filtroStock){
     entries = entries.filter(([code]) => getStock(code) > 0);
   }
 
-  // 3) búsqueda por código o nombre
+  // ✅ SI NO HAY BÚSQUEDA: mostrar vista previa (para que siempre se vea catálogo)
+  if(q.length === 0){
+    // (opcional) ordenar por código para que se vea "limpio"
+    entries.sort((a,b) => a[0].localeCompare(b[0], "es", { numeric:true, sensitivity:"base" }));
+
+    const show = entries.slice(0, CATALOG_INITIAL_LIMIT);
+
+    if(entries.length > show.length){
+      info.textContent = `Mostrando ${show.length} de ${entries.length}. Escribe para buscar o usa filtros.`;
+    }else{
+      info.textContent = `Productos: ${entries.length}`;
+    }
+
+    for(const [code, data] of show){
+      const stock = getStock(code);
+
+      const row = document.createElement("div");
+      row.className = "trow cols-catalog";
+      row.innerHTML = `
+        <div class="cell" data-label="Código">${escapeHtml(code)}</div>
+        <div class="cell wrap" data-label="Producto">${escapeHtml(data.producto || "(sin nombre)")}</div>
+        <div class="cell" data-label="Departamento">${escapeHtml(data.departamento || "")}</div>
+        <div class="cell right" data-label="Stock">${escapeHtml(String(stock))}</div>
+      `;
+      list.appendChild(row);
+    }
+    return;
+  }
+
+  // ✅ SI HAY BÚSQUEDA: filtrar por código o nombre
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
     return code.toLowerCase().includes(q) || name.includes(q);
@@ -347,7 +401,8 @@ function renderCatalog(query){
     return;
   }
 
-  const show = filtered.slice(0, 250);
+  const show = filtered.slice(0, CATALOG_MAX_RENDER);
+
   if(filtered.length > show.length){
     info.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
   }else{
@@ -368,6 +423,7 @@ function renderCatalog(query){
     list.appendChild(row);
   }
 }
+
 
 // ==========================
 // BUSCADOR (TABLA) (B2)
@@ -450,7 +506,7 @@ function renderSearch(query){
 }
 
 // ==========================
-// ENTRADAS / SALIDAS
+// ENTRADAS / SALIDAS (AUTO-LLENADO)
 // ==========================
 function fillProductoFromCode(context){
   if(context === "entrada"){
@@ -470,86 +526,263 @@ function updateSalidaStockHint(){
     $("salidaStockInfo").textContent = "";
     return;
   }
-  const stock = getStock(code);
-  $("salidaStockInfo").textContent = `Stock disponible: ${stock}`;
+  const stockReal = getStock(code);
+  const reservado = sumItems(salidaItems, code);
+  const disponible = stockReal - reservado;
+
+  const extra = reservado > 0 ? ` (en factura: ${reservado})` : "";
+  $("salidaStockInfo").textContent = `Stock disponible: ${disponible}${extra}`;
 }
 
-function saveEntrada(){
+// ==========================
+// FACTURAS MULTI-ITEM: RENDER LISTS
+// ==========================
+function renderEntradaItems(){
+  const info = $("entradaItemsInfo");
+  const list = $("entradaItemsList");
+  if(!info || !list) return;
+
+  list.innerHTML = "";
+
+  if(entradaItems.length === 0){
+    info.textContent = "Factura vacía.";
+    return;
+  }
+
+  const totalPiezas = entradaItems.reduce((a,it)=>a+Number(it.cantidad||0),0);
+  info.textContent = `Productos en factura: ${entradaItems.length} · Total piezas: ${totalPiezas}`;
+
+  for(const it of entradaItems){
+    const data = baseCache[it.codigo] || {};
+    const row = document.createElement("div");
+    row.className = "item-row";
+    row.innerHTML = `
+      <div class="item-left">
+        <div class="item-title">${escapeHtml(it.codigo)} · ${escapeHtml(data.producto || "(sin nombre)")}</div>
+        <div class="item-meta">Depto: ${escapeHtml(data.departamento || "")}</div>
+        <div class="item-qty">Cantidad: ${escapeHtml(String(it.cantidad))}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn tiny danger" type="button">Quitar</button>
+      </div>
+    `;
+    row.querySelector("button").addEventListener("click", () => {
+      entradaItems = entradaItems.filter(x => x.codigo !== it.codigo);
+      renderEntradaItems();
+      toast("Producto quitado");
+    });
+    list.appendChild(row);
+  }
+}
+
+function renderSalidaItems(){
+  const info = $("salidaItemsInfo");
+  const list = $("salidaItemsList");
+  if(!info || !list) return;
+
+  list.innerHTML = "";
+
+  if(salidaItems.length === 0){
+    info.textContent = "Factura vacía.";
+    return;
+  }
+
+  const totalPiezas = salidaItems.reduce((a,it)=>a+Number(it.cantidad||0),0);
+  info.textContent = `Productos en factura: ${salidaItems.length} · Total piezas: ${totalPiezas}`;
+
+  for(const it of salidaItems){
+    const data = baseCache[it.codigo] || {};
+    const row = document.createElement("div");
+    row.className = "item-row";
+    row.innerHTML = `
+      <div class="item-left">
+        <div class="item-title">${escapeHtml(it.codigo)} · ${escapeHtml(data.producto || "(sin nombre)")}</div>
+        <div class="item-meta">Depto: ${escapeHtml(data.departamento || "")}</div>
+        <div class="item-qty">Cantidad: ${escapeHtml(String(it.cantidad))}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn tiny danger" type="button">Quitar</button>
+      </div>
+    `;
+    row.querySelector("button").addEventListener("click", () => {
+      salidaItems = salidaItems.filter(x => x.codigo !== it.codigo);
+      renderSalidaItems();
+      updateSalidaStockHint();
+      toast("Producto quitado");
+    });
+    list.appendChild(row);
+  }
+}
+
+// ==========================
+// FACTURAS MULTI-ITEM: ADD ITEM
+// ==========================
+function addEntradaItem(){
   const codigo = String($("entradaCodigo").value||"").trim().toUpperCase();
   const cantidad = Number($("entradaCantidad").value);
+
+  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0){
+    toast("Código y cantidad válidos.");
+    return;
+  }
+  if(!baseCache[codigo]){
+    toast("Código no existe en inventario base.");
+    return;
+  }
+
+  const idx = entradaItems.findIndex(x => x.codigo === codigo);
+  if(idx >= 0) entradaItems[idx].cantidad += cantidad;
+  else entradaItems.push({ codigo, cantidad });
+
+  // limpiar campos de producto para el siguiente
+  $("entradaCodigo").value = "";
+  $("entradaProducto").value = "";
+  $("entradaCantidad").value = "";
+
+  renderEntradaItems();
+  toast("➕ Agregado a la factura");
+}
+
+function addSalidaItem(){
+  const codigo = String($("salidaCodigo").value||"").trim().toUpperCase();
+  const cantidad = Number($("salidaCantidad").value);
+
+  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0){
+    toast("Código y cantidad válidos.");
+    return;
+  }
+  if(!baseCache[codigo]){
+    toast("Código no existe en inventario base.");
+    return;
+  }
+
+  const stockReal = getStock(codigo);
+  const reservado = sumItems(salidaItems, codigo);
+  const disponible = stockReal - reservado;
+
+  if(cantidad > disponible){
+    toast(`Stock insuficiente. Disponible: ${disponible}`);
+    return;
+  }
+
+  const idx = salidaItems.findIndex(x => x.codigo === codigo);
+  if(idx >= 0) salidaItems[idx].cantidad += cantidad;
+  else salidaItems.push({ codigo, cantidad });
+
+  $("salidaCodigo").value = "";
+  $("salidaProducto").value = "";
+  $("salidaCantidad").value = "";
+
+  renderSalidaItems();
+  updateSalidaStockHint();
+  toast("➕ Agregado a la factura");
+}
+
+// ==========================
+// FACTURAS MULTI-ITEM: SAVE FACTURA
+// ==========================
+function saveFacturaEntrada(){
   const proveedor = String($("entradaProveedor").value||"").trim();
   const factura = String($("entradaFactura").value||"").trim();
   const fecha = $("entradaFecha").value || todayISO();
 
-  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0 || !proveedor || !factura || !fecha){
-    toast("Completa todos los campos.");
+  if(entradaItems.length === 0){
+    toast("Agrega al menos 1 producto.");
     return;
   }
-  if(!baseCache[codigo]){
-    toast("Código no existe en inventario base. Actualiza o revisa.");
+  if(!proveedor || !factura || !fecha){
+    toast("Completa Proveedor, Factura y Fecha.");
     return;
   }
 
+  const grupoId = makeId();
   const movs = readJSON(K.MOV, []);
-  movs.push({
-    id: makeId(),
-    tipo: "entrada",
-    codigo,
-    producto: baseCache[codigo].producto || "",
-    departamento: baseCache[codigo].departamento || "",
-    cantidad,
-    proveedor,
-    factura,
-    fecha,
-    timestamp: Date.now()
-  });
+
+  for(const it of entradaItems){
+    const codigo = it.codigo;
+    const cantidad = Number(it.cantidad);
+
+    movs.push({
+      id: makeId(),
+      grupoId,
+      tipo: "entrada",
+      codigo,
+      producto: baseCache[codigo]?.producto || "",
+      departamento: baseCache[codigo]?.departamento || "",
+      cantidad,
+      proveedor,
+      factura,
+      fecha,
+      timestamp: Date.now()
+    });
+  }
+
   writeJSON(K.MOV, movs);
   deltaDirty = true;
 
-  toast("✅ Entrada guardada");
+  toast("✅ Factura de entrada guardada");
   refreshHome();
+
+  // limpiar draft (pero dejamos proveedor/factura/fecha por si van a capturar otra)
+  clearEntradaDraft();
+
   showScreen("homeScreen");
 }
 
-function saveSalida(){
-  const codigo = String($("salidaCodigo").value||"").trim().toUpperCase();
-  const cantidad = Number($("salidaCantidad").value);
+function saveFacturaSalida(){
   const factura = String($("salidaFactura").value||"").trim();
   const fecha = $("salidaFecha").value || todayISO();
 
-  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0 || !factura || !fecha){
-    toast("Completa todos los campos.");
+  if(salidaItems.length === 0){
+    toast("Agrega al menos 1 producto.");
     return;
   }
-  if(!baseCache[codigo]){
-    toast("Código no existe en inventario base. Actualiza o revisa.");
-    return;
-  }
-
-  const stock = getStock(codigo);
-  if(cantidad > stock){
-    toast(`Stock insuficiente. Disponible: ${stock}`);
+  if(!factura || !fecha){
+    toast("Completa Factura y Fecha.");
     return;
   }
 
+  // validación final de stock (por seguridad)
+  for(const it of salidaItems){
+    const stockReal = getStock(it.codigo);
+    const reservado = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
+    const disponible = stockReal - reservado;
+    if(Number(it.cantidad) > disponible){
+      toast(`Stock insuficiente en ${it.codigo}. Disponible: ${disponible}`);
+      return;
+    }
+  }
+
+  const grupoId = makeId();
   const movs = readJSON(K.MOV, []);
-  movs.push({
-    id: makeId(),
-    tipo: "salida",
-    codigo,
-    producto: baseCache[codigo].producto || "",
-    departamento: baseCache[codigo].departamento || "",
-    cantidad,
-    proveedor: "",
-    factura,
-    fecha,
-    timestamp: Date.now()
-  });
+
+  for(const it of salidaItems){
+    const codigo = it.codigo;
+    const cantidad = Number(it.cantidad);
+
+    movs.push({
+      id: makeId(),
+      grupoId,
+      tipo: "salida",
+      codigo,
+      producto: baseCache[codigo]?.producto || "",
+      departamento: baseCache[codigo]?.departamento || "",
+      cantidad,
+      proveedor: "",
+      factura,
+      fecha,
+      timestamp: Date.now()
+    });
+  }
+
   writeJSON(K.MOV, movs);
   deltaDirty = true;
 
-  toast("✅ Salida guardada");
+  toast("✅ Factura de salida guardada");
   refreshHome();
+
+  clearSalidaDraft();
+
   showScreen("homeScreen");
 }
 
@@ -558,22 +791,44 @@ function saveSalida(){
 // ==========================
 function setHistTab(tab){
   historialTab = tab;
-  $("tabMov").classList.toggle("active", tab === "mov");
-  $("tabDel").classList.toggle("active", tab === "del");
 
+  // Tabs
+  $("tabMov").classList.remove("active");
+  $("tabDel").classList.remove("active");
+
+  if(tab === "mov"){
+    $("tabMov").classList.add("active");
+  }else{
+    $("tabDel").classList.add("active");
+  }
+
+  // Headers
   $("histHeadMov").classList.toggle("hidden", tab !== "mov");
   $("histHeadDel").classList.toggle("hidden", tab !== "del");
+
+  // Limpiar lista y volver a renderizar
+  const list = $("histList");
+  if(list) list.innerHTML = "";
 
   renderHistorial();
 }
 
+
 function renderHistorial(){
   const q = ($("histSearch").value || "").toLowerCase().trim();
   const list = $("histList");
+  if(!list) return;
+
   list.innerHTML = "";
 
+  // ======================
+  // MOVIMIENTOS
+  // ======================
   if(historialTab === "mov"){
-    const movs = readJSON(K.MOV, []).slice().sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+    const movs = readJSON(K.MOV, [])
+      .slice()
+      .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+
     const filtered = movs.filter(m => {
       const c = String(m.codigo||"").toLowerCase();
       const p = String(m.producto||"").toLowerCase();
@@ -581,42 +836,37 @@ function renderHistorial(){
     });
 
     if(filtered.length === 0){
-      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin movimientos.</div></div>`;
+      list.innerHTML = `<div class="trow"><div class="cell">Sin movimientos.</div></div>`;
       return;
     }
 
     for(const m of filtered){
       const row = document.createElement("div");
       row.className = "trow cols-hmov";
-
-      const tipo = m.tipo === "entrada" ? "ENTRADA" : "SALIDA";
-      const proveedor = m.tipo === "entrada" ? (m.proveedor || "") : "";
-
       row.innerHTML = `
-        <div class="cell" data-label="Tipo">${escapeHtml(tipo)}</div>
-        <div class="cell" data-label="Código">${escapeHtml(m.codigo||"")}</div>
-        <div class="cell wrap" data-label="Producto">${escapeHtml(m.producto||"")}</div>
-        <div class="cell right" data-label="Cant.">${escapeHtml(String(m.cantidad||0))}</div>
-        <div class="cell" data-label="Fecha">${escapeHtml(m.fecha||"")}</div>
-        <div class="cell" data-label="Factura">${escapeHtml(m.factura||"")}</div>
-        <div class="cell" data-label="Proveedor">${escapeHtml(proveedor)}</div>
-        <div class="cell right" data-label="">
-         <button
-  class="btn small danger row-action"
-  type="button"
-  data-id="${m.id}">
-  Eliminar
-</button>
+        <div class="cell">${m.tipo === "entrada" ? "ENTRADA" : "SALIDA"}</div>
+        <div class="cell">${escapeHtml(m.codigo)}</div>
+        <div class="cell wrap">${escapeHtml(m.producto)}</div>
+        <div class="cell right">${m.cantidad}</div>
+        <div class="cell">${m.fecha}</div>
+        <div class="cell">${escapeHtml(m.factura || "")}</div>
+        <div class="cell">${escapeHtml(m.proveedor || "")}</div>
+        <div class="cell right">
+          <button class="btn small danger row-action" data-id="${m.id}">Eliminar</button>
         </div>
       `;
-
-      
+      list.appendChild(row);
     }
-
     return;
   }
 
-  const dels = readJSON(K.DEL, []).slice().sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+  // ======================
+  // ELIMINACIONES
+  // ======================
+  const dels = readJSON(K.DEL, [])
+    .slice()
+    .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+
   const filtered = dels.filter(d => {
     const c = String(d.codigo||"").toLowerCase();
     const p = String(d.producto||"").toLowerCase();
@@ -624,7 +874,7 @@ function renderHistorial(){
   });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin eliminaciones.</div></div>`;
+    list.innerHTML = `<div class="trow"><div class="cell">Sin eliminaciones.</div></div>`;
     return;
   }
 
@@ -632,19 +882,22 @@ function renderHistorial(){
     const row = document.createElement("div");
     row.className = "trow cols-hdel";
     row.innerHTML = `
-      <div class="cell" data-label="Fecha/Hora">${escapeHtml(d.fechaHora||"")}</div>
-      <div class="cell" data-label="Tipo">${escapeHtml(d.tipo||"")}</div>
-      <div class="cell" data-label="Código">${escapeHtml(d.codigo||"")}</div>
-      <div class="cell wrap" data-label="Producto">${escapeHtml(d.producto||"")}</div>
-      <div class="cell right" data-label="Cant.">${escapeHtml(String(d.cantidad||0))}</div>
-      <div class="cell wrap" data-label="Detalle">${escapeHtml(d.detalle||"")}</div>
+      <div class="cell">${escapeHtml(d.fechaHora)}</div>
+      <div class="cell">${escapeHtml(d.tipo)}</div>
+      <div class="cell">${escapeHtml(d.codigo)}</div>
+      <div class="cell wrap">${escapeHtml(d.producto)}</div>
+      <div class="cell right">${d.cantidad}</div>
+      <div class="cell wrap">${escapeHtml(d.detalle)}</div>
     `;
     list.appendChild(row);
   }
 }
 
-function deleteMovimiento(id){
-  const ok = confirm("¿Eliminar este movimiento? (quedará registrado en Eliminaciones)");
+
+async function deleteMovimiento(id){
+  const ok = await uiConfirm(
+    "¿Eliminar este movimiento? (quedará registrado en Eliminaciones)"
+  );
   if(!ok) return;
 
   const movs = readJSON(K.MOV, []);
@@ -679,8 +932,40 @@ function deleteMovimiento(id){
   renderHistorial();
 }
 
+
 // ==========================
-// EXPORT EXCEL (MEJORADO + CONFIRMAR + LIMPIAR)
+// CONFIRM MODAL (sin window.confirm)
+// ==========================
+function uiConfirm(message){
+  return new Promise(resolve => {
+    const overlay = document.getElementById("confirmOverlay");
+    const msg = document.getElementById("confirmMessage");
+    const btnOk = document.getElementById("confirmOk");
+    const btnCancel = document.getElementById("confirmCancel");
+
+    msg.textContent = message;
+    overlay.classList.remove("hidden");
+
+    const cleanup = (result) => {
+      overlay.classList.add("hidden");
+      btnOk.onclick = null;
+      btnCancel.onclick = null;
+      overlay.onclick = null;
+      resolve(result);
+    };
+
+    btnOk.onclick = () => cleanup(true);
+    btnCancel.onclick = () => cleanup(false);
+
+    overlay.onclick = (e) => {
+      if(e.target === overlay) cleanup(false);
+    };
+  });
+}
+
+
+// ==========================
+// EXPORT EXCEL
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -707,12 +992,11 @@ function exportExcel(){
   const wbout = XLSX.write(wb,{bookType:"xlsx",type:"base64"});
   const filename = `reporte_${todayISO()}.xlsx`;
 
-  // 👉 ANDROID GUARDA EL ARCHIVO
   if(window.Android){
     Android.saveFile(wbout, filename);
     toast("📥 Archivo guardado en Descargas");
   }else{
-    XLSX.writeFile(wb, filename); // navegador
+    XLSX.writeFile(wb, filename);
   }
 
   // LIMPIEZA AUTOMÁTICA
@@ -734,27 +1018,15 @@ document.addEventListener("DOMContentLoaded", () => {
   refreshHome();
   showScreen("homeScreen");
 
-  $("entradaFecha").value = todayISO();
-  $("salidaFecha").value = todayISO();
+  if($("entradaFecha")) $("entradaFecha").value = todayISO();
+  if($("salidaFecha")) $("salidaFecha").value = todayISO();
 
-  $("btnSync").addEventListener("click", () => syncBase(true));
-  $("btnExport").addEventListener("click", exportExcel);
+  $("btnSync")?.addEventListener("click", () => syncBase(true));
+  $("btnExport")?.addEventListener("click", exportExcel);
 
-  $("btnCatalogo").addEventListener("click", () => {
+  $("btnCatalogo")?.addEventListener("click", () => {
     showScreen("catalogScreen");
     $("catalogSearch").value = "";
-$("histList").addEventListener("click", (e) => {
-  const btn = e.target.closest("button.row-action");
-  if(!btn) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const id = btn.dataset.id;
-  if(id){
-    deleteMovimiento(id);
-  }
-});
 
     // reset filtros al abrir Catálogo
     filtroDepartamento = "";
@@ -770,69 +1042,83 @@ $("histList").addEventListener("click", (e) => {
     renderCatalog("");
   });
 
-  $("btnEntrada").addEventListener("click", () => {
+  $("btnEntrada")?.addEventListener("click", () => {
     showScreen("entradaScreen");
     $("entradaFecha").value = todayISO();
     $("entradaCodigo").value = "";
     $("entradaProducto").value = "";
     $("entradaCantidad").value = "";
-    $("entradaProveedor").value = "";
-    $("entradaFactura").value = "";
+
+    // No borramos proveedor/factura automáticamente por si capturan varias facturas seguidas
+    // pero si quieres, descomenta:
+    // $("entradaProveedor").value = "";
+    // $("entradaFactura").value = "";
+
+    clearEntradaDraft();
   });
 
-  $("btnSalida").addEventListener("click", () => {
+  $("btnSalida")?.addEventListener("click", () => {
     showScreen("salidaScreen");
     $("salidaFecha").value = todayISO();
     $("salidaCodigo").value = "";
     $("salidaProducto").value = "";
     $("salidaCantidad").value = "";
     $("salidaFactura").value = "";
-    updateSalidaStockHint();
+
+    clearSalidaDraft();
   });
 
-  $("btnHistorial").addEventListener("click", () => {
+  $("btnHistorial")?.addEventListener("click", () => {
     showScreen("historialScreen");
     $("histSearch").value = "";
     setHistTab("mov");
   });
 
-  $("btnBackCatalog").addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackEntrada").addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackSalida").addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackHistorial").addEventListener("click", () => showScreen("homeScreen"));
+  $("btnBackCatalog")?.addEventListener("click", () => showScreen("homeScreen"));
+  $("btnBackEntrada")?.addEventListener("click", () => showScreen("homeScreen"));
+  $("btnBackSalida")?.addEventListener("click", () => showScreen("homeScreen"));
+  $("btnBackHistorial")?.addEventListener("click", () => showScreen("homeScreen"));
 
-  $("btnBackSearch").addEventListener("click", () => {
+  $("btnBackSearch")?.addEventListener("click", () => {
     if(currentSearchContext === "entrada") showScreen("entradaScreen");
     else if(currentSearchContext === "salida") showScreen("salidaScreen");
     else showScreen("homeScreen");
   });
 
-  $("catalogSearch").addEventListener("input", (e) => renderCatalog(e.target.value));
-  $("entradaCodigo").addEventListener("input", () => fillProductoFromCode("entrada"));
-  $("salidaCodigo").addEventListener("input", () => fillProductoFromCode("salida"));
+  $("catalogSearch")?.addEventListener("input", (e) => renderCatalog(e.target.value));
+  $("entradaCodigo")?.addEventListener("input", () => fillProductoFromCode("entrada"));
+  $("salidaCodigo")?.addEventListener("input", () => fillProductoFromCode("salida"));
 
-  $("btnBuscarEntrada").addEventListener("click", () => {
+  $("btnBuscarEntrada")?.addEventListener("click", () => {
     currentSearchContext = "entrada";
     showScreen("searchScreen");
     $("searchInput").value = "";
     renderSearch("");
   });
 
-  $("btnBuscarSalida").addEventListener("click", () => {
+  $("btnBuscarSalida")?.addEventListener("click", () => {
     currentSearchContext = "salida";
     showScreen("searchScreen");
     $("searchInput").value = "";
     renderSearch("");
   });
 
-  $("searchInput").addEventListener("input", (e) => renderSearch(e.target.value));
+  $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  $("btnGuardarEntrada").addEventListener("click", saveEntrada);
-  $("btnGuardarSalida").addEventListener("click", saveSalida);
+  // ====== FACTURAS MULTI-ITEM: BOTONES ======
+  $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
+  $("btnClearEntradaItems")?.addEventListener("click", () => {
+    clearEntradaDraft();
+    toast("Factura vaciada");
+  });
+  $("btnGuardarEntrada")?.addEventListener("click", saveFacturaEntrada);
 
-  $("tabMov").addEventListener("click", () => setHistTab("mov"));
-  $("tabDel").addEventListener("click", () => setHistTab("del"));
-  $("histSearch").addEventListener("input", renderHistorial);
+  $("btnAddSalidaItem")?.addEventListener("click", addSalidaItem);
+  $("btnClearSalidaItems")?.addEventListener("click", () => {
+    clearSalidaDraft();
+    toast("Factura vaciada");
+  });
+  $("btnGuardarSalida")?.addEventListener("click", saveFacturaSalida);
 
   // ==========================
   // EVENTOS FILTROS CATALOGO
@@ -854,19 +1140,20 @@ $("histList").addEventListener("click", (e) => {
     });
   }
 
-  const btnClear = $("btnClearFilters");
-  if(btnClear){
-    btnClear.addEventListener("click", () => {
-      filtroDepartamento = "";
-      filtroStock = false;
+  $("btnClearFilters")?.addEventListener("click", () => {
+    filtroDepartamento = "";
+    filtroStock = false;
 
-      if(selDep) selDep.value = "";
-      if(btnStock) btnStock.classList.remove("active");
+    if(selDep) selDep.value = "";
+    if(btnStock) btnStock.classList.remove("active");
 
-      renderCatalog($("catalogSearch")?.value || "");
-    });
-  }
+    renderCatalog($("catalogSearch")?.value || "");
+  });
 
   // sync silencioso al iniciar
   syncBase(false);
+
+  // render inicial de drafts por si recargas en esas pantallas
+  renderEntradaItems();
+  renderSalidaItems();
 });
