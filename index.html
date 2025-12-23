@@ -179,7 +179,16 @@
             <input id="entradaFecha" class="input" type="date">
           </div>
 
-          <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar entrada</button>
+          <button class="btn" id="btnAddEntradaItem" type="button">➕ Agregar producto a factura</button>
+
+<div class="note" id="entradaItemsInfo">Factura vacía.</div>
+<div id="entradaItemsList" class="items-list"></div>
+
+<div class="btn-row">
+  <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
+  <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar factura</button>
+</div>
+
         </div>
       </section>
 
@@ -220,7 +229,16 @@
             <input id="salidaFecha" class="input" type="date">
           </div>
 
-          <button class="btn primary" id="btnGuardarSalida" type="button">Guardar salida</button>
+         <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
+
+<div class="note" id="salidaItemsInfo">Factura vacía.</div>
+<div id="salidaItemsList" class="items-list"></div>
+
+<div class="btn-row">
+  <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
+  <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
+</div>
+
         </div>
       </section>
 
