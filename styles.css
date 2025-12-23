@@ -515,3 +515,67 @@ body{
   border-color:rgba(11,47,122,.45);
 }
 
+/* ===== FACTURAS (LISTA DE ITEMS) ===== */
+.items-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
+
+.item-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  padding:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:16px;
+}
+
+.item-left{
+  min-width: 0;
+}
+
+.item-title{
+  font-weight:900;
+  font-size:13.5px;
+  margin:0;
+}
+
+.item-meta{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.25;
+  word-break: break-word;
+}
+
+.item-qty{
+  font-weight:900;
+  margin-top:6px;
+  font-size:13px;
+}
+
+.item-actions{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+}
+
+.btn.tiny{
+  width:auto;
+  padding:8px 10px;
+  border-radius:12px;
+  font-size:12.5px;
+}
+
+.btn-row{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+.btn-row .btn{
+  width:100%;
+}
