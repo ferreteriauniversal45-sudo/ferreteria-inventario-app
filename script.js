@@ -1049,11 +1049,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("entradaProducto").value = "";
     $("entradaCantidad").value = "";
 
-    // No borramos proveedor/factura automáticamente por si capturan varias facturas seguidas
-    // pero si quieres, descomenta:
-    // $("entradaProveedor").value = "";
-    // $("entradaFactura").value = "";
-
     clearEntradaDraft();
   });
 
@@ -1119,6 +1114,9 @@ document.addEventListener("DOMContentLoaded", () => {
     toast("Factura vaciada");
   });
   $("btnGuardarSalida")?.addEventListener("click", saveFacturaSalida);
+  $("tabMov").addEventListener("click", () => setHistTab("mov"));
+  $("tabDel").addEventListener("click", () => setHistTab("del"));
+  $("histSearch").addEventListener("input", renderHistorial);
 
   // ==========================
   // EVENTOS FILTROS CATALOGO
