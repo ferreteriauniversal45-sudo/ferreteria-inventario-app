@@ -29,6 +29,8 @@ let deltaCache = { ent: {}, sal: {} };
 // ==========================
 let filtroDepartamento = "";
 let filtroStock = false;
+const CATALOG_INITIAL_LIMIT = 80;  // cuantos productos mostrar al entrar sin buscar
+const CATALOG_MAX_RENDER = 250;    // límite cuando ya estás buscando
 
 // ==========================
 // FACTURAS MULTI-ITEM (DRAFTS)
@@ -341,31 +343,54 @@ function renderCatalog(query){
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
-  const entriesAll = Object.entries(baseCache || {});
-  const baseTotal = entriesAll.length;
 
-  if(baseTotal > 500 && q.length < 2 && !filtroDepartamento && !filtroStock){
-    info.textContent = "Escribe al menos 2 letras/números para buscar (catálogo grande).";
-    return;
-  }
+  // Base
+  let entries = Object.entries(baseCache || {});
+  const baseTotal = entries.length;
 
   if(baseTotal === 0){
     info.textContent = "No hay inventario cargado. Pulsa 'Actualizar inventario'.";
     return;
   }
 
-  // 1) filtro por departamento
-  let entries = entriesAll;
-  if(filtroDepartamento){
+  // ✅ Aplicar filtros (si existen en tu script)
+  if(typeof filtroDepartamento !== "undefined" && filtroDepartamento){
     entries = entries.filter(([_, data]) => String(data?.departamento || "") === filtroDepartamento);
   }
-
-  // 2) filtro con stock
-  if(filtroStock){
+  if(typeof filtroStock !== "undefined" && filtroStock){
     entries = entries.filter(([code]) => getStock(code) > 0);
   }
 
-  // 3) búsqueda por código o nombre
+  // ✅ SI NO HAY BÚSQUEDA: mostrar vista previa (para que siempre se vea catálogo)
+  if(q.length === 0){
+    // (opcional) ordenar por código para que se vea "limpio"
+    entries.sort((a,b) => a[0].localeCompare(b[0], "es", { numeric:true, sensitivity:"base" }));
+
+    const show = entries.slice(0, CATALOG_INITIAL_LIMIT);
+
+    if(entries.length > show.length){
+      info.textContent = `Mostrando ${show.length} de ${entries.length}. Escribe para buscar o usa filtros.`;
+    }else{
+      info.textContent = `Productos: ${entries.length}`;
+    }
+
+    for(const [code, data] of show){
+      const stock = getStock(code);
+
+      const row = document.createElement("div");
+      row.className = "trow cols-catalog";
+      row.innerHTML = `
+        <div class="cell" data-label="Código">${escapeHtml(code)}</div>
+        <div class="cell wrap" data-label="Producto">${escapeHtml(data.producto || "(sin nombre)")}</div>
+        <div class="cell" data-label="Departamento">${escapeHtml(data.departamento || "")}</div>
+        <div class="cell right" data-label="Stock">${escapeHtml(String(stock))}</div>
+      `;
+      list.appendChild(row);
+    }
+    return;
+  }
+
+  // ✅ SI HAY BÚSQUEDA: filtrar por código o nombre
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
     return code.toLowerCase().includes(q) || name.includes(q);
@@ -376,7 +401,8 @@ function renderCatalog(query){
     return;
   }
 
-  const show = filtered.slice(0, 250);
+  const show = filtered.slice(0, CATALOG_MAX_RENDER);
+
   if(filtered.length > show.length){
     info.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
   }else{
@@ -397,6 +423,7 @@ function renderCatalog(query){
     list.appendChild(row);
   }
 }
+
 
 // ==========================
 // BUSCADOR (TABLA) (B2)
