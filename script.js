@@ -791,14 +791,28 @@ function saveFacturaSalida(){
 // ==========================
 function setHistTab(tab){
   historialTab = tab;
-  $("tabMov").classList.toggle("active", tab === "mov");
-  $("tabDel").classList.toggle("active", tab === "del");
 
+  // Tabs
+  $("tabMov").classList.remove("active");
+  $("tabDel").classList.remove("active");
+
+  if(tab === "mov"){
+    $("tabMov").classList.add("active");
+  }else{
+    $("tabDel").classList.add("active");
+  }
+
+  // Headers
   $("histHeadMov").classList.toggle("hidden", tab !== "mov");
   $("histHeadDel").classList.toggle("hidden", tab !== "del");
 
+  // Limpiar lista y volver a renderizar
+  const list = $("histList");
+  if(list) list.innerHTML = "";
+
   renderHistorial();
 }
+
 
 function renderHistorial(){
   const q = ($("histSearch").value || "").toLowerCase().trim();
