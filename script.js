@@ -872,8 +872,10 @@ function renderHistorial(){
   }
 }
 
-function deleteMovimiento(id){
-  const ok = confirm("¿Eliminar este movimiento? (quedará registrado en Eliminaciones)");
+async function deleteMovimiento(id){
+  const ok = await uiConfirm(
+    "¿Eliminar este movimiento? (quedará registrado en Eliminaciones)"
+  );
   if(!ok) return;
 
   const movs = readJSON(K.MOV, []);
@@ -907,6 +909,38 @@ function deleteMovimiento(id){
   refreshHome();
   renderHistorial();
 }
+
+
+// ==========================
+// CONFIRM MODAL (sin window.confirm)
+// ==========================
+function uiConfirm(message){
+  return new Promise(resolve => {
+    const overlay = document.getElementById("confirmOverlay");
+    const msg = document.getElementById("confirmMessage");
+    const btnOk = document.getElementById("confirmOk");
+    const btnCancel = document.getElementById("confirmCancel");
+
+    msg.textContent = message;
+    overlay.classList.remove("hidden");
+
+    const cleanup = (result) => {
+      overlay.classList.add("hidden");
+      btnOk.onclick = null;
+      btnCancel.onclick = null;
+      overlay.onclick = null;
+      resolve(result);
+    };
+
+    btnOk.onclick = () => cleanup(true);
+    btnCancel.onclick = () => cleanup(false);
+
+    overlay.onclick = (e) => {
+      if(e.target === overlay) cleanup(false);
+    };
+  });
+}
+
 
 // ==========================
 // EXPORT EXCEL
