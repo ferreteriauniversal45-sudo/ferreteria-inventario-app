@@ -491,3 +491,27 @@ body{
   color:var(--muted);
   font-size:12px;
 }
+
+/* ===== FILTROS CATALOGO ===== */
+.filters{
+  display:flex;
+  gap:8px;
+  margin:10px 0 12px;
+  flex-wrap:wrap;
+}
+
+.filters .input.small{
+  min-width:200px;
+}
+
+.btn.ghost{
+  background:transparent;
+  border:1px dashed #bdbdbd;
+  color:#555;
+}
+
+.btn.small.active{
+  background:rgba(11,47,122,.15);
+  border-color:rgba(11,47,122,.45);
+}
+
