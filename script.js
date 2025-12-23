@@ -817,10 +817,18 @@ function setHistTab(tab){
 function renderHistorial(){
   const q = ($("histSearch").value || "").toLowerCase().trim();
   const list = $("histList");
+  if(!list) return;
+
   list.innerHTML = "";
 
+  // ======================
+  // MOVIMIENTOS
+  // ======================
   if(historialTab === "mov"){
-    const movs = readJSON(K.MOV, []).slice().sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+    const movs = readJSON(K.MOV, [])
+      .slice()
+      .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+
     const filtered = movs.filter(m => {
       const c = String(m.codigo||"").toLowerCase();
       const p = String(m.producto||"").toLowerCase();
@@ -828,38 +836,37 @@ function renderHistorial(){
     });
 
     if(filtered.length === 0){
-      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin movimientos.</div></div>`;
+      list.innerHTML = `<div class="trow"><div class="cell">Sin movimientos.</div></div>`;
       return;
     }
 
     for(const m of filtered){
       const row = document.createElement("div");
       row.className = "trow cols-hmov";
-
-      const tipo = m.tipo === "entrada" ? "ENTRADA" : "SALIDA";
-      const proveedor = m.tipo === "entrada" ? (m.proveedor || "") : "";
-
       row.innerHTML = `
-        <div class="cell" data-label="Tipo">${escapeHtml(tipo)}</div>
-        <div class="cell" data-label="Código">${escapeHtml(m.codigo||"")}</div>
-        <div class="cell wrap" data-label="Producto">${escapeHtml(m.producto||"")}</div>
-        <div class="cell right" data-label="Cant.">${escapeHtml(String(m.cantidad||0))}</div>
-        <div class="cell" data-label="Fecha">${escapeHtml(m.fecha||"")}</div>
-        <div class="cell" data-label="Factura">${escapeHtml(m.factura||"")}</div>
-        <div class="cell" data-label="Proveedor">${escapeHtml(proveedor)}</div>
-        <div class="cell right" data-label="">
-          <button class="btn small danger row-action" type="button">Eliminar</button>
+        <div class="cell">${m.tipo === "entrada" ? "ENTRADA" : "SALIDA"}</div>
+        <div class="cell">${escapeHtml(m.codigo)}</div>
+        <div class="cell wrap">${escapeHtml(m.producto)}</div>
+        <div class="cell right">${m.cantidad}</div>
+        <div class="cell">${m.fecha}</div>
+        <div class="cell">${escapeHtml(m.factura || "")}</div>
+        <div class="cell">${escapeHtml(m.proveedor || "")}</div>
+        <div class="cell right">
+          <button class="btn small danger row-action" data-id="${m.id}">Eliminar</button>
         </div>
       `;
-
-      row.querySelector(".row-action").addEventListener("click", () => deleteMovimiento(m.id));
       list.appendChild(row);
     }
-
     return;
   }
 
-  const dels = readJSON(K.DEL, []).slice().sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+  // ======================
+  // ELIMINACIONES
+  // ======================
+  const dels = readJSON(K.DEL, [])
+    .slice()
+    .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+
   const filtered = dels.filter(d => {
     const c = String(d.codigo||"").toLowerCase();
     const p = String(d.producto||"").toLowerCase();
@@ -867,7 +874,7 @@ function renderHistorial(){
   });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin eliminaciones.</div></div>`;
+    list.innerHTML = `<div class="trow"><div class="cell">Sin eliminaciones.</div></div>`;
     return;
   }
 
@@ -875,16 +882,17 @@ function renderHistorial(){
     const row = document.createElement("div");
     row.className = "trow cols-hdel";
     row.innerHTML = `
-      <div class="cell" data-label="Fecha/Hora">${escapeHtml(d.fechaHora||"")}</div>
-      <div class="cell" data-label="Tipo">${escapeHtml(d.tipo||"")}</div>
-      <div class="cell" data-label="Código">${escapeHtml(d.codigo||"")}</div>
-      <div class="cell wrap" data-label="Producto">${escapeHtml(d.producto||"")}</div>
-      <div class="cell right" data-label="Cant.">${escapeHtml(String(d.cantidad||0))}</div>
-      <div class="cell wrap" data-label="Detalle">${escapeHtml(d.detalle||"")}</div>
+      <div class="cell">${escapeHtml(d.fechaHora)}</div>
+      <div class="cell">${escapeHtml(d.tipo)}</div>
+      <div class="cell">${escapeHtml(d.codigo)}</div>
+      <div class="cell wrap">${escapeHtml(d.producto)}</div>
+      <div class="cell right">${d.cantidad}</div>
+      <div class="cell wrap">${escapeHtml(d.detalle)}</div>
     `;
     list.appendChild(row);
   }
 }
+
 
 async function deleteMovimiento(id){
   const ok = await uiConfirm(
