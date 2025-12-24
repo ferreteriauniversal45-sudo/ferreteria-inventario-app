@@ -68,8 +68,11 @@ function writeJSON(key, value){
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+// ✅ FECHA LOCAL (NO UTC) -> evita que cambie el día por zona horaria
 function todayISO(){
-  return new Date().toISOString().slice(0,10);
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 
 function nowISO(){
@@ -101,7 +104,7 @@ function makeId(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 
-// ✅ Descarga compatible con Android WebView (evita crash por XLSX.writeFile)
+// ✅ Descarga compatible con Android WebView
 function downloadBlob(blob, filename){
   try{
     const url = URL.createObjectURL(blob);
@@ -141,6 +144,8 @@ function setNetworkState(isOnline){
   if(icon){
     icon.classList.toggle("online", !!isOnline);
     icon.classList.toggle("offline", !isOnline);
+    icon.title = isOnline ? "Con conexión" : "Sin conexión";
+    icon.setAttribute("aria-label", isOnline ? "Con conexión" : "Sin conexión");
   }
   const estado = $("homeEstado");
   if(estado) estado.textContent = isOnline ? "ON" : "OFF";
@@ -353,7 +358,7 @@ function renderCatalog(query){
     return;
   }
 
-  // ✅ Aplicar filtros (si existen en tu script)
+  // ✅ Aplicar filtros
   if(typeof filtroDepartamento !== "undefined" && filtroDepartamento){
     entries = entries.filter(([_, data]) => String(data?.departamento || "") === filtroDepartamento);
   }
@@ -361,11 +366,9 @@ function renderCatalog(query){
     entries = entries.filter(([code]) => getStock(code) > 0);
   }
 
-  // ✅ SI NO HAY BÚSQUEDA: mostrar vista previa (para que siempre se vea catálogo)
+  // ✅ SI NO HAY BÚSQUEDA: mostrar vista previa
   if(q.length === 0){
-    // (opcional) ordenar por código para que se vea "limpio"
     entries.sort((a,b) => a[0].localeCompare(b[0], "es", { numeric:true, sensitivity:"base" }));
-
     const show = entries.slice(0, CATALOG_INITIAL_LIMIT);
 
     if(entries.length > show.length){
@@ -376,7 +379,6 @@ function renderCatalog(query){
 
     for(const [code, data] of show){
       const stock = getStock(code);
-
       const row = document.createElement("div");
       row.className = "trow cols-catalog";
       row.innerHTML = `
@@ -411,7 +413,6 @@ function renderCatalog(query){
 
   for(const [code, data] of show){
     const stock = getStock(code);
-
     const row = document.createElement("div");
     row.className = "trow cols-catalog";
     row.innerHTML = `
@@ -423,7 +424,6 @@ function renderCatalog(query){
     list.appendChild(row);
   }
 }
-
 
 // ==========================
 // BUSCADOR (TABLA) (B2)
@@ -452,6 +452,8 @@ function selectProduct(code){
 function renderSearch(query){
   const list = $("searchList");
   const info = $("searchInfo");
+  if(!list || !info) return;
+
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
@@ -522,8 +524,11 @@ function fillProductoFromCode(context){
 
 function updateSalidaStockHint(){
   const code = String($("salidaCodigo").value||"").trim().toUpperCase();
+  const out = $("salidaStockInfo");
+  if(!out) return;
+
   if(!code){
-    $("salidaStockInfo").textContent = "";
+    out.textContent = "";
     return;
   }
   const stockReal = getStock(code);
@@ -531,7 +536,7 @@ function updateSalidaStockHint(){
   const disponible = stockReal - reservado;
 
   const extra = reservado > 0 ? ` (en factura: ${reservado})` : "";
-  $("salidaStockInfo").textContent = `Stock disponible: ${disponible}${extra}`;
+  out.textContent = `Stock disponible: ${disponible}${extra}`;
 }
 
 // ==========================
@@ -634,7 +639,6 @@ function addEntradaItem(){
   if(idx >= 0) entradaItems[idx].cantidad += cantidad;
   else entradaItems.push({ codigo, cantidad });
 
-  // limpiar campos de producto para el siguiente
   $("entradaCodigo").value = "";
   $("entradaProducto").value = "";
   $("entradaCantidad").value = "";
@@ -722,10 +726,7 @@ function saveFacturaEntrada(){
 
   toast("✅ Factura de entrada guardada");
   refreshHome();
-
-  // limpiar draft (pero dejamos proveedor/factura/fecha por si van a capturar otra)
   clearEntradaDraft();
-
   showScreen("homeScreen");
 }
 
@@ -742,7 +743,7 @@ function saveFacturaSalida(){
     return;
   }
 
-  // validación final de stock (por seguridad)
+  // validación final de stock
   for(const it of salidaItems){
     const stockReal = getStock(it.codigo);
     const reservado = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
@@ -782,7 +783,6 @@ function saveFacturaSalida(){
   refreshHome();
 
   clearSalidaDraft();
-
   showScreen("homeScreen");
 }
 
@@ -793,18 +793,17 @@ function setHistTab(tab){
   historialTab = tab;
 
   // Tabs
-  $("tabMov").classList.remove("active");
-  $("tabDel").classList.remove("active");
+  const tMov = $("tabMov");
+  const tDel = $("tabDel");
+  tMov?.classList.remove("active");
+  tDel?.classList.remove("active");
 
-  if(tab === "mov"){
-    $("tabMov").classList.add("active");
-  }else{
-    $("tabDel").classList.add("active");
-  }
+  if(tab === "mov") tMov?.classList.add("active");
+  else tDel?.classList.add("active");
 
   // Headers
-  $("histHeadMov").classList.toggle("hidden", tab !== "mov");
-  $("histHeadDel").classList.toggle("hidden", tab !== "del");
+  $("histHeadMov")?.classList.toggle("hidden", tab !== "mov");
+  $("histHeadDel")?.classList.toggle("hidden", tab !== "del");
 
   // Limpiar lista y volver a renderizar
   const list = $("histList");
@@ -813,9 +812,8 @@ function setHistTab(tab){
   renderHistorial();
 }
 
-
 function renderHistorial(){
-  const q = ($("histSearch").value || "").toLowerCase().trim();
+  const q = ($("histSearch")?.value || "").toLowerCase().trim();
   const list = $("histList");
   if(!list) return;
 
@@ -847,12 +845,13 @@ function renderHistorial(){
         <div class="cell">${m.tipo === "entrada" ? "ENTRADA" : "SALIDA"}</div>
         <div class="cell">${escapeHtml(m.codigo)}</div>
         <div class="cell wrap">${escapeHtml(m.producto)}</div>
-        <div class="cell right">${m.cantidad}</div>
-        <div class="cell">${m.fecha}</div>
+        <div class="cell right">${escapeHtml(String(m.cantidad))}</div>
+        <div class="cell">${escapeHtml(String(m.fecha || ""))}</div>
         <div class="cell">${escapeHtml(m.factura || "")}</div>
         <div class="cell">${escapeHtml(m.proveedor || "")}</div>
         <div class="cell right">
-          <button class="btn small danger row-action" data-id="${m.id}">Eliminar</button>
+          <!-- ✅ type="button" + data-id -->
+          <button class="btn small danger row-action" type="button" data-id="${escapeHtml(m.id)}">Eliminar</button>
         </div>
       `;
       list.appendChild(row);
@@ -886,13 +885,12 @@ function renderHistorial(){
       <div class="cell">${escapeHtml(d.tipo)}</div>
       <div class="cell">${escapeHtml(d.codigo)}</div>
       <div class="cell wrap">${escapeHtml(d.producto)}</div>
-      <div class="cell right">${d.cantidad}</div>
+      <div class="cell right">${escapeHtml(String(d.cantidad))}</div>
       <div class="cell wrap">${escapeHtml(d.detalle)}</div>
     `;
     list.appendChild(row);
   }
 }
-
 
 async function deleteMovimiento(id){
   const ok = await uiConfirm(
@@ -932,7 +930,6 @@ async function deleteMovimiento(id){
   renderHistorial();
 }
 
-
 // ==========================
 // CONFIRM MODAL (sin window.confirm)
 // ==========================
@@ -942,6 +939,12 @@ function uiConfirm(message){
     const msg = document.getElementById("confirmMessage");
     const btnOk = document.getElementById("confirmOk");
     const btnCancel = document.getElementById("confirmCancel");
+
+    if(!overlay || !msg || !btnOk || !btnCancel){
+      // fallback seguro
+      resolve(window.confirm(message));
+      return;
+    }
 
     msg.textContent = message;
     overlay.classList.remove("hidden");
@@ -963,13 +966,12 @@ function uiConfirm(message){
   });
 }
 
-
 // ==========================
-// EXPORT EXCEL
+// EXPORT EXCEL (robusto)
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
-    toast("No cargó Excel");
+    toast("No cargó Excel (revisa XLSX)");
     return;
   }
 
@@ -981,25 +983,50 @@ function exportExcel(){
     return;
   }
 
-  const entradas = movs.filter(m=>m.tipo==="entrada");
-  const salidas = movs.filter(m=>m.tipo==="salida");
+  const entradas = movs.filter(m => m.tipo === "entrada");
+  const salidas  = movs.filter(m => m.tipo === "salida");
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dels), "ELIMINACIONES");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas),  "SALIDAS");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dels),     "ELIMINACIONES");
 
-  const wbout = XLSX.write(wb,{bookType:"xlsx",type:"base64"});
   const filename = `reporte_${todayISO()}.xlsx`;
+  let saved = false;
 
-  if(window.Android){
-    Android.saveFile(wbout, filename);
-    toast("📥 Archivo guardado en Descargas");
-  }else{
-    XLSX.writeFile(wb, filename);
+  // 1) Android Bridge (si existe)
+  if(window.Android && typeof Android.saveFile === "function"){
+    try{
+      const wb64 = XLSX.write(wb, { bookType:"xlsx", type:"base64" });
+      Android.saveFile(wb64, filename);
+      saved = true;
+      toast("📥 Archivo guardado en Descargas");
+    }catch(e){
+      console.warn("Android.saveFile falló", e);
+    }
   }
 
-  // LIMPIEZA AUTOMÁTICA
+  // 2) Fallback: descarga por Blob
+  if(!saved){
+    try{
+      const wbarr = XLSX.write(wb, { bookType:"xlsx", type:"array" });
+      const blob = new Blob([wbarr], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      });
+      saved = downloadBlob(blob, filename);
+      if(saved) toast("📥 Descarga iniciada");
+    }catch(e){
+      console.warn("Export blob falló", e);
+    }
+  }
+
+  // Si no se guardó, NO borres el historial
+  if(!saved){
+    toast("❌ No se pudo exportar (no se borró el historial)");
+    return;
+  }
+
+  // LIMPIEZA AUTOMÁTICA SOLO SI SE GUARDÓ
   localStorage.removeItem(K.MOV);
   localStorage.removeItem(K.DEL);
   deltaDirty = true;
@@ -1048,12 +1075,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("entradaCodigo").value = "";
     $("entradaProducto").value = "";
     $("entradaCantidad").value = "";
-
-    // No borramos proveedor/factura automáticamente por si capturan varias facturas seguidas
-    // pero si quieres, descomenta:
-    // $("entradaProveedor").value = "";
-    // $("entradaFactura").value = "";
-
     clearEntradaDraft();
   });
 
@@ -1064,7 +1085,6 @@ document.addEventListener("DOMContentLoaded", () => {
     $("salidaProducto").value = "";
     $("salidaCantidad").value = "";
     $("salidaFactura").value = "";
-
     clearSalidaDraft();
   });
 
@@ -1148,6 +1168,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if(btnStock) btnStock.classList.remove("active");
 
     renderCatalog($("catalogSearch")?.value || "");
+  });
+
+  // ==========================
+  // HISTORIAL: tabs, filtro y eliminar (FIX)
+  // ==========================
+  $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
+  $("tabDel")?.addEventListener("click", () => setHistTab("del"));
+  $("histSearch")?.addEventListener("input", () => renderHistorial());
+
+  // ✅ Delegación: botón Eliminar (funciona en web y APK)
+  $("histList")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-id]");
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    deleteMovimiento(btn.dataset.id);
   });
 
   // sync silencioso al iniciar
