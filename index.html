@@ -104,7 +104,7 @@
         <div class="card">
           <div class="screen-head">
             <h2 class="h2">Catálogo</h2>
-            <button class="btn small" id="btnBackCatalog">⬅</button>
+            <button class="btn small" id="btnBackCatalog" type="button">⬅</button>
           </div>
 
           <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
@@ -115,11 +115,11 @@
               <option value="">Todos los departamentos</option>
             </select>
 
-            <button class="btn small" id="btnFilterStock">
+            <button class="btn small" id="btnFilterStock" type="button">
               📦 Con stock
             </button>
 
-            <button class="btn small ghost" id="btnClearFilters">
+            <button class="btn small ghost" id="btnClearFilters" type="button">
               ❌ Quitar filtros
             </button>
           </div>
@@ -181,13 +181,13 @@
 
           <button class="btn" id="btnAddEntradaItem" type="button">➕ Agregar producto a factura</button>
 
-<div class="note" id="entradaItemsInfo">Factura vacía.</div>
-<div id="entradaItemsList" class="items-list"></div>
+          <div class="note" id="entradaItemsInfo">Factura vacía.</div>
+          <div id="entradaItemsList" class="items-list"></div>
 
-<div class="btn-row">
-  <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
-  <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar factura</button>
-</div>
+          <div class="btn-row">
+            <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
+            <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar factura</button>
+          </div>
 
         </div>
       </section>
@@ -229,15 +229,15 @@
             <input id="salidaFecha" class="input" type="date">
           </div>
 
-         <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
+          <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
 
-<div class="note" id="salidaItemsInfo">Factura vacía.</div>
-<div id="salidaItemsList" class="items-list"></div>
+          <div class="note" id="salidaItemsInfo">Factura vacía.</div>
+          <div id="salidaItemsList" class="items-list"></div>
 
-<div class="btn-row">
-  <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
-  <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
-</div>
+          <div class="btn-row">
+            <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
+            <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
+          </div>
 
         </div>
       </section>
@@ -309,26 +309,27 @@
 
       <!-- TOAST -->
       <div id="toast" class="toast" aria-live="polite"></div>
+
+      <!-- CONFIRM MODAL -->
+      <div id="confirmOverlay" class="confirm-overlay hidden">
+        <div class="confirm-box">
+          <div id="confirmMessage" class="confirm-text"></div>
+          <div class="confirm-actions">
+            <button id="confirmCancel" class="btn" type="button">Cancelar</button>
+            <button id="confirmOk" class="btn danger" type="button">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v1.3 · Carlos Tercero
+      Ferretería Universal · v1.4 · Carlos Tercero
     </footer>
   </div>
 
   <!-- Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="./script.js"></script>
-  <!-- CONFIRM MODAL -->
-<div id="confirmOverlay" class="confirm-overlay hidden">
-  <div class="confirm-box">
-    <div id="confirmMessage" class="confirm-text"></div>
-    <div class="confirm-actions">
-      <button id="confirmCancel" class="btn">Cancelar</button>
-      <button id="confirmOk" class="btn danger">Eliminar</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
