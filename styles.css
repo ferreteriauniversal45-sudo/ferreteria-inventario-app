@@ -579,6 +579,7 @@ body{
 .btn-row .btn{
   width:100%;
 }
+
 /* ===== CONFIRM MODAL (JS) ===== */
 .confirm-overlay{
   position:fixed;
