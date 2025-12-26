@@ -1364,12 +1364,24 @@ XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMI
 // ==========================
 // INIT
 // ==========================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // 1️⃣ Revisar sesión
+  const { data } = await supa.auth.getSession();
+
+  if(data.session){
+    currentUser = data.session.user;
+    showScreen("homeScreen");
+  }else{
+    showScreen("loginScreen");
+    return; // ⬅️ CLAVE: no seguir cargando la app
+  }
+
+  // 2️⃣ Inicialización normal SOLO si hay sesión
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
   cargarDepartamentos();
   refreshHome();
-  showScreen("homeScreen");
 
   if($("entradaFecha")) $("entradaFecha").value = todayISO();
   if($("salidaFecha")) $("salidaFecha").value = todayISO();
