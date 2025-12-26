@@ -29,8 +29,8 @@ let deltaCache = { ent: {}, sal: {} };
 // ==========================
 let filtroDepartamento = "";
 let filtroStock = false;
-const CATALOG_INITIAL_LIMIT = 80;  // cuantos productos mostrar al entrar sin buscar
-const CATALOG_MAX_RENDER = 250;    // límite cuando ya estás buscando
+const CATALOG_INITIAL_LIMIT = 80;
+const CATALOG_MAX_RENDER = 250;
 
 // ==========================
 // FACTURAS MULTI-ITEM (DRAFTS)
@@ -45,11 +45,12 @@ function sumItems(items, code){
 
 function clearEntradaDraft(){
   entradaItems = [];
-  renderEntradaItems();
+  renderEntradaItems(); // ahora renderiza FACTURA BORRADOR
 }
+
 function clearSalidaDraft(){
   salidaItems = [];
-  renderSalidaItems();
+  renderSalidaItems();  // ahora renderiza FACTURA BORRADOR
   updateSalidaStockHint();
 }
 
@@ -68,7 +69,7 @@ function writeJSON(key, value){
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-// ✅ FECHA LOCAL (NO UTC) -> evita que cambie el día por zona horaria
+// ✅ FECHA LOCAL (NO UTC)
 function todayISO(){
   const d = new Date();
   const pad = (n) => String(n).padStart(2, "0");
@@ -125,22 +126,45 @@ function downloadBlob(blob, filename){
   }
 }
 
-function formatCodigoInput(input){
-  input.addEventListener("input", () => {
-    let v = input.value;
-
-    // quitar todo lo que no sea número
-    v = v.replace(/[^0-9]/g, "");
-
-    // máximo: 2 dígitos + resto
-    if(v.length <= 2){
-      input.value = v;
-    }else{
-      input.value = v.slice(0,2) + "-" + v.slice(2);
-    }
-  });
+// ==========================
+// AUTO "-" DESPUÉS DE 2 DÍGITOS (CÓDIGOS)
+// ==========================
+function digitsToCodigo(digits){
+  const d = String(digits || "").replace(/\D/g, "");
+  if(d.length === 0) return "";
+  if(d.length === 1) return d;
+  // ✅ con 2 dígitos ya deja el guion listo
+  if(d.length === 2) return `${d}-`;
+  return `${d.slice(0,2)}-${d.slice(2)}`;
 }
 
+function hasLetters(str){
+  return /[a-zA-Z\u00C0-\u017F]/.test(String(str || ""));
+}
+
+/**
+ * allowText=true -> SOLO aplica máscara si el usuario está escribiendo algo numérico (sin letras).
+ * allowText=false -> forzar solo dígitos (ideal para entradaCodigo/salidaCodigo).
+ */
+function attachCodigoMask(input, { allowText=false } = {}){
+  if(!input) return;
+
+  input.addEventListener("input", () => {
+    const raw = input.value ?? "";
+
+    if(allowText){
+      // si tiene letras, no tocar (para poder buscar por nombre)
+      if(hasLetters(raw)) return;
+
+      // si empieza con letra u otro, no tocar
+      const t = String(raw).trim();
+      if(t && !/^\d/.test(t)) return;
+    }
+
+    const digits = String(raw).replace(/\D/g, "");
+    input.value = digitsToCodigo(digits);
+  });
+}
 
 // ==========================
 // UI NAV
@@ -373,10 +397,10 @@ function renderCatalog(query){
     return;
   }
 
-  if(typeof filtroDepartamento !== "undefined" && filtroDepartamento){
+  if(filtroDepartamento){
     entries = entries.filter(([_, data]) => String(data?.departamento || "") === filtroDepartamento);
   }
-  if(typeof filtroStock !== "undefined" && filtroStock){
+  if(filtroStock){
     entries = entries.filter(([code]) => getStock(code) > 0);
   }
 
@@ -384,11 +408,9 @@ function renderCatalog(query){
     entries.sort((a,b) => a[0].localeCompare(b[0], "es", { numeric:true, sensitivity:"base" }));
     const show = entries.slice(0, CATALOG_INITIAL_LIMIT);
 
-    if(entries.length > show.length){
-      info.textContent = `Mostrando ${show.length} de ${entries.length}. Escribe para buscar o usa filtros.`;
-    }else{
-      info.textContent = `Productos: ${entries.length}`;
-    }
+    info.textContent = entries.length > show.length
+      ? `Mostrando ${show.length} de ${entries.length}. Escribe para buscar o usa filtros.`
+      : `Productos: ${entries.length}`;
 
     for(const [code, data] of show){
       const stock = getStock(code);
@@ -407,7 +429,7 @@ function renderCatalog(query){
 
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
-    return code.toLowerCase().includes(q) || name.includes(q);
+    return String(code||"").toLowerCase().includes(q) || name.includes(q);
   });
 
   if(filtered.length === 0){
@@ -416,12 +438,9 @@ function renderCatalog(query){
   }
 
   const show = filtered.slice(0, CATALOG_MAX_RENDER);
-
-  if(filtered.length > show.length){
-    info.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
-  }else{
-    info.textContent = `Resultados: ${filtered.length}`;
-  }
+  info.textContent = filtered.length > show.length
+    ? `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`
+    : `Resultados: ${filtered.length}`;
 
   for(const [code, data] of show){
     const stock = getStock(code);
@@ -438,7 +457,7 @@ function renderCatalog(query){
 }
 
 // ==========================
-// BUSCADOR (TABLA) (B2)
+// BUSCADOR (B2)
 // ==========================
 function selectProduct(code){
   const data = baseCache[code];
@@ -479,7 +498,7 @@ function renderSearch(query){
 
   const filtered = entries.filter(([code, data]) => {
     const name = String(data.producto||"").toLowerCase();
-    return code.toLowerCase().includes(q) || name.includes(q);
+    return String(code||"").toLowerCase().includes(q) || name.includes(q);
   });
 
   if(filtered.length === 0){
@@ -488,11 +507,9 @@ function renderSearch(query){
   }
 
   const show = filtered.slice(0, 250);
-  if(filtered.length > show.length){
-    info.textContent = `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`;
-  }else{
-    info.textContent = `Resultados: ${filtered.length}`;
-  }
+  info.textContent = filtered.length > show.length
+    ? `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`
+    : `Resultados: ${filtered.length}`;
 
   for(const [code, data] of show){
     const stock = getStock(code);
@@ -552,84 +569,129 @@ function updateSalidaStockHint(){
 }
 
 // ==========================
-// FACTURAS MULTI-ITEM: RENDER LISTS
+// FACTURA BORRADOR (PREVIEW) - MISMO ESTILO QUE HISTORIAL
 // ==========================
-function renderEntradaItems(){
-  const info = $("entradaItemsInfo");
-  const list = $("entradaItemsList");
-  if(!info || !list) return;
+function flashInvoiceEl(el){
+  if(!el) return;
+  el.classList.add("invoice-flash");
+  clearTimeout(el._flashTimer);
+  el._flashTimer = setTimeout(() => el.classList.remove("invoice-flash"), 250);
+}
 
-  list.innerHTML = "";
+function updateDraftTotalsFromDOM(context){
+  const preview = context === "entrada" ? $("entradaFacturaPreview") : $("salidaFacturaPreview");
+  const inv = preview?.querySelector(`.invoice[data-draft="${context}"]`);
+  if(!inv) return;
 
-  if(entradaItems.length === 0){
+  const inputs = inv.querySelectorAll("input.draft-cantidad");
+  const totalProductos = inputs.length;
+
+  let totalPiezas = 0;
+  for(const inp of inputs){
+    const v = Number(inp.value);
+    if(Number.isFinite(v) && v > 0) totalPiezas += v;
+  }
+
+  inv.querySelectorAll(".t-prod").forEach(el => el.textContent = String(totalProductos));
+  inv.querySelectorAll(".t-pzas").forEach(el => el.textContent = String(totalPiezas));
+
+  flashInvoiceEl(inv);
+}
+
+function renderDraftFactura(context){
+  const isEntrada = context === "entrada";
+  const items = isEntrada ? entradaItems : salidaItems;
+
+  const info = isEntrada ? $("entradaItemsInfo") : $("salidaItemsInfo");
+  const preview = isEntrada ? $("entradaFacturaPreview") : $("salidaFacturaPreview");
+  if(!info || !preview) return;
+
+  preview.innerHTML = "";
+
+  if(items.length === 0){
     info.textContent = "Factura vacía.";
     return;
   }
 
-  const totalPiezas = entradaItems.reduce((a,it)=>a+Number(it.cantidad||0),0);
-  info.textContent = `Productos en factura: ${entradaItems.length} · Total piezas: ${totalPiezas}`;
+  const fecha = (isEntrada ? $("entradaFecha")?.value : $("salidaFecha")?.value) || todayISO();
+  const factura = (isEntrada ? $("entradaFactura")?.value : $("salidaFactura")?.value) || "";
 
-  for(const it of entradaItems){
-    const data = baseCache[it.codigo] || {};
-    const row = document.createElement("div");
-    row.className = "item-row";
-    row.innerHTML = `
-      <div class="item-left">
-        <div class="item-title">${escapeHtml(it.codigo)} · ${escapeHtml(data.producto || "(sin nombre)")}</div>
-        <div class="item-meta">Depto: ${escapeHtml(data.departamento || "")}</div>
-        <div class="item-qty">Cantidad: ${escapeHtml(String(it.cantidad))}</div>
+  const proveedor = isEntrada ? String($("entradaProveedor")?.value || "").trim() : "";
+  const tipoLabel = isEntrada ? "ENTRADA" : "SALIDA";
+
+  const totalPiezas = items.reduce((a,it)=>a+Number(it.cantidad||0),0);
+  info.textContent = `Productos en factura: ${items.length} · Total piezas: ${totalPiezas}`;
+
+  const inv = document.createElement("div");
+  inv.className = "invoice";
+  inv.dataset.draft = context;
+
+  inv.innerHTML = `
+    <div class="invoice-header">
+      <div class="invoice-company">FERRETERÍA UNIVERSAL</div>
+      <div class="invoice-sub">FACTURA (BORRADOR)</div>
+    </div>
+
+    <div class="invoice-meta">
+      <div class="im-row"><span class="im-label">FACTURA</span><span class="im-value">${escapeHtml(factura || "—")}</span></div>
+      <div class="im-row"><span class="im-label">TIPO</span><span class="im-value">${escapeHtml(tipoLabel)}</span></div>
+      <div class="im-row"><span class="im-label">FECHA</span><span class="im-value">${escapeHtml(fecha)}</span></div>
+      <div class="im-row"><span class="im-label">${isEntrada ? "PROVEEDOR" : "REFERENCIA"}</span><span class="im-value">${escapeHtml(isEntrada ? (proveedor || "—") : "—")}</span></div>
+    </div>
+
+    <div class="invoice-summary">
+      Productos: <b class="t-prod">${items.length}</b> · Piezas: <b class="t-pzas">${totalPiezas}</b>
+    </div>
+
+    <div class="invoice-rule"></div>
+
+    <div class="invoice-table">
+      <div class="it-head">
+        <div>CÓD</div>
+        <div>PRODUCTO</div>
+        <div class="right">CANT</div>
+        <div class="right">ACC</div>
       </div>
-      <div class="item-actions">
-        <button class="btn tiny danger" type="button">Quitar</button>
-      </div>
-    `;
-    row.querySelector("button").addEventListener("click", () => {
-      entradaItems = entradaItems.filter(x => x.codigo !== it.codigo);
-      renderEntradaItems();
-      toast("Producto quitado");
-    });
-    list.appendChild(row);
-  }
+
+      ${items.map(it=>{
+        const data = baseCache[it.codigo] || {};
+        return `
+          <div class="it-row">
+            <div class="it-code">${escapeHtml(it.codigo)}</div>
+            <div class="it-prod">${escapeHtml(data.producto || "(sin nombre)")}</div>
+            <div class="right">
+              <input
+                class="qty-input draft-cantidad"
+                type="number"
+                min="1"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                value="${escapeHtml(String(it.cantidad))}"
+                data-context="${escapeHtml(context)}"
+                data-codigo="${escapeHtml(it.codigo)}">
+            </div>
+            <div class="it-actions">
+              <button class="inv-action" type="button" data-edit-draft title="Editar cantidad">✏️</button>
+              <button class="inv-action danger" type="button" data-del-draft="${escapeHtml(it.codigo)}" data-context="${escapeHtml(context)}" title="Eliminar producto">🗑</button>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+
+    <div class="invoice-rule"></div>
+
+    <div class="invoice-totals">
+      <div class="itot-row"><span>TOTAL PRODUCTOS</span><span class="t-prod">${items.length}</span></div>
+      <div class="itot-row"><span>TOTAL PIEZAS</span><span class="t-pzas">${totalPiezas}</span></div>
+    </div>
+  `;
+
+  preview.appendChild(inv);
 }
 
-function renderSalidaItems(){
-  const info = $("salidaItemsInfo");
-  const list = $("salidaItemsList");
-  if(!info || !list) return;
-
-  list.innerHTML = "";
-
-  if(salidaItems.length === 0){
-    info.textContent = "Factura vacía.";
-    return;
-  }
-
-  const totalPiezas = salidaItems.reduce((a,it)=>a+Number(it.cantidad||0),0);
-  info.textContent = `Productos en factura: ${salidaItems.length} · Total piezas: ${totalPiezas}`;
-
-  for(const it of salidaItems){
-    const data = baseCache[it.codigo] || {};
-    const row = document.createElement("div");
-    row.className = "item-row";
-    row.innerHTML = `
-      <div class="item-left">
-        <div class="item-title">${escapeHtml(it.codigo)} · ${escapeHtml(data.producto || "(sin nombre)")}</div>
-        <div class="item-meta">Depto: ${escapeHtml(data.departamento || "")}</div>
-        <div class="item-qty">Cantidad: ${escapeHtml(String(it.cantidad))}</div>
-      </div>
-      <div class="item-actions">
-        <button class="btn tiny danger" type="button">Quitar</button>
-      </div>
-    `;
-    row.querySelector("button").addEventListener("click", () => {
-      salidaItems = salidaItems.filter(x => x.codigo !== it.codigo);
-      renderSalidaItems();
-      updateSalidaStockHint();
-      toast("Producto quitado");
-    });
-    list.appendChild(row);
-  }
-}
+function renderEntradaItems(){ renderDraftFactura("entrada"); }
+function renderSalidaItems(){ renderDraftFactura("salida"); }
 
 // ==========================
 // FACTURAS MULTI-ITEM: ADD ITEM
@@ -799,12 +861,9 @@ function saveFacturaSalida(){
 }
 
 // ==========================
-// HISTORIAL NUEVO (FACTURAS) + EDITAR/ELIMINAR
+// HISTORIAL NUEVO (FACTURAS)
 // ==========================
 function movGroupKey(m){
-  // 1) grupoId (ideal)
-  // 2) factura (fallback)
-  // 3) id (último recurso)
   return String(m?.grupoId || m?.factura || m?.id || "").trim();
 }
 
@@ -826,14 +885,12 @@ function groupFacturas(movs){
 
   const groups = Array.from(map.values());
 
-  // Orden dentro de la factura por código (bonito en “impreso”)
   for(const g of groups){
     g.items.sort((a,b) =>
       String(a.codigo||"").localeCompare(String(b.codigo||""), "es", { numeric:true, sensitivity:"base" })
     );
   }
 
-  // Facturas por fecha (timestamp) descendente
   groups.sort((a,b) => (b.ts||0)-(a.ts||0));
   return groups;
 }
@@ -847,7 +904,6 @@ function calcFacturaTotalsFromItems(items){
 function flashInvoice(grupoId){
   const inv = document.querySelector(`.invoice[data-grupo="${grupoId}"]`);
   if(!inv) return;
-
   inv.classList.add("invoice-flash");
   clearTimeout(inv._flashTimer);
   inv._flashTimer = setTimeout(() => inv.classList.remove("invoice-flash"), 250);
@@ -892,6 +948,7 @@ function renderFacturaCard(group, container){
 
   const f = items[0];
   const grupoId = movGroupKey(f) || group.key;
+
   const facturaNo = String(f.factura || "—");
   const tipoLabel = f.tipo === "entrada" ? "ENTRADA" : "SALIDA";
   const fecha = String(f.fecha || "—");
@@ -982,7 +1039,6 @@ function setHistTab(tab){
   if(tab === "mov") tMov?.classList.add("active");
   else tDel?.classList.add("active");
 
-  // Header solo para eliminaciones (PC)
   $("histHeadDel")?.classList.toggle("hidden", tab !== "del");
 
   const list = $("histList");
@@ -998,9 +1054,6 @@ function renderHistorial(){
 
   list.innerHTML = "";
 
-  // ======================
-  // FACTURAS (MOVIMIENTOS)
-  // ======================
   if(historialTab === "mov"){
     const movs = readJSON(K.MOV, []);
     const groups = groupFacturas(movs);
@@ -1032,9 +1085,7 @@ function renderHistorial(){
     return;
   }
 
-  // ======================
   // ELIMINACIONES
-  // ======================
   const dels = readJSON(K.DEL, [])
     .slice()
     .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
@@ -1102,7 +1153,6 @@ async function deleteMovimiento(id){
   refreshHome();
   renderHistorial();
 
-  // por si la misma factura sigue visible (o para flash)
   if(grupoId) updateFacturaTotalsFromStorage(grupoId);
 }
 
@@ -1205,7 +1255,6 @@ function exportExcel(){
   const filename = `reporte_${todayISO()}.xlsx`;
   let saved = false;
 
-  // 1) Android Bridge (si existe)
   if(window.Android && typeof Android.saveFile === "function"){
     try{
       const wb64 = XLSX.write(wb, { bookType:"xlsx", type:"base64" });
@@ -1217,7 +1266,6 @@ function exportExcel(){
     }
   }
 
-  // 2) Fallback: descarga por Blob
   if(!saved){
     try{
       const wbarr = XLSX.write(wb, { bookType:"xlsx", type:"array" });
@@ -1257,13 +1305,21 @@ document.addEventListener("DOMContentLoaded", () => {
   if($("entradaFecha")) $("entradaFecha").value = todayISO();
   if($("salidaFecha")) $("salidaFecha").value = todayISO();
 
+  // ✅ Máscara de código (con "-" automático)
+  attachCodigoMask($("entradaCodigo"), { allowText:false });
+  attachCodigoMask($("salidaCodigo"),  { allowText:false });
+
+  // ✅ En búsquedas: solo aplica si el usuario está escribiendo algo numérico
+  attachCodigoMask($("searchInput"),   { allowText:true });
+  attachCodigoMask($("catalogSearch"), { allowText:true });
+  attachCodigoMask($("histSearch"),    { allowText:true });
+
   $("btnSync")?.addEventListener("click", () => syncBase(true));
   $("btnExport")?.addEventListener("click", exportExcel);
 
   $("btnCatalogo")?.addEventListener("click", () => {
     showScreen("catalogScreen");
     $("catalogSearch").value = "";
-
     filtroDepartamento = "";
     filtroStock = false;
 
@@ -1314,6 +1370,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("catalogSearch")?.addEventListener("input", (e) => renderCatalog(e.target.value));
+
   $("entradaCodigo")?.addEventListener("input", () => fillProductoFromCode("entrada"));
   $("salidaCodigo")?.addEventListener("input", () => fillProductoFromCode("salida"));
 
@@ -1332,6 +1389,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
+
+  // ====== BORRADOR: re-render si cambian datos de factura ======
+  $("entradaFactura")?.addEventListener("input", () => renderEntradaItems());
+  $("entradaProveedor")?.addEventListener("input", () => renderEntradaItems());
+  $("entradaFecha")?.addEventListener("change", () => renderEntradaItems());
+
+  $("salidaFactura")?.addEventListener("input", () => renderSalidaItems());
+  $("salidaFecha")?.addEventListener("change", () => renderSalidaItems());
 
   // ====== FACTURAS MULTI-ITEM: BOTONES ======
   $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
@@ -1379,15 +1444,103 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================
+  // BORRADOR: acciones por producto (editar/eliminar) + totales dinámicos
+  // ==========================
+  function setupDraftPreview(previewId, context){
+    const preview = $(previewId);
+    if(!preview) return;
+
+    preview.addEventListener("click", (e) => {
+      const btnDel = e.target.closest("button[data-del-draft]");
+      if(btnDel){
+        const code = String(btnDel.dataset.delDraft || "").trim().toUpperCase();
+        if(context === "entrada"){
+          entradaItems = entradaItems.filter(it => it.codigo !== code);
+          renderEntradaItems();
+        }else{
+          salidaItems = salidaItems.filter(it => it.codigo !== code);
+          renderSalidaItems();
+          updateSalidaStockHint();
+        }
+        toast("Producto quitado");
+        return;
+      }
+
+      const btnEdit = e.target.closest("button[data-edit-draft]");
+      if(btnEdit){
+        const row = btnEdit.closest(".it-row");
+        const inp = row?.querySelector("input.draft-cantidad");
+        if(inp){
+          inp.focus();
+          inp.select?.();
+        }
+      }
+    });
+
+    // totales en vivo mientras escribe
+    preview.addEventListener("input", (e) => {
+      const inp = e.target.closest("input.draft-cantidad");
+      if(!inp) return;
+      updateDraftTotalsFromDOM(context);
+    });
+
+    // guardar cambio al terminar
+    preview.addEventListener("change", (e) => {
+      const inp = e.target.closest("input.draft-cantidad");
+      if(!inp) return;
+
+      const code = String(inp.dataset.codigo || "").trim().toUpperCase();
+      const nueva = Number(inp.value);
+
+      if(!Number.isFinite(nueva) || nueva <= 0){
+        toast("Cantidad inválida");
+        // re-render para restaurar valores
+        if(context === "entrada") renderEntradaItems(); else renderSalidaItems();
+        return;
+      }
+
+      if(context === "entrada"){
+        const it = entradaItems.find(x => x.codigo === code);
+        if(!it) return;
+        it.cantidad = nueva;
+        renderEntradaItems();
+        toast("✅ Cantidad actualizada");
+        return;
+      }
+
+      // SALIDA: validar stock
+      const it = salidaItems.find(x => x.codigo === code);
+      if(!it) return;
+
+      const stockReal = getStock(code);
+      const reservadoOtros = 0; // en salidaItems solo 1 por código
+      const disponible = stockReal - reservadoOtros;
+
+      if(nueva > disponible){
+        toast(`Stock insuficiente. Disponible: ${disponible}`);
+        renderSalidaItems(); // restaura
+        updateSalidaStockHint();
+        return;
+      }
+
+      it.cantidad = nueva;
+      renderSalidaItems();
+      updateSalidaStockHint();
+      toast("✅ Cantidad actualizada");
+    });
+  }
+
+  setupDraftPreview("entradaFacturaPreview", "entrada");
+  setupDraftPreview("salidaFacturaPreview", "salida");
+
+  // ==========================
   // HISTORIAL: tabs, filtro, acciones
   // ==========================
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
   $("histSearch")?.addEventListener("input", () => renderHistorial());
 
-  // ✅ Delegación: acciones dentro de historial (APK friendly)
   $("histList")?.addEventListener("click", (e) => {
-    // eliminar producto
     const btnDel = e.target.closest("button[data-del]");
     if(btnDel){
       e.preventDefault();
@@ -1396,7 +1549,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // eliminar factura completa
     const btnDelFac = e.target.closest("button[data-del-factura]");
     if(btnDelFac){
       e.preventDefault();
@@ -1405,7 +1557,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // “editar” (solo enfoca el input de cantidad)
     const btnEdit = e.target.closest("button[data-edit]");
     if(btnEdit){
       const row = btnEdit.closest(".it-row");
@@ -1417,7 +1568,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ✅ Totales dinámicos mientras editas (sin guardar aún)
+  // Totales dinámicos mientras escribe en historial
   $("histList")?.addEventListener("input", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1425,7 +1576,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(gid) updateTotalsFromDOM(gid);
   });
 
-  // ✅ Guardar cambio al terminar (change = blur / enter)
+  // Guardar cambio en historial (con validación de stock negativo)
   $("histList")?.addEventListener("change", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1452,8 +1603,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const oldQty = Number(m.cantidad||0);
     const code = String(m.codigo||"").trim().toUpperCase();
 
-    // ✅ Validación: no permitir stock negativo al editar
-    const stockActual = getStock(code); // stock ya incluye oldQty
+    const stockActual = getStock(code);
     let stockNuevo = stockActual;
 
     if(m.tipo === "entrada"){
@@ -1481,7 +1631,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // sync silencioso al iniciar
   syncBase(false);
 
-  // render inicial de drafts por si recargas en esas pantallas
+  // render inicial de borradores por si recargas en esas pantallas
   renderEntradaItems();
   renderSalidaItems();
 });
