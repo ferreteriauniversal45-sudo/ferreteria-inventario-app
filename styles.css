@@ -383,6 +383,10 @@ body{
   color:var(--muted);
   font-weight:800;
 }
+
+/* ✅ FIX: si NO trae data-label, no muestres ": " */
+.cell:not([data-label])::before{ content:""; }
+
 .cell[data-label=""]::before{ content:""; }
 
 .right{ text-align:right; }
@@ -614,4 +618,184 @@ body{
 }
 .confirm-actions .btn{
   width:100%;
+}
+
+/* ==============================
+   HISTORIAL NUEVO: FACTURA IMPRESA
+   ============================== */
+
+.hist-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* “Papel” */
+.invoice{
+  background:#fff;
+  color:#000;
+  border:1px solid rgba(0,0,0,.85);
+  border-radius:0;
+  padding:12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size:12.5px;
+  box-shadow:none;
+}
+
+/* Encabezado */
+.invoice-header{
+  text-align:center;
+  margin-bottom:8px;
+}
+.invoice-company{
+  font-weight:900;
+  font-size:14px;
+  letter-spacing:.5px;
+}
+.invoice-sub{
+  font-size:11px;
+}
+
+/* Meta */
+.invoice-meta{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px 12px;
+  margin-top:8px;
+}
+.im-row{
+  display:flex;
+  gap:8px;
+  align-items:baseline;
+}
+.im-label{
+  font-weight:900;
+  min-width:74px;
+}
+.im-value{
+  flex:1;
+  min-width:0;
+  word-break:break-word;
+}
+
+.invoice-summary{
+  margin-top:8px;
+  font-weight:900;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.invoice-rule{
+  border-top:1px dashed #000;
+  margin:10px 0;
+}
+
+/* Tabla */
+.invoice-table{ width:100%; }
+
+.it-head,
+.it-row{
+  display:grid;
+  grid-template-columns:60px 1fr 72px 64px;
+  gap:8px;
+  align-items:center;
+}
+
+.it-head{
+  font-weight:900;
+  border-bottom:1px solid #000;
+  padding-bottom:6px;
+  margin-bottom:6px;
+}
+
+.it-row{
+  padding:6px 0;
+  border-bottom:1px dotted #999;
+}
+.it-row:last-child{ border-bottom:0; }
+
+.it-prod{
+  word-break:break-word;
+}
+
+/* Cantidad (editable, estilo papel) */
+.qty-input{
+  width:100%;
+  border:0;
+  border-bottom:1px solid #000;
+  background:transparent;
+  font:inherit;
+  text-align:right;
+  padding:0 2px;
+  outline:none;
+}
+.qty-input:focus{
+  background:rgba(0,0,0,.04);
+}
+
+/* Acciones por producto */
+.it-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:6px;
+}
+
+.inv-action{
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  font-size:14px;
+  line-height:1;
+  padding:0;
+  opacity:.8;
+}
+.inv-action:hover{ opacity:1; }
+.inv-action.danger{ color:#b91c1c; }
+
+/* Totales */
+.invoice-totals{
+  display:grid;
+  gap:6px;
+  font-weight:900;
+}
+.itot-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+/* Acciones de factura */
+.invoice-actions{
+  margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.inv-btn{
+  border:1px solid #000;
+  background:transparent;
+  color:#000;
+  padding:8px 10px;
+  font:inherit;
+  font-weight:900;
+  cursor:pointer;
+  border-radius:0;
+}
+.inv-btn.danger{
+  border-color:#b91c1c;
+  color:#b91c1c;
+}
+
+/* Flash sutil cuando cambian totales */
+.invoice.invoice-flash{
+  outline:2px solid rgba(247,147,30,.55);
+  outline-offset:2px;
+}
+
+@media(min-width:900px){
+  .invoice{
+    padding:14px;
+    font-size:13px;
+  }
 }
