@@ -1,4 +1,27 @@
 // ==========================
+// SUPABASE INIT
+// ==========================
+const SUPABASE_URL = "https://vndygzbrlleaizrvfarr.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZHlnemJybGxlYWl6cnZmYXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NzMyNzEsImV4cCI6MjA4MjM0OTI3MX0.dW4K3c4Q2B7hLJWbRkkpWz2ySvstdr60HVEaxwTvSjk";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+supabase.auth.getSession().then(({ data, error }) => {
+  if (error) {
+    console.error("Supabase error:", error);
+  } else {
+    console.log("Supabase conectado ✅", data);
+  }
+});
+
+
+
+
+// ==========================
 // CONFIG (GitHub Pages)
 // ==========================
 const BASE_URL = "https://ferreteriauniversal45-sudo.github.io/ferreteria-inventario-app";
