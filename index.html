@@ -88,7 +88,6 @@
                 </button>
               </div>
 
-              <!-- ✅ Separado más abajo en móviles con CSS -->
               <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
               <p class="hint">
                 El Excel se genera en el teléfono. En Android quedara en <b>Descargas</b>.
@@ -275,24 +274,17 @@
           </div>
 
           <div class="tabs">
-            <button class="tab active" id="tabMov" type="button">Movimientos</button>
+            <button class="tab active" id="tabMov" type="button">Facturas</button>
             <button class="tab" id="tabDel" type="button">Eliminaciones</button>
           </div>
 
-          <input id="histSearch" class="input" placeholder="Filtrar por código o producto..." autocomplete="off">
+          <input id="histSearch" class="input" placeholder="Buscar por factura, código o producto..." autocomplete="off">
+          <div class="note">
+            Tip: toca la <b>cantidad</b> para editar. Usa <b>🗑</b> para eliminar un artículo.
+          </div>
 
           <div class="table-wrap">
-            <div id="histHeadMov" class="table-head cols-hmov">
-              <div>Tipo</div>
-              <div>Código</div>
-              <div>Producto</div>
-              <div class="right">Cant.</div>
-              <div>Fecha</div>
-              <div>Factura</div>
-              <div>Proveedor</div>
-              <div class="right">Acción</div>
-            </div>
-
+            <!-- header solo para eliminaciones (PC) -->
             <div id="histHeadDel" class="table-head cols-hdel hidden">
               <div>Fecha/Hora</div>
               <div>Tipo</div>
@@ -302,7 +294,8 @@
               <div>Detalle</div>
             </div>
 
-            <div id="histList" class="table-body"></div>
+            <!-- aquí se pintan facturas o eliminaciones -->
+            <div id="histList" class="hist-list"></div>
           </div>
         </div>
       </section>
