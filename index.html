@@ -84,7 +84,7 @@
                 <button class="tile" id="btnHistorial" type="button">
                   <div class="tile-emoji">📜</div>
                   <div class="tile-title">Historial</div>
-                  <div class="tile-desc">Mov. y eliminaciones</div>
+                  <div class="tile-desc">Facturas y eliminaciones</div>
                 </button>
               </div>
 
@@ -98,7 +98,7 @@
         </div>
       </section>
 
-     <!-- CATALOGO -->
+      <!-- CATALOGO -->
       <section id="catalogScreen" class="screen hidden">
         <div class="card">
           <div class="screen-head">
@@ -148,7 +148,7 @@
           <div class="field">
             <label class="label">Código</label>
             <div class="input-row">
-              <input id="entradaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
+              <input id="entradaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
               <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
             </div>
           </div>
@@ -181,7 +181,9 @@
           <button class="btn" id="btnAddEntradaItem" type="button">➕ Agregar producto a factura</button>
 
           <div class="note" id="entradaItemsInfo">Factura vacía.</div>
-          <div id="entradaItemsList" class="items-list"></div>
+
+          <!-- ✅ PREVIEW FACTURA (MISMO ESTILO QUE HISTORIAL) -->
+          <div id="entradaFacturaPreview"></div>
 
           <div class="btn-row">
             <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
@@ -202,7 +204,7 @@
           <div class="field">
             <label class="label">Código</label>
             <div class="input-row">
-              <input id="salidaCodigo" class="input" placeholder="Ej: A001" autocomplete="off">
+              <input id="salidaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
               <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
             </div>
           </div>
@@ -231,7 +233,9 @@
           <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
 
           <div class="note" id="salidaItemsInfo">Factura vacía.</div>
-          <div id="salidaItemsList" class="items-list"></div>
+
+          <!-- ✅ PREVIEW FACTURA (MISMO ESTILO QUE HISTORIAL) -->
+          <div id="salidaFacturaPreview"></div>
 
           <div class="btn-row">
             <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
@@ -279,12 +283,8 @@
           </div>
 
           <input id="histSearch" class="input" placeholder="Buscar por factura, código o producto..." autocomplete="off">
-          <div class="note">
-            Tip: toca la <b>cantidad</b> para editar. Usa <b>🗑</b> para eliminar un artículo.
-          </div>
 
           <div class="table-wrap">
-            <!-- header solo para eliminaciones (PC) -->
             <div id="histHeadDel" class="table-head cols-hdel hidden">
               <div>Fecha/Hora</div>
               <div>Tipo</div>
@@ -294,7 +294,6 @@
               <div>Detalle</div>
             </div>
 
-            <!-- aquí se pintan facturas o eliminaciones -->
             <div id="histList" class="hist-list"></div>
           </div>
         </div>
@@ -317,7 +316,7 @@
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v1.4 · Carlos Tercero
+      Ferretería Universal · v1.9 · Carlos Tercero
     </footer>
   </div>
 
