@@ -105,6 +105,12 @@ function makeId(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 
+function formatFechaHora(ts){
+  const d = new Date(ts);
+  const pad = n => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 // ✅ Descarga compatible con Android WebView
 function downloadBlob(blob, filename){
   try{
@@ -1244,13 +1250,31 @@ function exportExcel(){
     return;
   }
 
-  const entradas = movs.filter(m => m.tipo === "entrada");
-  const salidas  = movs.filter(m => m.tipo === "salida");
+  const entradas = movs
+  .filter(m => m.tipo === "entrada")
+  .map(m => ({
+    ...m,
+    fechaHora: formatFechaHora(m.timestamp)
+  }));
+
+const salidas = movs
+  .filter(m => m.tipo === "salida")
+  .map(m => ({
+    ...m,
+    fechaHora: formatFechaHora(m.timestamp)
+  }));
+
+const eliminaciones = dels.map(d => ({
+  ...d,
+  fechaHora: formatFechaHora(d.timestamp)
+}));
+
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas),  "SALIDAS");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dels),     "ELIMINACIONES");
+XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
+XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
+
 
   const filename = `reporte_${todayISO()}.xlsx`;
   let saved = false;
