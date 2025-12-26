@@ -84,7 +84,7 @@
                 <button class="tile" id="btnHistorial" type="button">
                   <div class="tile-emoji">📜</div>
                   <div class="tile-title">Historial</div>
-                  <div class="tile-desc">Facturas y eliminaciones</div>
+                  <div class="tile-desc">Mis / Otras / Eliminaciones</div>
                 </button>
               </div>
 
@@ -148,7 +148,7 @@
           <div class="field">
             <label class="label">Código</label>
             <div class="input-row">
-              <input id="entradaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+              <input id="entradaCodigo" class="input" placeholder="Ej: 12-0030" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
               <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
             </div>
           </div>
@@ -170,7 +170,7 @@
 
           <div class="field">
             <label class="label">Factura</label>
-            <input id="entradaFactura" class="input" placeholder="Ej: FAC-001">
+            <input id="entradaFactura" class="input" placeholder="Ej: 34433">
           </div>
 
           <div class="field">
@@ -182,7 +182,7 @@
 
           <div class="note" id="entradaItemsInfo">Factura vacía.</div>
 
-          <!-- ✅ PREVIEW FACTURA (MISMO ESTILO QUE HISTORIAL) -->
+          <!-- ✅ PREVIEW FACTURA BORRADOR -->
           <div id="entradaFacturaPreview"></div>
 
           <div class="btn-row">
@@ -204,7 +204,7 @@
           <div class="field">
             <label class="label">Código</label>
             <div class="input-row">
-              <input id="salidaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+              <input id="salidaCodigo" class="input" placeholder="Ej: 12-0030" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
               <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
             </div>
           </div>
@@ -222,7 +222,7 @@
 
           <div class="field">
             <label class="label">Factura</label>
-            <input id="salidaFactura" class="input" placeholder="Ej: FAC-123">
+            <input id="salidaFactura" class="input" placeholder="Ej: 34433">
           </div>
 
           <div class="field">
@@ -234,7 +234,7 @@
 
           <div class="note" id="salidaItemsInfo">Factura vacía.</div>
 
-          <!-- ✅ PREVIEW FACTURA (MISMO ESTILO QUE HISTORIAL) -->
+          <!-- ✅ PREVIEW FACTURA BORRADOR -->
           <div id="salidaFacturaPreview"></div>
 
           <div class="btn-row">
@@ -278,7 +278,8 @@
           </div>
 
           <div class="tabs">
-            <button class="tab active" id="tabMov" type="button">Facturas</button>
+            <button class="tab active" id="tabMine" type="button">Mis facturas</button>
+            <button class="tab" id="tabOthers" type="button">Otras facturas</button>
             <button class="tab" id="tabDel" type="button">Eliminaciones</button>
           </div>
 
@@ -316,7 +317,7 @@
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v2.0 · Carlos Tercero
+      Ferretería Universal · v1.4 · Carlos Tercero
     </footer>
   </div>
 
