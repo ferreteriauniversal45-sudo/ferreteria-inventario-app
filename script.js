@@ -125,6 +125,23 @@ function downloadBlob(blob, filename){
   }
 }
 
+function formatCodigoInput(input){
+  input.addEventListener("input", () => {
+    let v = input.value;
+
+    // quitar todo lo que no sea número
+    v = v.replace(/[^0-9]/g, "");
+
+    // máximo: 2 dígitos + resto
+    if(v.length <= 2){
+      input.value = v;
+    }else{
+      input.value = v.slice(0,2) + "-" + v.slice(2);
+    }
+  });
+}
+
+
 // ==========================
 // UI NAV
 // ==========================
