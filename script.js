@@ -16,6 +16,30 @@ supa.auth.getSession().then(({ data, error }) => {
   }
 });
 
+// ==========================
+// AUTH
+// ==========================
+let currentUser = null;
+
+async function login(){
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPass").value;
+
+  const { data, error } = await supa.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    $("loginError").textContent = error.message;
+    return;
+  }
+
+  currentUser = data.user;
+  $("loginError").textContent = "";
+  showScreen("homeScreen");
+  console.log("Usuario logueado:", currentUser.email);
+}
 
 
 
