@@ -1,48 +1,3 @@
-
-const SUPABASE_URL = "https://vndygzbrlleaizrvfarr.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuZHlnemJybGxlYWl6cnZmYXJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY3NzMyNzEsImV4cCI6MjA4MjM0OTI3MX0.dW4K3c4Q2B7hLJWbRkkpWz2ySvstdr60HVEaxwTvSjk";
-
-const supa = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-
-supa.auth.getSession().then(({ data, error }) => {
-  if (error) {
-    console.error("Supabase error:", error);
-  } else {
-    console.log("Supabase conectado ✅", data);
-  }
-});
-
-// ==========================
-// AUTH
-// ==========================
-let currentUser = null;
-
-async function login(){
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPass").value;
-
-  const { data, error } = await supa.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if(error){
-    $("loginError").textContent = error.message;
-    return;
-  }
-
-  currentUser = data.user;
-  $("loginError").textContent = "";
-  showScreen("homeScreen");
-  console.log("Usuario logueado:", currentUser.email);
-}
-
-
-
 // ==========================
 // CONFIG (GitHub Pages)
 // ==========================
@@ -1364,24 +1319,12 @@ XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMI
 // ==========================
 // INIT
 // ==========================
-document.addEventListener("DOMContentLoaded", async () => {
-
-  // 1️⃣ Revisar sesión
-  const { data } = await supa.auth.getSession();
-
-  if(data.session){
-    currentUser = data.session.user;
-    showScreen("homeScreen");
-  }else{
-    showScreen("loginScreen");
-    return; // ⬅️ CLAVE: no seguir cargando la app
-  }
-
-  // 2️⃣ Inicialización normal SOLO si hay sesión
+document.addEventListener("DOMContentLoaded", () => {
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
   cargarDepartamentos();
   refreshHome();
+  showScreen("homeScreen");
 
   if($("entradaFecha")) $("entradaFecha").value = todayISO();
   if($("salidaFecha")) $("salidaFecha").value = todayISO();
