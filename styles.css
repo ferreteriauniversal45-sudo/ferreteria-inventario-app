@@ -154,18 +154,6 @@ body{
 }
 .home-left, .home-right{ width:100%; }
 
-.pc-tip{
-  margin-top:10px;
-  padding:10px 12px;
-  border-radius:14px;
-  background:rgba(11,47,122,.06);
-  border:1px solid rgba(11,47,122,.12);
-  color:var(--muted);
-  font-size:12.5px;
-  line-height:1.35;
-  display:none;
-}
-
 /* STATS */
 .stats{
   display:grid;
@@ -227,8 +215,6 @@ body{
 #btnExport{
   margin-top:18px;
 }
-
-/* En móvil aún más separación */
 @media(max-width:480px){
   #btnExport{ margin-top:22px; }
 }
@@ -375,7 +361,6 @@ body{
   margin-top:6px;
   word-break: break-word;
 }
-
 .cell:first-child{ margin-top:0; }
 
 .cell::before{
@@ -383,10 +368,7 @@ body{
   color:var(--muted);
   font-weight:800;
 }
-
-/* ✅ FIX: si NO trae data-label, no muestres ": " */
 .cell:not([data-label])::before{ content:""; }
-
 .cell[data-label=""]::before{ content:""; }
 
 .right{ text-align:right; }
@@ -404,10 +386,8 @@ body{
 
   .home-left{ flex: 1.05; }
   .home-right{ flex: 0.95; }
-  .pc-tip{ display:block; }
   .brand-logo{ width: 280px; }
 
-  /* Tablas */
   .table-head{
     display:grid;
     padding:10px 12px;
@@ -446,15 +426,10 @@ body{
   }
   .cell::before{ content:""; }
 
-  .cell.wrap{
-    white-space:normal;
-  }
+  .cell.wrap{ white-space:normal; }
 
-  /* Columnas por pantalla */
   .cols-catalog{ grid-template-columns:110px 2fr 1fr 90px; gap:12px; }
   .cols-search{ grid-template-columns:110px 2fr 1fr 90px 120px; gap:12px; }
-
-  .cols-hmov{ grid-template-columns:90px 100px 2fr 80px 110px 160px 160px 120px; gap:12px; }
   .cols-hdel{ grid-template-columns:160px 90px 100px 2fr 80px 2fr; gap:12px; }
 }
 
@@ -519,71 +494,6 @@ body{
   border-color:rgba(11,47,122,.45);
 }
 
-/* ===== FACTURAS (LISTA DE ITEMS) ===== */
-.items-list{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-top:10px;
-}
-
-.item-row{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  align-items:flex-start;
-  padding:12px;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:16px;
-}
-
-.item-left{
-  min-width: 0;
-}
-
-.item-title{
-  font-weight:900;
-  font-size:13.5px;
-  margin:0;
-}
-
-.item-meta{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.25;
-  word-break: break-word;
-}
-
-.item-qty{
-  font-weight:900;
-  margin-top:6px;
-  font-size:13px;
-}
-
-.item-actions{
-  display:flex;
-  gap:8px;
-  align-items:flex-start;
-}
-
-.btn.tiny{
-  width:auto;
-  padding:8px 10px;
-  border-radius:12px;
-  font-size:12.5px;
-}
-
-.btn-row{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-.btn-row .btn{
-  width:100%;
-}
-
 /* ===== CONFIRM MODAL (JS) ===== */
 .confirm-overlay{
   position:fixed;
@@ -595,9 +505,8 @@ body{
   padding:18px;
   z-index:9999;
 }
-.confirm-overlay.hidden{
-  display:none;
-}
+.confirm-overlay.hidden{ display:none; }
+
 .confirm-box{
   width:min(420px, 100%);
   background:var(--card);
@@ -616,12 +525,10 @@ body{
   display:flex;
   gap:10px;
 }
-.confirm-actions .btn{
-  width:100%;
-}
+.confirm-actions .btn{ width:100%; }
 
 /* ==============================
-   HISTORIAL NUEVO: FACTURA IMPRESA
+   HISTORIAL + BORRADOR: FACTURA IMPRESA
    ============================== */
 
 .hist-list{
@@ -670,7 +577,7 @@ body{
 }
 .im-label{
   font-weight:900;
-  min-width:74px;
+  min-width:78px;
 }
 .im-value{
   flex:1;
@@ -715,9 +622,7 @@ body{
 }
 .it-row:last-child{ border-bottom:0; }
 
-.it-prod{
-  word-break:break-word;
-}
+.it-prod{ word-break:break-word; }
 
 /* Cantidad (editable, estilo papel) */
 .qty-input{
@@ -730,9 +635,7 @@ body{
   padding:0 2px;
   outline:none;
 }
-.qty-input:focus{
-  background:rgba(0,0,0,.04);
-}
+.qty-input:focus{ background:rgba(0,0,0,.04); }
 
 /* Acciones por producto */
 .it-actions{
@@ -794,8 +697,5 @@ body{
 }
 
 @media(min-width:900px){
-  .invoice{
-    padding:14px;
-    font-size:13px;
-  }
+  .invoice{ padding:14px; font-size:13px; }
 }
