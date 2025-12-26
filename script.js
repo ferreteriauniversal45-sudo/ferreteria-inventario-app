@@ -17,8 +17,33 @@ const K = {
 
 const $ = (id) => document.getElementById(id);
 
+// ==========================
+// DEVICE (dueño local)
+// ==========================
+const DEVICE_KEY = "fu_device_id";
+
+function getDeviceId(){
+  let id = localStorage.getItem(DEVICE_KEY);
+  if(!id){
+    id = "dev_" + Math.random().toString(36).slice(2) + "_" + Date.now().toString(36);
+    localStorage.setItem(DEVICE_KEY, id);
+  }
+  return id;
+}
+
+const DEVICE_ID = getDeviceId();
+
+function shortDevice(id){
+  const s = String(id || "");
+  if(s.length <= 8) return s;
+  return s.slice(-6);
+}
+
+// ==========================
+// APP STATE
+// ==========================
 let currentSearchContext = null; // "entrada" | "salida"
-let historialTab = "mov";        // "mov" | "del"
+let historialTab = "mine";       // "mine" | "others" | "del"
 
 let baseCache = {};
 let deltaDirty = true;
@@ -45,12 +70,11 @@ function sumItems(items, code){
 
 function clearEntradaDraft(){
   entradaItems = [];
-  renderEntradaItems(); // ahora renderiza FACTURA BORRADOR
+  renderEntradaItems();
 }
-
 function clearSalidaDraft(){
   salidaItems = [];
-  renderSalidaItems();  // ahora renderiza FACTURA BORRADOR
+  renderSalidaItems();
   updateSalidaStockHint();
 }
 
@@ -69,6 +93,15 @@ function writeJSON(key, value){
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function escapeHtml(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
 // ✅ FECHA LOCAL (NO UTC)
 function todayISO(){
   const d = new Date();
@@ -82,6 +115,16 @@ function nowISO(){
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
+function formatFechaHora(ts){
+  const d = new Date(Number(ts || 0));
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function makeId(){
+  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+}
+
 let toastTimer = null;
 function toast(msg){
   const t = $("toast");
@@ -90,25 +133,6 @@ function toast(msg){
   t.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove("show"), 1600);
-}
-
-function escapeHtml(str){
-  return String(str ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function makeId(){
-  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-}
-
-function formatFechaHora(ts){
-  const d = new Date(ts);
-  const pad = n => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
 // ✅ Descarga compatible con Android WebView
@@ -139,8 +163,7 @@ function digitsToCodigo(digits){
   const d = String(digits || "").replace(/\D/g, "");
   if(d.length === 0) return "";
   if(d.length === 1) return d;
-  // ✅ con 2 dígitos ya deja el guion listo
-  if(d.length === 2) return `${d}-`;
+  if(d.length === 2) return `${d}-`;      // ✅ listo el guion
   return `${d.slice(0,2)}-${d.slice(2)}`;
 }
 
@@ -149,7 +172,7 @@ function hasLetters(str){
 }
 
 /**
- * allowText=true -> SOLO aplica máscara si el usuario está escribiendo algo numérico (sin letras).
+ * allowText=true -> SOLO aplica máscara si parece búsqueda numérica (sin letras).
  * allowText=false -> forzar solo dígitos (ideal para entradaCodigo/salidaCodigo).
  */
 function attachCodigoMask(input, { allowText=false } = {}){
@@ -159,10 +182,7 @@ function attachCodigoMask(input, { allowText=false } = {}){
     const raw = input.value ?? "";
 
     if(allowText){
-      // si tiene letras, no tocar (para poder buscar por nombre)
       if(hasLetters(raw)) return;
-
-      // si empieza con letra u otro, no tocar
       const t = String(raw).trim();
       if(t && !/^\d/.test(t)) return;
     }
@@ -234,6 +254,32 @@ function normalizeBase(inv){
 }
 
 // ==========================
+// MIGRACIÓN: agregar deviceId a movimientos viejos
+// ==========================
+function migrateDeviceId(){
+  let changed = false;
+
+  const movs = readJSON(K.MOV, []);
+  for(const m of movs){
+    if(!m.deviceId){
+      m.deviceId = DEVICE_ID;
+      changed = true;
+    }
+  }
+  if(changed) writeJSON(K.MOV, movs);
+
+  changed = false;
+  const dels = readJSON(K.DEL, []);
+  for(const d of dels){
+    if(!d.deviceId){
+      d.deviceId = DEVICE_ID;
+      changed = true;
+    }
+  }
+  if(changed) writeJSON(K.DEL, dels);
+}
+
+// ==========================
 // CATALOGO FILTERS (DEPARTAMENTOS)
 // ==========================
 function cargarDepartamentos(){
@@ -266,19 +312,24 @@ function cargarDepartamentos(){
 }
 
 // ==========================
-// DELTAS
+// DELTAS (SOLO MI DISPOSITIVO)
 // ==========================
 function rebuildDelta(){
   const movs = readJSON(K.MOV, []);
   const ent = {};
   const sal = {};
+
   for(const m of movs){
+    // ✅ IMPORTANTE: stock local solo con MIS movimientos
+    if(String(m.deviceId || "") !== DEVICE_ID) continue;
+
     const c = String(m.codigo||"").trim().toUpperCase();
     const q = Number(m.cantidad||0);
     if(!c || !Number.isFinite(q)) continue;
     if(m.tipo === "entrada") ent[c] = (ent[c] || 0) + q;
     if(m.tipo === "salida")  sal[c] = (sal[c] || 0) + q;
   }
+
   deltaCache = { ent, sal };
   deltaDirty = false;
 }
@@ -379,12 +430,18 @@ function refreshHome(){
 
   const movs = readJSON(K.MOV, []);
   const h = todayISO();
-  const movHoy = movs.filter(m => String(m.fecha||"").slice(0,10) === h).length;
+
+  // ✅ solo movimientos de este dispositivo
+  const movHoy = movs.filter(m =>
+    String(m.deviceId||"") === DEVICE_ID &&
+    String(m.fecha||"").slice(0,10) === h
+  ).length;
+
   if($("homeMovHoy")) $("homeMovHoy").textContent = String(movHoy);
 }
 
 // ==========================
-// CATALOGO (TABLA) + FILTROS
+// CATALOGO
 // ==========================
 function renderCatalog(query){
   const list = $("catalogList");
@@ -392,7 +449,6 @@ function renderCatalog(query){
   if(!list || !info) return;
 
   list.innerHTML = "";
-
   const q = (query || "").toLowerCase().trim();
 
   let entries = Object.entries(baseCache || {});
@@ -566,6 +622,7 @@ function updateSalidaStockHint(){
     out.textContent = "";
     return;
   }
+
   const stockReal = getStock(code);
   const reservado = sumItems(salidaItems, code);
   const disponible = stockReal - reservado;
@@ -575,7 +632,7 @@ function updateSalidaStockHint(){
 }
 
 // ==========================
-// FACTURA BORRADOR (PREVIEW) - MISMO ESTILO QUE HISTORIAL
+// FACTURA BORRADOR (PREVIEW)
 // ==========================
 function flashInvoiceEl(el){
   if(!el) return;
@@ -600,7 +657,6 @@ function updateDraftTotalsFromDOM(context){
 
   inv.querySelectorAll(".t-prod").forEach(el => el.textContent = String(totalProductos));
   inv.querySelectorAll(".t-pzas").forEach(el => el.textContent = String(totalPiezas));
-
   flashInvoiceEl(inv);
 }
 
@@ -621,7 +677,6 @@ function renderDraftFactura(context){
 
   const fecha = (isEntrada ? $("entradaFecha")?.value : $("salidaFecha")?.value) || todayISO();
   const factura = (isEntrada ? $("entradaFactura")?.value : $("salidaFactura")?.value) || "";
-
   const proveedor = isEntrada ? String($("entradaProveedor")?.value || "").trim() : "";
   const tipoLabel = isEntrada ? "ENTRADA" : "SALIDA";
 
@@ -785,6 +840,7 @@ function saveFacturaEntrada(){
   for(const it of entradaItems){
     const codigo = it.codigo;
     const cantidad = Number(it.cantidad);
+    const ts = Date.now();
 
     movs.push({
       id: makeId(),
@@ -797,7 +853,8 @@ function saveFacturaEntrada(){
       proveedor,
       factura,
       fecha,
-      timestamp: Date.now()
+      timestamp: ts,
+      deviceId: DEVICE_ID
     });
   }
 
@@ -826,8 +883,8 @@ function saveFacturaSalida(){
   // validación final de stock
   for(const it of salidaItems){
     const stockReal = getStock(it.codigo);
-    const reservado = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
-    const disponible = stockReal - reservado;
+    const reservadoOtros = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
+    const disponible = stockReal - reservadoOtros;
     if(Number(it.cantidad) > disponible){
       toast(`Stock insuficiente en ${it.codigo}. Disponible: ${disponible}`);
       return;
@@ -840,6 +897,7 @@ function saveFacturaSalida(){
   for(const it of salidaItems){
     const codigo = it.codigo;
     const cantidad = Number(it.cantidad);
+    const ts = Date.now();
 
     movs.push({
       id: makeId(),
@@ -852,7 +910,8 @@ function saveFacturaSalida(){
       proveedor: "",
       factura,
       fecha,
-      timestamp: Date.now()
+      timestamp: ts,
+      deviceId: DEVICE_ID
     });
   }
 
@@ -867,7 +926,7 @@ function saveFacturaSalida(){
 }
 
 // ==========================
-// HISTORIAL NUEVO (FACTURAS)
+// HISTORIAL (facturas agrupadas)
 // ==========================
 function movGroupKey(m){
   return String(m?.grupoId || m?.factura || m?.id || "").trim();
@@ -890,15 +949,23 @@ function groupFacturas(movs){
   }
 
   const groups = Array.from(map.values());
-
   for(const g of groups){
     g.items.sort((a,b) =>
       String(a.codigo||"").localeCompare(String(b.codigo||""), "es", { numeric:true, sensitivity:"base" })
     );
   }
-
   groups.sort((a,b) => (b.ts||0)-(a.ts||0));
   return groups;
+}
+
+function isMineGroup(items){
+  if(!items || items.length === 0) return false;
+  return items.every(it => String(it.deviceId||"") === DEVICE_ID);
+}
+
+function isOthersGroup(items){
+  if(!items || items.length === 0) return false;
+  return items.every(it => String(it.deviceId||"") !== DEVICE_ID);
 }
 
 function calcFacturaTotalsFromItems(items){
@@ -948,7 +1015,7 @@ function updateFacturaTotalsFromStorage(grupoId){
   flashInvoice(grupoId);
 }
 
-function renderFacturaCard(group, container){
+function renderFacturaCard(group, container, { canEdit=false } = {}){
   const items = group.items || [];
   if(items.length === 0) return;
 
@@ -962,10 +1029,13 @@ function renderFacturaCard(group, container){
   const proveedorLabel = (f.tipo === "entrada") ? "PROVEEDOR" : "REFERENCIA";
   const proveedorVal = (f.tipo === "entrada") ? (proveedor || "—") : "—";
 
+  const origin = canEdit ? `LOCAL (${shortDevice(DEVICE_ID)})` : `OTRO (${shortDevice(f.deviceId)})`;
+
   const { totalProductos, totalPiezas } = calcFacturaTotalsFromItems(items);
 
   const el = document.createElement("div");
   el.className = "invoice";
+  if(!canEdit) el.classList.add("readonly");
   el.dataset.grupo = grupoId;
 
   el.innerHTML = `
@@ -979,6 +1049,7 @@ function renderFacturaCard(group, container){
       <div class="im-row"><span class="im-label">TIPO</span><span class="im-value">${escapeHtml(tipoLabel)}</span></div>
       <div class="im-row"><span class="im-label">FECHA</span><span class="im-value">${escapeHtml(fecha)}</span></div>
       <div class="im-row"><span class="im-label">${escapeHtml(proveedorLabel)}</span><span class="im-value">${escapeHtml(proveedorVal)}</span></div>
+      <div class="im-row"><span class="im-label">ORIGEN</span><span class="im-value">${escapeHtml(origin)}</span></div>
     </div>
 
     <div class="invoice-summary">
@@ -995,11 +1066,9 @@ function renderFacturaCard(group, container){
         <div class="right">ACC</div>
       </div>
 
-      ${items.map(it => `
-        <div class="it-row">
-          <div class="it-code">${escapeHtml(it.codigo)}</div>
-          <div class="it-prod">${escapeHtml(it.producto)}</div>
-          <div class="right">
+      ${items.map(it => {
+        const qtyCell = canEdit
+          ? `
             <input
               class="qty-input edit-cantidad"
               type="number"
@@ -1010,13 +1079,25 @@ function renderFacturaCard(group, container){
               data-id="${escapeHtml(it.id)}"
               data-grupo="${escapeHtml(grupoId)}"
               aria-label="Cantidad ${escapeHtml(it.codigo)}">
-          </div>
-          <div class="it-actions">
+          `
+          : `<div class="right">${escapeHtml(String(it.cantidad))}</div>`;
+
+        const actionCell = canEdit
+          ? `
             <button class="inv-action" type="button" data-edit title="Editar cantidad">✏️</button>
             <button class="inv-action danger" type="button" data-del="${escapeHtml(it.id)}" title="Eliminar producto">🗑</button>
+          `
+          : `<span class="readonly-pill">🔒</span>`;
+
+        return `
+          <div class="it-row">
+            <div class="it-code">${escapeHtml(it.codigo)}</div>
+            <div class="it-prod">${escapeHtml(it.producto)}</div>
+            <div class="right">${qtyCell}</div>
+            <div class="it-actions">${actionCell}</div>
           </div>
-        </div>
-      `).join("")}
+        `;
+      }).join("")}
     </div>
 
     <div class="invoice-rule"></div>
@@ -1027,22 +1108,32 @@ function renderFacturaCard(group, container){
     </div>
 
     <div class="invoice-actions">
-      <button class="inv-btn danger" type="button" data-del-factura="${escapeHtml(grupoId)}">Eliminar factura</button>
+      ${canEdit
+        ? `<button class="inv-btn danger" type="button" data-del-factura="${escapeHtml(grupoId)}">Eliminar factura</button>`
+        : `<span class="readonly-pill">Solo lectura</span>`
+      }
     </div>
   `;
 
   container.appendChild(el);
 }
 
+// ==========================
+// HISTORIAL: tabs
+// ==========================
 function setHistTab(tab){
   historialTab = tab;
 
-  const tMov = $("tabMov");
+  const tMine = $("tabMine");
+  const tOthers = $("tabOthers");
   const tDel = $("tabDel");
-  tMov?.classList.remove("active");
+
+  tMine?.classList.remove("active");
+  tOthers?.classList.remove("active");
   tDel?.classList.remove("active");
 
-  if(tab === "mov") tMov?.classList.add("active");
+  if(tab === "mine") tMine?.classList.add("active");
+  else if(tab === "others") tOthers?.classList.add("active");
   else tDel?.classList.add("active");
 
   $("histHeadDel")?.classList.toggle("hidden", tab !== "del");
@@ -1060,82 +1151,110 @@ function renderHistorial(){
 
   list.innerHTML = "";
 
-  if(historialTab === "mov"){
-    const movs = readJSON(K.MOV, []);
-    const groups = groupFacturas(movs);
+  // ======================
+  // ELIMINACIONES
+  // ======================
+  if(historialTab === "del"){
+    const dels = readJSON(K.DEL, [])
+      .slice()
+      .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
 
-    const filtered = groups.filter(g => {
+    const filtered = dels.filter(d => {
       if(!q) return true;
-      const f = g.items[0] || {};
-      const factura = String(f.factura||"").toLowerCase();
-      const prov = String(f.proveedor||"").toLowerCase();
-      const fecha = String(f.fecha||"").toLowerCase();
-
-      if(factura.includes(q) || prov.includes(q) || fecha.includes(q)) return true;
-
-      return g.items.some(m => {
-        const c = String(m.codigo||"").toLowerCase();
-        const p = String(m.producto||"").toLowerCase();
-        return c.includes(q) || p.includes(q);
-      });
+      const c = String(d.codigo||"").toLowerCase();
+      const p = String(d.producto||"").toLowerCase();
+      const det = String(d.detalle||"").toLowerCase();
+      return c.includes(q) || p.includes(q) || det.includes(q);
     });
 
     if(filtered.length === 0){
-      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin facturas.</div></div>`;
+      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin eliminaciones.</div></div>`;
       return;
     }
 
-    for(const g of filtered){
-      renderFacturaCard(g, list);
+    for(const d of filtered){
+      const row = document.createElement("div");
+      row.className = "trow cols-hdel";
+      row.innerHTML = `
+        <div class="cell" data-label="Fecha/Hora">${escapeHtml(d.fechaHora || "")}</div>
+        <div class="cell" data-label="Tipo">${escapeHtml(d.tipo || "")}</div>
+        <div class="cell" data-label="Código">${escapeHtml(d.codigo || "")}</div>
+        <div class="cell wrap" data-label="Producto">${escapeHtml(d.producto || "")}</div>
+        <div class="cell right" data-label="Cant.">${escapeHtml(String(d.cantidad || ""))}</div>
+        <div class="cell wrap" data-label="Detalle">${escapeHtml(d.detalle || "")}</div>
+      `;
+      list.appendChild(row);
     }
     return;
   }
 
-  // ELIMINACIONES
-  const dels = readJSON(K.DEL, [])
-    .slice()
-    .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+  // ======================
+  // FACTURAS (MIS / OTRAS)
+  // ======================
+  const movs = readJSON(K.MOV, []);
+  const groups = groupFacturas(movs);
 
-  const filtered = dels.filter(d => {
+  const visibleGroups = groups.filter(g => {
+    const mine = isMineGroup(g.items);
+    const others = isOthersGroup(g.items);
+    const mixed = !mine && !others;
+
+    if(historialTab === "mine") return mine;
+    if(historialTab === "others") return others || mixed;
+    return false;
+  });
+
+  const filtered = visibleGroups.filter(g => {
     if(!q) return true;
-    const c = String(d.codigo||"").toLowerCase();
-    const p = String(d.producto||"").toLowerCase();
-    const det = String(d.detalle||"").toLowerCase();
-    return c.includes(q) || p.includes(q) || det.includes(q);
+    const f = g.items[0] || {};
+    const factura = String(f.factura||"").toLowerCase();
+    const prov = String(f.proveedor||"").toLowerCase();
+    const fecha = String(f.fecha||"").toLowerCase();
+
+    if(factura.includes(q) || prov.includes(q) || fecha.includes(q)) return true;
+
+    return g.items.some(m => {
+      const c = String(m.codigo||"").toLowerCase();
+      const p = String(m.producto||"").toLowerCase();
+      return c.includes(q) || p.includes(q);
+    });
   });
 
   if(filtered.length === 0){
-    list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin eliminaciones.</div></div>`;
+    if(historialTab === "mine"){
+      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin facturas locales.</div></div>`;
+    }else{
+      list.innerHTML = `<div class="trow"><div class="cell" data-label="">No hay facturas de otros dispositivos aquí.</div></div>`;
+    }
     return;
   }
 
-  for(const d of filtered){
-    const row = document.createElement("div");
-    row.className = "trow cols-hdel";
-    row.innerHTML = `
-      <div class="cell" data-label="Fecha/Hora">${escapeHtml(d.fechaHora)}</div>
-      <div class="cell" data-label="Tipo">${escapeHtml(d.tipo)}</div>
-      <div class="cell" data-label="Código">${escapeHtml(d.codigo)}</div>
-      <div class="cell wrap" data-label="Producto">${escapeHtml(d.producto)}</div>
-      <div class="cell right" data-label="Cant.">${escapeHtml(String(d.cantidad))}</div>
-      <div class="cell wrap" data-label="Detalle">${escapeHtml(d.detalle)}</div>
-    `;
-    list.appendChild(row);
+  for(const g of filtered){
+    const canEdit = isMineGroup(g.items) && historialTab === "mine";
+    renderFacturaCard(g, list, { canEdit });
   }
 }
 
+// ==========================
+// ELIMINAR / EDITAR (solo si es mío)
+// ==========================
 async function deleteMovimiento(id){
-  const ok = await uiConfirm("¿Eliminar este artículo de la factura? (Quedará registrado en Eliminaciones)");
-  if(!ok) return;
-
   const movs = readJSON(K.MOV, []);
-  const idx = movs.findIndex(m => m.id === id);
-  if(idx < 0){
+  const m = movs.find(x => x.id === id);
+  if(!m){
     toast("No se encontró el artículo.");
     return;
   }
 
-  const m = movs[idx];
+  if(String(m.deviceId||"") !== DEVICE_ID){
+    toast("🔒 Esta factura pertenece a otro dispositivo");
+    return;
+  }
+
+  const ok = await uiConfirm("¿Eliminar este artículo de la factura? (Quedará registrado en Eliminaciones)");
+  if(!ok) return;
+
+  const idx = movs.findIndex(x => x.id === id);
   const grupoId = movGroupKey(m);
 
   movs.splice(idx, 1);
@@ -1151,7 +1270,8 @@ async function deleteMovimiento(id){
     cantidad: m.cantidad,
     detalle: `Artículo eliminado de factura ${m.factura||""}`,
     fechaHora: nowISO(),
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    deviceId: DEVICE_ID
   });
   writeJSON(K.DEL, dels);
 
@@ -1163,23 +1283,29 @@ async function deleteMovimiento(id){
 }
 
 async function deleteFactura(grupoId){
-  const ok = await uiConfirm("¿Eliminar FACTURA COMPLETA? (Se registrará en Eliminaciones)");
-  if(!ok) return;
-
   const movs = readJSON(K.MOV, []);
-  const eliminar = movs.filter(m => movGroupKey(m) === String(grupoId));
-  const restantes = movs.filter(m => movGroupKey(m) !== String(grupoId));
+  const items = movs.filter(m => movGroupKey(m) === String(grupoId));
 
-  if(eliminar.length === 0){
+  if(items.length === 0){
     toast("No se encontró la factura.");
     return;
   }
 
+  // ✅ seguridad: si hay cualquier item que no sea mío, bloqueo
+  if(!items.every(it => String(it.deviceId||"") === DEVICE_ID)){
+    toast("🔒 Esta factura pertenece a otro dispositivo");
+    return;
+  }
+
+  const ok = await uiConfirm("¿Eliminar FACTURA COMPLETA? (Se registrará en Eliminaciones)");
+  if(!ok) return;
+
+  const restantes = movs.filter(m => movGroupKey(m) !== String(grupoId));
   writeJSON(K.MOV, restantes);
   deltaDirty = true;
 
   const dels = readJSON(K.DEL, []);
-  for(const m of eliminar){
+  for(const m of items){
     dels.push({
       id: makeId(),
       tipo: m.tipo,
@@ -1188,7 +1314,8 @@ async function deleteFactura(grupoId){
       cantidad: m.cantidad,
       detalle: `Factura eliminada: ${m.factura||""}`,
       fechaHora: nowISO(),
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      deviceId: DEVICE_ID
     });
   }
   writeJSON(K.DEL, dels);
@@ -1199,14 +1326,14 @@ async function deleteFactura(grupoId){
 }
 
 // ==========================
-// CONFIRM MODAL (sin window.confirm)
+// CONFIRM MODAL
 // ==========================
 function uiConfirm(message){
   return new Promise(resolve => {
-    const overlay = document.getElementById("confirmOverlay");
-    const msg = document.getElementById("confirmMessage");
-    const btnOk = document.getElementById("confirmOk");
-    const btnCancel = document.getElementById("confirmCancel");
+    const overlay = $("confirmOverlay");
+    const msg = $("confirmMessage");
+    const btnOk = $("confirmOk");
+    const btnCancel = $("confirmCancel");
 
     if(!overlay || !msg || !btnOk || !btnCancel){
       resolve(window.confirm(message));
@@ -1234,8 +1361,50 @@ function uiConfirm(message){
 }
 
 // ==========================
-// EXPORT EXCEL (robusto)
+// EXPORT EXCEL (con HORA)
 // ==========================
+function exportMovRow(m){
+  const ts = Number(m.timestamp || 0);
+  const fechaHora = ts ? formatFechaHora(ts) : "";
+  const hora = fechaHora ? fechaHora.split(" ")[1] : "";
+
+  return {
+    id: m.id || "",
+    grupoId: m.grupoId || "",
+    tipo: m.tipo || "",
+    codigo: m.codigo || "",
+    producto: m.producto || "",
+    departamento: m.departamento || "",
+    cantidad: m.cantidad ?? "",
+    proveedor: m.proveedor || "",
+    factura: m.factura || "",
+    fecha: m.fecha || "",
+    hora,
+    fechaHora,
+    timestamp: ts ? String(ts) : "",       // ✅ texto para evitar 1.7E+12
+    deviceId: m.deviceId || ""
+  };
+}
+
+function exportDelRow(d){
+  const ts = Number(d.timestamp || 0);
+  const fechaHora = d.fechaHora || (ts ? formatFechaHora(ts) : "");
+  const hora = fechaHora ? String(fechaHora).split(" ")[1] : "";
+
+  return {
+    id: d.id || "",
+    tipo: d.tipo || "",
+    codigo: d.codigo || "",
+    producto: d.producto || "",
+    cantidad: d.cantidad ?? "",
+    detalle: d.detalle || "",
+    fechaHora,
+    hora,
+    timestamp: ts ? String(ts) : "",
+    deviceId: d.deviceId || ""
+  };
+}
+
 function exportExcel(){
   if(typeof XLSX === "undefined"){
     toast("No cargó Excel (revisa XLSX)");
@@ -1250,35 +1419,19 @@ function exportExcel(){
     return;
   }
 
-  const entradas = movs
-  .filter(m => m.tipo === "entrada")
-  .map(m => ({
-    ...m,
-    fechaHora: formatFechaHora(m.timestamp)
-  }));
-
-const salidas = movs
-  .filter(m => m.tipo === "salida")
-  .map(m => ({
-    ...m,
-    fechaHora: formatFechaHora(m.timestamp)
-  }));
-
-const eliminaciones = dels.map(d => ({
-  ...d,
-  fechaHora: formatFechaHora(d.timestamp)
-}));
-
+  const entradas = movs.filter(m => m.tipo === "entrada").map(exportMovRow);
+  const salidas  = movs.filter(m => m.tipo === "salida").map(exportMovRow);
+  const eliminaciones = dels.map(exportDelRow);
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
-XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
-XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
-
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas),  "SALIDAS");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
 
   const filename = `reporte_${todayISO()}.xlsx`;
   let saved = false;
 
+  // 1) Android Bridge (si existe)
   if(window.Android && typeof Android.saveFile === "function"){
     try{
       const wb64 = XLSX.write(wb, { bookType:"xlsx", type:"base64" });
@@ -1290,6 +1443,7 @@ XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMI
     }
   }
 
+  // 2) Fallback: descarga por Blob
   if(!saved){
     try{
       const wbarr = XLSX.write(wb, { bookType:"xlsx", type:"array" });
@@ -1308,6 +1462,7 @@ XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMI
     return;
   }
 
+  // ✅ Limpieza automática SOLO si se guardó
   localStorage.removeItem(K.MOV);
   localStorage.removeItem(K.DEL);
   deltaDirty = true;
@@ -1320,6 +1475,8 @@ XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMI
 // INIT
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
+  migrateDeviceId();
+
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
   cargarDepartamentos();
@@ -1333,10 +1490,10 @@ document.addEventListener("DOMContentLoaded", () => {
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"),  { allowText:false });
 
-  // ✅ En búsquedas: solo aplica si el usuario está escribiendo algo numérico
+  // ✅ En búsquedas de PRODUCTO: solo si el usuario escribe numérico
   attachCodigoMask($("searchInput"),   { allowText:true });
   attachCodigoMask($("catalogSearch"), { allowText:true });
-  attachCodigoMask($("histSearch"),    { allowText:true });
+  // ❌ NO aplicar en histSearch porque también busca FACTURA numérica
 
   $("btnSync")?.addEventListener("click", () => syncBase(true));
   $("btnExport")?.addEventListener("click", exportExcel);
@@ -1379,7 +1536,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnHistorial")?.addEventListener("click", () => {
     showScreen("historialScreen");
     $("histSearch").value = "";
-    setHistTab("mov");
+    setHistTab("mine");
   });
 
   $("btnBackCatalog")?.addEventListener("click", () => showScreen("homeScreen"));
@@ -1414,7 +1571,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // ====== BORRADOR: re-render si cambian datos de factura ======
+  // ====== BORRADOR: re-render si cambian datos ======
   $("entradaFactura")?.addEventListener("input", () => renderEntradaItems());
   $("entradaProveedor")?.addEventListener("input", () => renderEntradaItems());
   $("entradaFecha")?.addEventListener("change", () => renderEntradaItems());
@@ -1468,7 +1625,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ==========================
-  // BORRADOR: acciones por producto (editar/eliminar) + totales dinámicos
+  // BORRADOR: acciones y edición en vivo
   // ==========================
   function setupDraftPreview(previewId, context){
     const preview = $(previewId);
@@ -1501,14 +1658,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // totales en vivo mientras escribe
     preview.addEventListener("input", (e) => {
       const inp = e.target.closest("input.draft-cantidad");
       if(!inp) return;
       updateDraftTotalsFromDOM(context);
     });
 
-    // guardar cambio al terminar
     preview.addEventListener("change", (e) => {
       const inp = e.target.closest("input.draft-cantidad");
       if(!inp) return;
@@ -1518,7 +1673,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if(!Number.isFinite(nueva) || nueva <= 0){
         toast("Cantidad inválida");
-        // re-render para restaurar valores
         if(context === "entrada") renderEntradaItems(); else renderSalidaItems();
         return;
       }
@@ -1532,17 +1686,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // SALIDA: validar stock
+      // salida: validar stock
       const it = salidaItems.find(x => x.codigo === code);
       if(!it) return;
 
       const stockReal = getStock(code);
-      const reservadoOtros = 0; // en salidaItems solo 1 por código
+      const reservadoOtros = sumItems(salidaItems, code) - Number(it.cantidad || 0);
       const disponible = stockReal - reservadoOtros;
 
       if(nueva > disponible){
         toast(`Stock insuficiente. Disponible: ${disponible}`);
-        renderSalidaItems(); // restaura
+        renderSalidaItems();
         updateSalidaStockHint();
         return;
       }
@@ -1558,10 +1712,12 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDraftPreview("salidaFacturaPreview", "salida");
 
   // ==========================
-  // HISTORIAL: tabs, filtro, acciones
+  // HISTORIAL: tabs y acciones
   // ==========================
-  $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
+  $("tabMine")?.addEventListener("click", () => setHistTab("mine"));
+  $("tabOthers")?.addEventListener("click", () => setHistTab("others"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
+
   $("histSearch")?.addEventListener("input", () => renderHistorial());
 
   $("histList")?.addEventListener("click", (e) => {
@@ -1592,7 +1748,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Totales dinámicos mientras escribe en historial
   $("histList")?.addEventListener("input", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1600,7 +1755,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(gid) updateTotalsFromDOM(gid);
   });
 
-  // Guardar cambio en historial (con validación de stock negativo)
   $("histList")?.addEventListener("change", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1611,7 +1765,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(!Number.isFinite(nueva) || nueva <= 0){
       toast("Cantidad inválida");
-      updateFacturaTotalsFromStorage(gid);
       renderHistorial();
       return;
     }
@@ -1624,9 +1777,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if(String(m.deviceId||"") !== DEVICE_ID){
+      toast("🔒 Esta factura pertenece a otro dispositivo");
+      renderHistorial();
+      return;
+    }
+
     const oldQty = Number(m.cantidad||0);
     const code = String(m.codigo||"").trim().toUpperCase();
 
+    // ✅ Validar que no deje stock negativo (stock LOCAL)
     const stockActual = getStock(code);
     let stockNuevo = stockActual;
 
@@ -1637,7 +1797,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if(stockNuevo < 0){
-      toast("❌ No se puede: dejaría stock negativo");
+      toast("❌ No se puede: dejaría stock negativo (local)");
       inp.value = String(oldQty);
       updateTotalsFromDOM(gid);
       return;
@@ -1655,7 +1815,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // sync silencioso al iniciar
   syncBase(false);
 
-  // render inicial de borradores por si recargas en esas pantallas
+  // render inicial
   renderEntradaItems();
   renderSalidaItems();
 });
