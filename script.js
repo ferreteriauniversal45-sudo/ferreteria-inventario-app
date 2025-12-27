@@ -1,13 +1,9 @@
-// ==========================
-// CONFIG (GitHub Pages)
-// ==========================
+
 const BASE_URL = "https://ferreteriauniversal45-sudo.github.io/ferreteria-inventario-app";
 const INVENTARIO_URL = `${BASE_URL}/inventario.json`;
 const VERSION_URL = `${BASE_URL}/inventario_version.json`;
 
-// ==========================
-// STORAGE KEYS
-// ==========================
+
 const K = {
   BASE: "fu_base_inv",
   VER: "fu_base_ver",
@@ -24,17 +20,13 @@ let baseCache = {};
 let deltaDirty = true;
 let deltaCache = { ent: {}, sal: {} };
 
-// ==========================
-// CATALOGO FILTERS (UI STATE)
-// ==========================
+
 let filtroDepartamento = "";
 let filtroStock = false;
 const CATALOG_INITIAL_LIMIT = 80;
 const CATALOG_MAX_RENDER = 250;
 
-// ==========================
-// FACTURAS MULTI-ITEM (DRAFTS)
-// ==========================
+
 let entradaItems = []; // [{codigo, cantidad}]
 let salidaItems  = []; // [{codigo, cantidad}]
 
@@ -45,18 +37,15 @@ function sumItems(items, code){
 
 function clearEntradaDraft(){
   entradaItems = [];
-  renderEntradaItems(); // ahora renderiza FACTURA BORRADOR
-}
+  renderEntradaItems();
 
 function clearSalidaDraft(){
   salidaItems = [];
-  renderSalidaItems();  // ahora renderiza FACTURA BORRADOR
+  renderSalidaItems();  
   updateSalidaStockHint();
 }
 
-// ==========================
-// HELPERS
-// ==========================
+
 function readJSON(key, fallback){
   try{
     const raw = localStorage.getItem(key);
@@ -69,7 +58,6 @@ function writeJSON(key, value){
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-// ✅ FECHA LOCAL (NO UTC)
 function todayISO(){
   const d = new Date();
   const pad = (n) => String(n).padStart(2, "0");
@@ -111,7 +99,6 @@ function formatFechaHora(ts){
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-// ✅ Descarga compatible con Android WebView
 function downloadBlob(blob, filename){
   try{
     const url = URL.createObjectURL(blob);
@@ -132,9 +119,7 @@ function downloadBlob(blob, filename){
   }
 }
 
-// ==========================
-// AUTO "-" DESPUÉS DE 2 DÍGITOS (CÓDIGOS)
-// ==========================
+
 function digitsToCodigo(digits){
   const d = String(digits || "").replace(/\D/g, "");
   if(d.length === 0) return "";
@@ -148,10 +133,6 @@ function hasLetters(str){
   return /[a-zA-Z\u00C0-\u017F]/.test(String(str || ""));
 }
 
-/**
- * allowText=true -> SOLO aplica máscara si el usuario está escribiendo algo numérico (sin letras).
- * allowText=false -> forzar solo dígitos (ideal para entradaCodigo/salidaCodigo).
- */
 function attachCodigoMask(input, { allowText=false } = {}){
   if(!input) return;
 
@@ -159,10 +140,10 @@ function attachCodigoMask(input, { allowText=false } = {}){
     const raw = input.value ?? "";
 
     if(allowText){
-      // si tiene letras, no tocar (para poder buscar por nombre)
+    
       if(hasLetters(raw)) return;
 
-      // si empieza con letra u otro, no tocar
+    
       const t = String(raw).trim();
       if(t && !/^\d/.test(t)) return;
     }
@@ -172,9 +153,7 @@ function attachCodigoMask(input, { allowText=false } = {}){
   });
 }
 
-// ==========================
-// UI NAV
-// ==========================
+
 const screens = ["homeScreen","catalogScreen","entradaScreen","salidaScreen","searchScreen","historialScreen"];
 function showScreen(id){
   for(const s of screens){
@@ -183,9 +162,6 @@ function showScreen(id){
   }
 }
 
-// ==========================
-// NETWORK ICON
-// ==========================
 function setNetworkState(isOnline){
   const icon = $("netIcon");
   if(icon){
@@ -200,9 +176,6 @@ function setNetworkState(isOnline){
 window.addEventListener("online", () => setNetworkState(true));
 window.addEventListener("offline", () => setNetworkState(false));
 
-// ==========================
-// INVENTORY NORMALIZATION
-// ==========================
 function normalizeBase(inv){
   const out = {};
   if(!inv || typeof inv !== "object") return out;
@@ -233,9 +206,6 @@ function normalizeBase(inv){
   return out;
 }
 
-// ==========================
-// CATALOGO FILTERS (DEPARTAMENTOS)
-// ==========================
 function cargarDepartamentos(){
   const select = $("filterDepartamento");
   if(!select) return;
@@ -383,9 +353,7 @@ function refreshHome(){
   if($("homeMovHoy")) $("homeMovHoy").textContent = String(movHoy);
 }
 
-// ==========================
-// CATALOGO (TABLA) + FILTROS
-// ==========================
+
 function renderCatalog(query){
   const list = $("catalogList");
   const info = $("catalogInfo");
@@ -462,9 +430,7 @@ function renderCatalog(query){
   }
 }
 
-// ==========================
-// BUSCADOR (B2)
-// ==========================
+
 function selectProduct(code){
   const data = baseCache[code];
   if(!data) return;
@@ -542,9 +508,7 @@ function renderSearch(query){
   }
 }
 
-// ==========================
-// ENTRADAS / SALIDAS (AUTO-LLENADO)
-// ==========================
+
 function fillProductoFromCode(context){
   if(context === "entrada"){
     const code = String($("entradaCodigo").value||"").trim().toUpperCase();
@@ -574,9 +538,6 @@ function updateSalidaStockHint(){
   out.textContent = `Stock disponible: ${disponible}${extra}`;
 }
 
-// ==========================
-// FACTURA BORRADOR (PREVIEW) - MISMO ESTILO QUE HISTORIAL
-// ==========================
 function flashInvoiceEl(el){
   if(!el) return;
   el.classList.add("invoice-flash");
@@ -699,9 +660,7 @@ function renderDraftFactura(context){
 function renderEntradaItems(){ renderDraftFactura("entrada"); }
 function renderSalidaItems(){ renderDraftFactura("salida"); }
 
-// ==========================
-// FACTURAS MULTI-ITEM: ADD ITEM
-// ==========================
+
 function addEntradaItem(){
   const codigo = String($("entradaCodigo").value||"").trim().toUpperCase();
   const cantidad = Number($("entradaCantidad").value);
@@ -762,9 +721,7 @@ function addSalidaItem(){
   toast("➕ Agregado a la factura");
 }
 
-// ==========================
-// FACTURAS MULTI-ITEM: SAVE FACTURA
-// ==========================
+
 function saveFacturaEntrada(){
   const proveedor = String($("entradaProveedor").value||"").trim();
   const factura = String($("entradaFactura").value||"").trim();
@@ -866,9 +823,7 @@ function saveFacturaSalida(){
   showScreen("homeScreen");
 }
 
-// ==========================
-// HISTORIAL NUEVO (FACTURAS)
-// ==========================
+
 function movGroupKey(m){
   return String(m?.grupoId || m?.factura || m?.id || "").trim();
 }
@@ -1198,9 +1153,7 @@ async function deleteFactura(grupoId){
   renderHistorial();
 }
 
-// ==========================
-// CONFIRM MODAL (sin window.confirm)
-// ==========================
+
 function uiConfirm(message){
   return new Promise(resolve => {
     const overlay = document.getElementById("confirmOverlay");
@@ -1233,9 +1186,7 @@ function uiConfirm(message){
   });
 }
 
-// ==========================
-// EXPORT EXCEL (robusto)
-// ==========================
+
 function exportExcel(){
   if(typeof XLSX === "undefined"){
     toast("No cargó Excel (revisa XLSX)");
@@ -1316,9 +1267,7 @@ XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMI
   renderHistorial();
 }
 
-// ==========================
-// INIT
-// ==========================
+
 document.addEventListener("DOMContentLoaded", () => {
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
@@ -1329,11 +1278,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if($("entradaFecha")) $("entradaFecha").value = todayISO();
   if($("salidaFecha")) $("salidaFecha").value = todayISO();
 
-  // ✅ Máscara de código (con "-" automático)
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"),  { allowText:false });
 
-  // ✅ En búsquedas: solo aplica si el usuario está escribiendo algo numérico
   attachCodigoMask($("searchInput"),   { allowText:true });
   attachCodigoMask($("catalogSearch"), { allowText:true });
   attachCodigoMask($("histSearch"),    { allowText:true });
@@ -1414,7 +1361,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // ====== BORRADOR: re-render si cambian datos de factura ======
+
   $("entradaFactura")?.addEventListener("input", () => renderEntradaItems());
   $("entradaProveedor")?.addEventListener("input", () => renderEntradaItems());
   $("entradaFecha")?.addEventListener("change", () => renderEntradaItems());
@@ -1422,7 +1369,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("salidaFactura")?.addEventListener("input", () => renderSalidaItems());
   $("salidaFecha")?.addEventListener("change", () => renderSalidaItems());
 
-  // ====== FACTURAS MULTI-ITEM: BOTONES ======
+
   $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
   $("btnClearEntradaItems")?.addEventListener("click", () => {
     clearEntradaDraft();
@@ -1467,9 +1414,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCatalog($("catalogSearch")?.value || "");
   });
 
-  // ==========================
-  // BORRADOR: acciones por producto (editar/eliminar) + totales dinámicos
-  // ==========================
+
   function setupDraftPreview(previewId, context){
     const preview = $(previewId);
     if(!preview) return;
@@ -1501,14 +1446,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // totales en vivo mientras escribe
+
     preview.addEventListener("input", (e) => {
       const inp = e.target.closest("input.draft-cantidad");
       if(!inp) return;
       updateDraftTotalsFromDOM(context);
     });
 
-    // guardar cambio al terminar
     preview.addEventListener("change", (e) => {
       const inp = e.target.closest("input.draft-cantidad");
       if(!inp) return;
@@ -1518,7 +1462,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if(!Number.isFinite(nueva) || nueva <= 0){
         toast("Cantidad inválida");
-        // re-render para restaurar valores
+
         if(context === "entrada") renderEntradaItems(); else renderSalidaItems();
         return;
       }
@@ -1532,12 +1476,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // SALIDA: validar stock
       const it = salidaItems.find(x => x.codigo === code);
       if(!it) return;
 
       const stockReal = getStock(code);
-      const reservadoOtros = 0; // en salidaItems solo 1 por código
+      const reservadoOtros = 0; 
       const disponible = stockReal - reservadoOtros;
 
       if(nueva > disponible){
@@ -1557,9 +1500,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDraftPreview("entradaFacturaPreview", "entrada");
   setupDraftPreview("salidaFacturaPreview", "salida");
 
-  // ==========================
-  // HISTORIAL: tabs, filtro, acciones
-  // ==========================
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
   $("histSearch")?.addEventListener("input", () => renderHistorial());
@@ -1592,7 +1532,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Totales dinámicos mientras escribe en historial
   $("histList")?.addEventListener("input", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1600,7 +1539,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(gid) updateTotalsFromDOM(gid);
   });
 
-  // Guardar cambio en historial (con validación de stock negativo)
+
   $("histList")?.addEventListener("change", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1652,10 +1591,8 @@ document.addEventListener("DOMContentLoaded", () => {
     updateFacturaTotalsFromStorage(gid);
   });
 
-  // sync silencioso al iniciar
   syncBase(false);
 
-  // render inicial de borradores por si recargas en esas pantallas
   renderEntradaItems();
   renderSalidaItems();
 });
