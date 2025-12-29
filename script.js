@@ -1,8 +1,4 @@
 // ==========================
-// CLOUD (TU PC)
-// ==========================
-const CLOUD_URL = "https://aware-dispatched-resulted-restored.trycloudflare.com";
-// ==========================
 // CONFIG (GitHub Pages)
 // ==========================
 const BASE_URL = "https://ferreteriauniversal45-sudo.github.io/ferreteria-inventario-app";
@@ -133,16 +129,6 @@ function downloadBlob(blob, filename){
   }catch(e){
     console.warn("downloadBlob error", e);
     return false;
-  }
-}
-async function fetchCloudMovimientos() {
-  try {
-    const res = await fetch(`${CLOUD_URL}/movimientos`);
-    if (!res.ok) throw new Error("Error al leer nube");
-    return await res.json();
-  } catch (e) {
-    console.warn("Usando movimientos locales (sin nube)");
-    return readJSON(K.MOV, []);
   }
 }
 
@@ -1075,45 +1061,7 @@ function renderHistorial(){
   list.innerHTML = "";
 
   if(historialTab === "mov"){
-   async function renderHistorial(){
-  const q = ($("histSearch")?.value || "").toLowerCase().trim();
-  const list = $("histList");
-  if(!list) return;
-
-  list.innerHTML = "";
-
-  const movs = await fetchCloudMovimientos();
-
-  if(historialTab === "mov"){
-    const groups = groupFacturas(movs);
-
-    const filtered = groups.filter(g => {
-      if(!q) return true;
-      const f = g.items[0] || {};
-      const factura = String(f.factura||"").toLowerCase();
-      const prov = String(f.proveedor||"").toLowerCase();
-      const fecha = String(f.fecha||"").toLowerCase();
-
-      if(factura.includes(q) || prov.includes(q) || fecha.includes(q)) return true;
-
-      return g.items.some(m => {
-        const c = String(m.codigo||"").toLowerCase();
-        const p = String(m.producto||"").toLowerCase();
-        return c.includes(q) || p.includes(q);
-      });
-    });
-
-    if(filtered.length === 0){
-      list.innerHTML = `<div class="trow"><div class="cell">Sin facturas.</div></div>`;
-      return;
-    }
-
-    for(const g of filtered){
-      renderFacturaCard(g, list);
-    }
-  }
-}
-
+    const movs = readJSON(K.MOV, []);
     const groups = groupFacturas(movs);
 
     const filtered = groups.filter(g => {
