@@ -108,34 +108,30 @@
 
           <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
 
-          <!-- 🔽 FILTROS -->
-<div class="filters filters-grid">
+          <!-- ✅ FILTROS COMPACTOS -->
+          <div class="filters filters-grid">
 
-  <div class="filter-box">
-    <label class="filter-label">Departamento</label>
-    <select id="filterDepartamento" class="filter-select">
-      <option value="">Todos</option>
-    </select>
-  </div>
+            <div class="filter-box compact">
+              <label class="filter-label">Departamento</label>
+              <select id="filterDepartamento" class="filter-select compact">
+                <option value="">Todos</option>
+              </select>
+            </div>
 
-  <div class="filter-box">
-    <label class="filter-label">Categoría</label>
-    <select id="filterCategoria" class="filter-select">
-      <option value="">Todas</option>
-    </select>
-  </div>
+            <div class="filter-box compact">
+              <label class="filter-label">Categoría</label>
+              <select id="filterCategoria" class="filter-select compact">
+                <option value="">Todas</option>
+              </select>
+            </div>
 
-  <div class="filter-actions">
-    <button class="btn small" id="btnFilterStock" type="button">
-      📦 Con stock
-    </button>
+            <div class="filter-actions">
+              <button class="btn small" id="btnFilterStock" type="button" title="Con stock">📦</button>
+              <button class="btn small ghost" id="btnClearFilters" type="button" title="Limpiar filtros">✖</button>
+            </div>
 
-    <button class="btn small ghost" id="btnClearFilters" type="button">
-      ❌ Sin Filtros
-    </button>
-  </div>
+          </div>
 
-</div>
           <div id="catalogInfo" class="note"></div>
 
           <div class="table-wrap">
@@ -165,7 +161,7 @@
               <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
             </div>
 
-            <!-- ✅ Autocomplete SOLO por código -->
+            <!-- ✅ lista autocomplete por código -->
             <div class="autocomplete-list" id="entradaAutoList"></div>
           </div>
 
@@ -198,7 +194,6 @@
 
           <div class="note" id="entradaItemsInfo">Factura vacía.</div>
 
-          <!-- ✅ PREVIEW FACTURA (MISMO ESTILO QUE HISTORIAL) -->
           <div id="entradaFacturaPreview"></div>
 
           <div class="btn-row">
@@ -224,7 +219,7 @@
               <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
             </div>
 
-            <!-- ✅ Autocomplete SOLO por código -->
+            <!-- ✅ lista autocomplete por código -->
             <div class="autocomplete-list" id="salidaAutoList"></div>
           </div>
 
@@ -253,7 +248,6 @@
 
           <div class="note" id="salidaItemsInfo">Factura vacía.</div>
 
-          <!-- ✅ PREVIEW FACTURA (MISMO ESTILO QUE HISTORIAL) -->
           <div id="salidaFacturaPreview"></div>
 
           <div class="btn-row">
@@ -335,7 +329,7 @@
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v2.3 · Carlos Tercero
+      Ferretería Universal · v2.2 · Carlos Tercero
     </footer>
   </div>
 
