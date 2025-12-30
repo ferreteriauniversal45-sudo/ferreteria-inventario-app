@@ -27,8 +27,10 @@ let deltaCache = { ent: {}, sal: {} };
 // ==========================
 // CATALOGO FILTERS (UI STATE)
 // ==========================
-let filtroDepartamento = "";
+let filtroDepartamento = ""; // ✅ ahora es "principal" (antes del "-")
+let filtroCategoria = "";    // ✅ texto después del "-"
 let filtroStock = false;
+
 const CATALOG_INITIAL_LIMIT = 80;
 const CATALOG_MAX_RENDER = 250;
 
@@ -45,12 +47,12 @@ function sumItems(items, code){
 
 function clearEntradaDraft(){
   entradaItems = [];
-  renderEntradaItems(); // ahora renderiza FACTURA BORRADOR
+  renderEntradaItems();
 }
 
 function clearSalidaDraft(){
   salidaItems = [];
-  renderSalidaItems();  // ahora renderiza FACTURA BORRADOR
+  renderSalidaItems();
   updateSalidaStockHint();
 }
 
@@ -69,7 +71,6 @@ function writeJSON(key, value){
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-// ✅ FECHA LOCAL (NO UTC)
 function todayISO(){
   const d = new Date();
   const pad = (n) => String(n).padStart(2, "0");
@@ -111,7 +112,6 @@ function formatFechaHora(ts){
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-// ✅ Descarga compatible con Android WebView
 function downloadBlob(blob, filename){
   try{
     const url = URL.createObjectURL(blob);
@@ -139,7 +139,6 @@ function digitsToCodigo(digits){
   const d = String(digits || "").replace(/\D/g, "");
   if(d.length === 0) return "";
   if(d.length === 1) return d;
-  // ✅ con 2 dígitos ya deja el guion listo
   if(d.length === 2) return `${d}-`;
   return `${d.slice(0,2)}-${d.slice(2)}`;
 }
@@ -148,10 +147,6 @@ function hasLetters(str){
   return /[a-zA-Z\u00C0-\u017F]/.test(String(str || ""));
 }
 
-/**
- * allowText=true -> SOLO aplica máscara si el usuario está escribiendo algo numérico (sin letras).
- * allowText=false -> forzar solo dígitos (ideal para entradaCodigo/salidaCodigo).
- */
 function attachCodigoMask(input, { allowText=false } = {}){
   if(!input) return;
 
@@ -159,10 +154,7 @@ function attachCodigoMask(input, { allowText=false } = {}){
     const raw = input.value ?? "";
 
     if(allowText){
-      // si tiene letras, no tocar (para poder buscar por nombre)
       if(hasLetters(raw)) return;
-
-      // si empieza con letra u otro, no tocar
       const t = String(raw).trim();
       if(t && !/^\d/.test(t)) return;
     }
@@ -182,7 +174,7 @@ function showScreen(id){
     if(el) el.classList.toggle("hidden", s !== id);
   }
 
-  // ✅ Ocultar autocomplete al cambiar de pantalla (evita listas "pegadas")
+  // ✅ evitar listas pegadas al navegar
   const l1 = $("entradaAutoList");
   if(l1){
     l1.innerHTML = "";
@@ -246,6 +238,21 @@ function normalizeBase(inv){
 }
 
 // ==========================
+// DEPARTAMENTO / CATEGORIA (split por "-")
+// ==========================
+function depSplit(dep){
+  const s = String(dep || "").trim();
+  if(!s) return { dep:"", cat:"" };
+  const idx = s.indexOf("-");
+  if(idx < 0) return { dep: s.trim(), cat:"" };
+  const depMain = s.slice(0, idx).trim();
+  const cat = s.slice(idx + 1).trim();
+  return { dep: depMain, cat };
+}
+function getDepartamentoPrincipal(dep){ return depSplit(dep).dep; }
+function getCategoria(dep){ return depSplit(dep).cat; }
+
+// ==========================
 // CATALOGO FILTERS (DEPARTAMENTOS)
 // ==========================
 function cargarDepartamentos(){
@@ -256,8 +263,9 @@ function cargarDepartamentos(){
 
   const depsSet = new Set();
   for(const code of Object.keys(baseCache || {})){
-    const dep = baseCache[code]?.departamento;
-    if(dep) depsSet.add(String(dep));
+    const depFull = baseCache[code]?.departamento;
+    const depMain = getDepartamentoPrincipal(depFull);
+    if(depMain) depsSet.add(depMain);
   }
 
   const deps = Array.from(depsSet).sort((a,b) =>
@@ -275,6 +283,38 @@ function cargarDepartamentos(){
   const finalVal = depsSet.has(prev) ? prev : "";
   select.value = finalVal;
   filtroDepartamento = finalVal;
+}
+
+function cargarCategorias(depMainFilter = filtroDepartamento){
+  const select = $("filterCategoria");
+  if(!select) return;
+
+  const prev = (filtroCategoria || select.value || "").trim();
+  const set = new Set();
+
+  for(const code of Object.keys(baseCache || {})){
+    const depFull = baseCache[code]?.departamento || "";
+    const depMain = getDepartamentoPrincipal(depFull);
+    const cat = getCategoria(depFull);
+
+    if(depMainFilter && depMain !== depMainFilter) continue;
+    if(cat) set.add(cat);
+  }
+
+  const cats = Array.from(set).sort((a,b) =>
+    a.localeCompare(b, "es", { sensitivity:"base" })
+  );
+
+  select.innerHTML = `<option value="">Todas las categorías</option>`;
+  for(const c of cats){
+    const opt = document.createElement("option");
+    opt.value = c;
+    opt.textContent = c;
+    select.appendChild(opt);
+  }
+
+  filtroCategoria = set.has(prev) ? prev : "";
+  select.value = filtroCategoria;
 }
 
 // ==========================
@@ -349,6 +389,7 @@ async function syncBase(showMsg){
 
     setNetworkState(true);
     cargarDepartamentos();
+    cargarCategorias(filtroDepartamento);
     refreshHome();
 
     const cat = $("catalogScreen");
@@ -360,6 +401,7 @@ async function syncBase(showMsg){
     baseCache = readJSON(K.BASE, {});
     setNetworkState(navigator.onLine);
     cargarDepartamentos();
+    cargarCategorias(filtroDepartamento);
     refreshHome();
 
     const cat = $("catalogScreen");
@@ -415,9 +457,20 @@ function renderCatalog(query){
     return;
   }
 
+  // ✅ filtro por departamento (principal)
   if(filtroDepartamento){
-    entries = entries.filter(([_, data]) => String(data?.departamento || "") === filtroDepartamento);
+    entries = entries.filter(([_, data]) =>
+      getDepartamentoPrincipal(data?.departamento || "") === filtroDepartamento
+    );
   }
+
+  // ✅ filtro por categoría (después del "-")
+  if(filtroCategoria){
+    entries = entries.filter(([_, data]) =>
+      getCategoria(data?.departamento || "") === filtroCategoria
+    );
+  }
+
   if(filtroStock){
     entries = entries.filter(([code]) => getStock(code) > 0);
   }
@@ -587,7 +640,6 @@ function renderCodigoAutoList(context){
     return;
   }
 
-  // SOLO por código: empieza con lo escrito
   const matches = codes
     .filter(code => code.startsWith(q))
     .slice(0, 8);
@@ -631,7 +683,6 @@ function renderCodigoAutoList(context){
       hideCodigoAutoList(listId);
     };
 
-    // pointerdown va excelente en Android
     item.addEventListener("pointerdown", select);
     item.addEventListener("mousedown", select);
     item.addEventListener("click", select);
@@ -675,7 +726,7 @@ function updateSalidaStockHint(){
 }
 
 // ==========================
-// FACTURA BORRADOR (PREVIEW) - MISMO ESTILO QUE HISTORIAL
+// FACTURA BORRADOR (PREVIEW)
 // ==========================
 function flashInvoiceEl(el){
   if(!el) return;
@@ -925,7 +976,6 @@ function saveFacturaSalida(){
     return;
   }
 
-  // validación final de stock
   for(const it of salidaItems){
     const stockReal = getStock(it.codigo);
     const reservado = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
@@ -1193,7 +1243,6 @@ function renderHistorial(){
     return;
   }
 
-  // ELIMINACIONES
   const dels = readJSON(K.DEL, [])
     .slice()
     .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
@@ -1301,7 +1350,7 @@ async function deleteFactura(grupoId){
 }
 
 // ==========================
-// CONFIRM MODAL (sin window.confirm)
+// CONFIRM MODAL
 // ==========================
 function uiConfirm(message){
   return new Promise(resolve => {
@@ -1336,7 +1385,7 @@ function uiConfirm(message){
 }
 
 // ==========================
-// EXPORT EXCEL (robusto)
+// EXPORT EXCEL
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -1353,23 +1402,14 @@ function exportExcel(){
   }
 
   const entradas = movs
-  .filter(m => m.tipo === "entrada")
-  .map(m => ({
-    ...m,
-    fechaHora: formatFechaHora(m.timestamp)
-  }));
+    .filter(m => m.tipo === "entrada")
+    .map(m => ({ ...m, fechaHora: formatFechaHora(m.timestamp) }));
 
   const salidas = movs
-  .filter(m => m.tipo === "salida")
-  .map(m => ({
-    ...m,
-    fechaHora: formatFechaHora(m.timestamp)
-  }));
+    .filter(m => m.tipo === "salida")
+    .map(m => ({ ...m, fechaHora: formatFechaHora(m.timestamp) }));
 
-  const eliminaciones = dels.map(d => ({
-    ...d,
-    fechaHora: formatFechaHora(d.timestamp)
-  }));
+  const eliminaciones = dels.map(d => ({ ...d, fechaHora: formatFechaHora(d.timestamp) }));
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
@@ -1422,18 +1462,21 @@ function exportExcel(){
 document.addEventListener("DOMContentLoaded", () => {
   baseCache = readJSON(K.BASE, {});
   setNetworkState(navigator.onLine);
+
   cargarDepartamentos();
+  cargarCategorias("");
+
   refreshHome();
   showScreen("homeScreen");
 
   if($("entradaFecha")) $("entradaFecha").value = todayISO();
   if($("salidaFecha")) $("salidaFecha").value = todayISO();
 
-  // ✅ Máscara de código (con "-" automático)
+  // Máscara de código
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"),  { allowText:false });
 
-  // ✅ En búsquedas: solo aplica si el usuario está escribiendo algo numérico
+  // Búsquedas: permite texto (nombre) sin forzar máscara
   attachCodigoMask($("searchInput"),   { allowText:true });
   attachCodigoMask($("catalogSearch"), { allowText:true });
   attachCodigoMask($("histSearch"),    { allowText:true });
@@ -1444,16 +1487,21 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnCatalogo")?.addEventListener("click", () => {
     showScreen("catalogScreen");
     $("catalogSearch").value = "";
+
     filtroDepartamento = "";
+    filtroCategoria = "";
     filtroStock = false;
 
     const selDep = $("filterDepartamento");
+    const selCat = $("filterCategoria");
     if(selDep) selDep.value = "";
+    if(selCat) selCat.value = "";
 
     const btnStock = $("btnFilterStock");
     if(btnStock) btnStock.classList.remove("active");
 
     cargarDepartamentos();
+    cargarCategorias("");
     renderCatalog("");
   });
 
@@ -1497,17 +1545,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("catalogSearch")?.addEventListener("input", (e) => renderCatalog(e.target.value));
 
+  // Auto-llenado + autocomplete por código (entrada/salida)
   $("entradaCodigo")?.addEventListener("input", () => fillProductoFromCode("entrada"));
   $("salidaCodigo")?.addEventListener("input", () => fillProductoFromCode("salida"));
 
-  // ✅ Autocomplete SOLO por código (debajo del input)
   $("entradaCodigo")?.addEventListener("input", () => renderCodigoAutoList("entrada"));
   $("salidaCodigo")?.addEventListener("input", () => renderCodigoAutoList("salida"));
 
-  // Ocultar al perder foco (con delay para permitir tap)
   $("entradaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("entradaAutoList"), 220));
   $("salidaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("salidaAutoList"), 220));
 
+  // Lupa (buscar por nombre)
   $("btnBuscarEntrada")?.addEventListener("click", () => {
     currentSearchContext = "entrada";
     showScreen("searchScreen");
@@ -1523,6 +1571,46 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
+
+  // ===== filtros catálogo =====
+  const selDep = $("filterDepartamento");
+  if(selDep){
+    selDep.addEventListener("change", (e) => {
+      filtroDepartamento = e.target.value || "";
+      cargarCategorias(filtroDepartamento); // ✅ categorías dependientes del depto
+      renderCatalog($("catalogSearch")?.value || "");
+    });
+  }
+
+  const selCat = $("filterCategoria");
+  if(selCat){
+    selCat.addEventListener("change", (e) => {
+      filtroCategoria = e.target.value || "";
+      renderCatalog($("catalogSearch")?.value || "");
+    });
+  }
+
+  const btnStock = $("btnFilterStock");
+  if(btnStock){
+    btnStock.addEventListener("click", () => {
+      filtroStock = !filtroStock;
+      btnStock.classList.toggle("active", filtroStock);
+      renderCatalog($("catalogSearch")?.value || "");
+    });
+  }
+
+  $("btnClearFilters")?.addEventListener("click", () => {
+    filtroDepartamento = "";
+    filtroCategoria = "";
+    filtroStock = false;
+
+    if(selDep) selDep.value = "";
+    if(selCat) selCat.value = "";
+    if(btnStock) btnStock.classList.remove("active");
+
+    cargarCategorias("");
+    renderCatalog($("catalogSearch")?.value || "");
+  });
 
   // ====== BORRADOR: re-render si cambian datos de factura ======
   $("entradaFactura")?.addEventListener("input", () => renderEntradaItems());
@@ -1547,39 +1635,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   $("btnGuardarSalida")?.addEventListener("click", saveFacturaSalida);
 
-  // ==========================
-  // EVENTOS FILTROS CATALOGO
-  // ==========================
-  const selDep = $("filterDepartamento");
-  if(selDep){
-    selDep.addEventListener("change", (e) => {
-      filtroDepartamento = e.target.value || "";
-      renderCatalog($("catalogSearch")?.value || "");
-    });
-  }
-
-  const btnStock = $("btnFilterStock");
-  if(btnStock){
-    btnStock.addEventListener("click", () => {
-      filtroStock = !filtroStock;
-      btnStock.classList.toggle("active", filtroStock);
-      renderCatalog($("catalogSearch")?.value || "");
-    });
-  }
-
-  $("btnClearFilters")?.addEventListener("click", () => {
-    filtroDepartamento = "";
-    filtroStock = false;
-
-    if(selDep) selDep.value = "";
-    if(btnStock) btnStock.classList.remove("active");
-
-    renderCatalog($("catalogSearch")?.value || "");
-  });
-
-  // ==========================
-  // BORRADOR: acciones por producto (editar/eliminar) + totales dinámicos
-  // ==========================
+  // BORRADOR: acciones por producto + totales dinámicos
   function setupDraftPreview(previewId, context){
     const preview = $(previewId);
     if(!preview) return;
@@ -1611,14 +1667,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // totales en vivo mientras escribe
     preview.addEventListener("input", (e) => {
       const inp = e.target.closest("input.draft-cantidad");
       if(!inp) return;
       updateDraftTotalsFromDOM(context);
     });
 
-    // guardar cambio al terminar
     preview.addEventListener("change", (e) => {
       const inp = e.target.closest("input.draft-cantidad");
       if(!inp) return;
@@ -1628,7 +1682,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if(!Number.isFinite(nueva) || nueva <= 0){
         toast("Cantidad inválida");
-        // re-render para restaurar valores
         if(context === "entrada") renderEntradaItems(); else renderSalidaItems();
         return;
       }
@@ -1642,17 +1695,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // SALIDA: validar stock
       const it = salidaItems.find(x => x.codigo === code);
       if(!it) return;
 
       const stockReal = getStock(code);
-      const reservadoOtros = 0; // en salidaItems solo 1 por código
-      const disponible = stockReal - reservadoOtros;
+      const disponible = stockReal;
 
       if(nueva > disponible){
         toast(`Stock insuficiente. Disponible: ${disponible}`);
-        renderSalidaItems(); // restaura
+        renderSalidaItems();
         updateSalidaStockHint();
         return;
       }
@@ -1667,9 +1718,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupDraftPreview("entradaFacturaPreview", "entrada");
   setupDraftPreview("salidaFacturaPreview", "salida");
 
-  // ==========================
-  // HISTORIAL: tabs, filtro, acciones
-  // ==========================
+  // HISTORIAL
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
   $("histSearch")?.addEventListener("input", () => renderHistorial());
@@ -1702,7 +1751,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Totales dinámicos mientras escribe en historial
   $("histList")?.addEventListener("input", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1710,7 +1758,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(gid) updateTotalsFromDOM(gid);
   });
 
-  // Guardar cambio en historial (con validación de stock negativo)
   $("histList")?.addEventListener("change", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1765,7 +1812,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // sync silencioso al iniciar
   syncBase(false);
 
-  // render inicial de borradores por si recargas en esas pantallas
+  // render inicial
   renderEntradaItems();
   renderSalidaItems();
 });
