@@ -181,6 +181,18 @@ function showScreen(id){
     const el = $(s);
     if(el) el.classList.toggle("hidden", s !== id);
   }
+
+  // ✅ Ocultar autocomplete al cambiar de pantalla (evita listas "pegadas")
+  const l1 = $("entradaAutoList");
+  if(l1){
+    l1.innerHTML = "";
+    l1.style.display = "none";
+  }
+  const l2 = $("salidaAutoList");
+  if(l2){
+    l2.innerHTML = "";
+    l2.style.display = "none";
+  }
 }
 
 // ==========================
@@ -543,6 +555,94 @@ function renderSearch(query){
 }
 
 // ==========================
+// ✅ AUTOCOMPLETE SOLO POR CÓDIGO (ENTRADA / SALIDA)
+// ==========================
+function hideCodigoAutoList(listId){
+  const list = $(listId);
+  if(!list) return;
+  list.innerHTML = "";
+  list.style.display = "none";
+}
+
+function renderCodigoAutoList(context){
+  const inputId = context === "entrada" ? "entradaCodigo" : "salidaCodigo";
+  const listId  = context === "entrada" ? "entradaAutoList" : "salidaAutoList";
+
+  const input = $(inputId);
+  const list = $(listId);
+  if(!input || !list) return;
+
+  const q = String(input.value || "").trim().toUpperCase();
+
+  // Mostrar sugerencias SOLO cuando ya haya 2 dígitos (ej: "01-")
+  const digits = q.replace(/\D/g, "");
+  if(digits.length < 2){
+    hideCodigoAutoList(listId);
+    return;
+  }
+
+  const codes = Object.keys(baseCache || {});
+  if(codes.length === 0){
+    hideCodigoAutoList(listId);
+    return;
+  }
+
+  // SOLO por código: empieza con lo escrito
+  const matches = codes
+    .filter(code => code.startsWith(q))
+    .slice(0, 8);
+
+  if(matches.length === 0){
+    hideCodigoAutoList(listId);
+    return;
+  }
+
+  list.innerHTML = "";
+
+  for(const code of matches){
+    const data = baseCache[code] || {};
+    const stock = getStock(code);
+
+    const item = document.createElement("div");
+    item.className = "autocomplete-item";
+    item.innerHTML = `
+      <div class="auto-code">${escapeHtml(code)}</div>
+      <div class="auto-name">${escapeHtml(data.producto || "")}</div>
+      <div class="auto-stock">Stock: ${escapeHtml(String(stock))}</div>
+    `;
+
+    let done = false;
+    const select = (e) => {
+      if(done) return;
+      done = true;
+      e?.preventDefault?.();
+
+      input.value = code;
+
+      if(context === "entrada"){
+        $("entradaProducto").value = data.producto || "";
+        $("entradaCantidad")?.focus();
+      }else{
+        $("salidaProducto").value = data.producto || "";
+        updateSalidaStockHint();
+        $("salidaCantidad")?.focus();
+      }
+
+      hideCodigoAutoList(listId);
+    };
+
+    // pointerdown va excelente en Android
+    item.addEventListener("pointerdown", select);
+    item.addEventListener("mousedown", select);
+    item.addEventListener("click", select);
+
+    list.appendChild(item);
+  }
+
+  list.style.display = "block";
+}
+
+// ==========================
 // ENTRADAS / SALIDAS (AUTO-LLENADO)
 // ==========================
 function fillProductoFromCode(context){
@@ -722,6 +822,7 @@ function addEntradaItem(){
   $("entradaCodigo").value = "";
   $("entradaProducto").value = "";
   $("entradaCantidad").value = "";
+  hideCodigoAutoList("entradaAutoList");
 
   renderEntradaItems();
   toast("➕ Agregado a la factura");
@@ -756,6 +857,7 @@ function addSalidaItem(){
   $("salidaCodigo").value = "";
   $("salidaProducto").value = "";
   $("salidaCantidad").value = "";
+  hideCodigoAutoList("salidaAutoList");
 
   renderSalidaItems();
   updateSalidaStockHint();
@@ -1257,24 +1359,22 @@ function exportExcel(){
     fechaHora: formatFechaHora(m.timestamp)
   }));
 
-const salidas = movs
+  const salidas = movs
   .filter(m => m.tipo === "salida")
   .map(m => ({
     ...m,
     fechaHora: formatFechaHora(m.timestamp)
   }));
 
-const eliminaciones = dels.map(d => ({
-  ...d,
-  fechaHora: formatFechaHora(d.timestamp)
-}));
-
+  const eliminaciones = dels.map(d => ({
+    ...d,
+    fechaHora: formatFechaHora(d.timestamp)
+  }));
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
-XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
-XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
-
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
 
   const filename = `reporte_${todayISO()}.xlsx`;
   let saved = false;
@@ -1363,6 +1463,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("entradaCodigo").value = "";
     $("entradaProducto").value = "";
     $("entradaCantidad").value = "";
+    hideCodigoAutoList("entradaAutoList");
     clearEntradaDraft();
   });
 
@@ -1373,6 +1474,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("salidaProducto").value = "";
     $("salidaCantidad").value = "";
     $("salidaFactura").value = "";
+    hideCodigoAutoList("salidaAutoList");
     clearSalidaDraft();
   });
 
@@ -1397,6 +1499,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("entradaCodigo")?.addEventListener("input", () => fillProductoFromCode("entrada"));
   $("salidaCodigo")?.addEventListener("input", () => fillProductoFromCode("salida"));
+
+  // ✅ Autocomplete SOLO por código (debajo del input)
+  $("entradaCodigo")?.addEventListener("input", () => renderCodigoAutoList("entrada"));
+  $("salidaCodigo")?.addEventListener("input", () => renderCodigoAutoList("salida"));
+
+  // Ocultar al perder foco (con delay para permitir tap)
+  $("entradaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("entradaAutoList"), 220));
+  $("salidaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("salidaAutoList"), 220));
 
   $("btnBuscarEntrada")?.addEventListener("click", () => {
     currentSearchContext = "entrada";
