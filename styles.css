@@ -699,3 +699,45 @@ body{
 @media(min-width:900px){
   .invoice{ padding:14px; font-size:13px; }
 }
+
+/* ===== AUTOCOMPLETE (SOLO CÓDIGO) ===== */
+.autocomplete-list{
+  display:none;
+  margin-top:6px;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:#fff;
+  box-shadow:0 10px 22px rgba(0,0,0,.12);
+  max-height:240px;
+  overflow-y:auto;
+  z-index:50;
+}
+
+.autocomplete-item{
+  padding:10px 12px;
+  cursor:pointer;
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.autocomplete-item:last-child{ border-bottom:0; }
+
+.autocomplete-item:hover{
+  background:rgba(11,47,122,.08);
+}
+
+.auto-code{
+  font-weight:900;
+  font-size:13px;
+}
+
+.auto-name{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.auto-stock{
+  font-size:11px;
+  margin-top:2px;
+  color:#16a34a;
+}
