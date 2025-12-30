@@ -27,8 +27,8 @@ let deltaCache = { ent: {}, sal: {} };
 // ==========================
 // CATALOGO FILTERS (UI STATE)
 // ==========================
-let filtroDepartamento = ""; // ✅ ahora es "principal" (antes del "-")
-let filtroCategoria = "";    // ✅ texto después del "-"
+let filtroDepartamento = ""; // principal (antes del "-")
+let filtroCategoria = "";    // después del "-"
 let filtroStock = false;
 
 const CATALOG_INITIAL_LIMIT = 80;
@@ -67,6 +67,7 @@ function readJSON(key, fallback){
     return fallback;
   }
 }
+
 function writeJSON(key, value){
   localStorage.setItem(key, JSON.stringify(value));
 }
@@ -112,6 +113,7 @@ function formatFechaHora(ts){
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
+// ✅ Descarga compatible con Android WebView
 function downloadBlob(blob, filename){
   try{
     const url = URL.createObjectURL(blob);
@@ -147,6 +149,10 @@ function hasLetters(str){
   return /[a-zA-Z\u00C0-\u017F]/.test(String(str || ""));
 }
 
+/**
+ * allowText=true -> SOLO aplica máscara si el usuario escribe numérico (sin letras).
+ * allowText=false -> forzar solo dígitos (entradaCodigo/salidaCodigo).
+ */
 function attachCodigoMask(input, { allowText=false } = {}){
   if(!input) return;
 
@@ -174,17 +180,9 @@ function showScreen(id){
     if(el) el.classList.toggle("hidden", s !== id);
   }
 
-  // ✅ evitar listas pegadas al navegar
-  const l1 = $("entradaAutoList");
-  if(l1){
-    l1.innerHTML = "";
-    l1.style.display = "none";
-  }
-  const l2 = $("salidaAutoList");
-  if(l2){
-    l2.innerHTML = "";
-    l2.style.display = "none";
-  }
+  // evitar listas pegadas al navegar
+  hideCodigoAutoList("entradaAutoList");
+  hideCodigoAutoList("salidaAutoList");
 }
 
 // ==========================
@@ -253,15 +251,15 @@ function getDepartamentoPrincipal(dep){ return depSplit(dep).dep; }
 function getCategoria(dep){ return depSplit(dep).cat; }
 
 // ==========================
-// CATALOGO FILTERS (DEPARTAMENTOS)
+// CATALOGO FILTERS (DEPARTAMENTOS/CATEGORIAS)
 // ==========================
 function cargarDepartamentos(){
   const select = $("filterDepartamento");
   if(!select) return;
 
   const prev = (filtroDepartamento || select.value || "").trim();
-
   const depsSet = new Set();
+
   for(const code of Object.keys(baseCache || {})){
     const depFull = baseCache[code]?.departamento;
     const depMain = getDepartamentoPrincipal(depFull);
@@ -272,7 +270,7 @@ function cargarDepartamentos(){
     a.localeCompare(b, "es", { sensitivity: "base" })
   );
 
-  select.innerHTML = `<option value="">Todos los departamentos</option>`;
+  select.innerHTML = `<option value="">Todos</option>`;
   for(const dep of deps){
     const opt = document.createElement("option");
     opt.value = dep;
@@ -280,9 +278,8 @@ function cargarDepartamentos(){
     select.appendChild(opt);
   }
 
-  const finalVal = depsSet.has(prev) ? prev : "";
-  select.value = finalVal;
-  filtroDepartamento = finalVal;
+  filtroDepartamento = depsSet.has(prev) ? prev : "";
+  select.value = filtroDepartamento;
 }
 
 function cargarCategorias(depMainFilter = filtroDepartamento){
@@ -305,7 +302,7 @@ function cargarCategorias(depMainFilter = filtroDepartamento){
     a.localeCompare(b, "es", { sensitivity:"base" })
   );
 
-  select.innerHTML = `<option value="">Todas las categorías</option>`;
+  select.innerHTML = `<option value="">Todas</option>`;
   for(const c of cats){
     const opt = document.createElement("option");
     opt.value = c;
@@ -315,6 +312,34 @@ function cargarCategorias(depMainFilter = filtroDepartamento){
 
   filtroCategoria = set.has(prev) ? prev : "";
   select.value = filtroCategoria;
+}
+
+// ==========================
+// CHIPS DE FILTROS (DEP / CAT)
+// ==========================
+function updateFilterChips(){
+  const depChip = $("chipDep");
+  const depText = $("chipDepText");
+  const catChip = $("chipCat");
+  const catText = $("chipCatText");
+
+  if(depChip && depText){
+    if(filtroDepartamento){
+      depText.textContent = filtroDepartamento;
+      depChip.classList.remove("hidden");
+    }else{
+      depChip.classList.add("hidden");
+    }
+  }
+
+  if(catChip && catText){
+    if(filtroCategoria){
+      catText.textContent = filtroCategoria;
+      catChip.classList.remove("hidden");
+    }else{
+      catChip.classList.add("hidden");
+    }
+  }
 }
 
 // ==========================
@@ -390,6 +415,7 @@ async function syncBase(showMsg){
     setNetworkState(true);
     cargarDepartamentos();
     cargarCategorias(filtroDepartamento);
+    updateFilterChips();
     refreshHome();
 
     const cat = $("catalogScreen");
@@ -400,8 +426,11 @@ async function syncBase(showMsg){
   }catch(err){
     baseCache = readJSON(K.BASE, {});
     setNetworkState(navigator.onLine);
+
     cargarDepartamentos();
     cargarCategorias(filtroDepartamento);
+    updateFilterChips();
+
     refreshHome();
 
     const cat = $("catalogScreen");
@@ -457,14 +486,12 @@ function renderCatalog(query){
     return;
   }
 
-  // ✅ filtro por departamento (principal)
   if(filtroDepartamento){
     entries = entries.filter(([_, data]) =>
       getDepartamentoPrincipal(data?.departamento || "") === filtroDepartamento
     );
   }
 
-  // ✅ filtro por categoría (después del "-")
   if(filtroCategoria){
     entries = entries.filter(([_, data]) =>
       getCategoria(data?.departamento || "") === filtroCategoria
@@ -528,7 +555,7 @@ function renderCatalog(query){
 }
 
 // ==========================
-// BUSCADOR (B2)
+// BUSCADOR (B2) - pantalla lupa
 // ==========================
 function selectProduct(code){
   const data = baseCache[code];
@@ -627,7 +654,7 @@ function renderCodigoAutoList(context){
 
   const q = String(input.value || "").trim().toUpperCase();
 
-  // Mostrar sugerencias SOLO cuando ya haya 2 dígitos (ej: "01-")
+  // solo mostrar cuando ya tenga 2 dígitos
   const digits = q.replace(/\D/g, "");
   if(digits.length < 2){
     hideCodigoAutoList(listId);
@@ -976,10 +1003,11 @@ function saveFacturaSalida(){
     return;
   }
 
+  // validación final
   for(const it of salidaItems){
     const stockReal = getStock(it.codigo);
-    const reservado = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
-    const disponible = stockReal - reservado;
+    const reservadoOtros = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
+    const disponible = stockReal - reservadoOtros;
     if(Number(it.cantidad) > disponible){
       toast(`Stock insuficiente en ${it.codigo}. Disponible: ${disponible}`);
       return;
@@ -1019,7 +1047,7 @@ function saveFacturaSalida(){
 }
 
 // ==========================
-// HISTORIAL NUEVO (FACTURAS)
+// HISTORIAL (FACTURAS)
 // ==========================
 function movGroupKey(m){
   return String(m?.grupoId || m?.factura || m?.id || "").trim();
@@ -1243,6 +1271,7 @@ function renderHistorial(){
     return;
   }
 
+  // Eliminaciones
   const dels = readJSON(K.DEL, [])
     .slice()
     .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
@@ -1350,7 +1379,7 @@ async function deleteFactura(grupoId){
 }
 
 // ==========================
-// CONFIRM MODAL
+// CONFIRM MODAL (sin window.confirm)
 // ==========================
 function uiConfirm(message){
   return new Promise(resolve => {
@@ -1465,6 +1494,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cargarDepartamentos();
   cargarCategorias("");
+  updateFilterChips();
 
   refreshHome();
   showScreen("homeScreen");
@@ -1476,7 +1506,7 @@ document.addEventListener("DOMContentLoaded", () => {
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"),  { allowText:false });
 
-  // Búsquedas: permite texto (nombre) sin forzar máscara
+  // Búsquedas: permite texto
   attachCodigoMask($("searchInput"),   { allowText:true });
   attachCodigoMask($("catalogSearch"), { allowText:true });
   attachCodigoMask($("histSearch"),    { allowText:true });
@@ -1502,6 +1532,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cargarDepartamentos();
     cargarCategorias("");
+    updateFilterChips();
+
     renderCatalog("");
   });
 
@@ -1572,13 +1604,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // ===== filtros catálogo =====
+  // ===== filtros catálogo (selects invisibles) =====
   const selDep = $("filterDepartamento");
   if(selDep){
     selDep.addEventListener("change", (e) => {
       filtroDepartamento = e.target.value || "";
-      cargarCategorias(filtroDepartamento); // ✅ categorías dependientes del depto
+
+      // si cambia dep, re-carga categorías para ese dep
+      cargarCategorias(filtroDepartamento);
+
+      // si ya no existe la categoría en ese dep, cargarCategorias la limpia
       renderCatalog($("catalogSearch")?.value || "");
+      updateFilterChips();
     });
   }
 
@@ -1587,6 +1624,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selCat.addEventListener("change", (e) => {
       filtroCategoria = e.target.value || "";
       renderCatalog($("catalogSearch")?.value || "");
+      updateFilterChips();
     });
   }
 
@@ -1610,6 +1648,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cargarCategorias("");
     renderCatalog($("catalogSearch")?.value || "");
+    updateFilterChips();
+  });
+
+  // Chips: quitar DEP (y CAT)
+  $("chipDepClear")?.addEventListener("click", () => {
+    filtroDepartamento = "";
+    filtroCategoria = "";
+
+    if(selDep) selDep.value = "";
+    if(selCat) selCat.value = "";
+
+    cargarCategorias("");
+    renderCatalog($("catalogSearch")?.value || "");
+    updateFilterChips();
+  });
+
+  // Chips: quitar CAT
+  $("chipCatClear")?.addEventListener("click", () => {
+    filtroCategoria = "";
+    if(selCat) selCat.value = "";
+    renderCatalog($("catalogSearch")?.value || "");
+    updateFilterChips();
   });
 
   // ====== BORRADOR: re-render si cambian datos de factura ======
@@ -1695,11 +1755,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // SALIDA: validar stock
       const it = salidaItems.find(x => x.codigo === code);
       if(!it) return;
 
       const stockReal = getStock(code);
-      const disponible = stockReal;
+      const reservadoOtros = sumItems(salidaItems, code) - Number(it.cantidad || 0);
+      const disponible = stockReal - reservadoOtros;
 
       if(nueva > disponible){
         toast(`Stock insuficiente. Disponible: ${disponible}`);
@@ -1751,6 +1813,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Totales dinámicos mientras escribe en historial
   $("histList")?.addEventListener("input", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
@@ -1758,6 +1821,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(gid) updateTotalsFromDOM(gid);
   });
 
+  // Guardar cambio en historial (validación stock negativo)
   $("histList")?.addEventListener("change", (e) => {
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
