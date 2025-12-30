@@ -109,25 +109,33 @@
           <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
 
           <!-- 🔽 FILTROS -->
-          <div class="filters">
-            <select id="filterDepartamento" class="input small">
-              <option value="">Todos los departamentos</option>
-            </select>
+<div class="filters filters-grid">
 
-            <!-- ✅ NUEVO: filtro por categoría (texto después del "-") -->
-            <select id="filterCategoria" class="input small">
-              <option value="">Todas las categorías</option>
-            </select>
+  <div class="filter-box">
+    <label class="filter-label">Departamento</label>
+    <select id="filterDepartamento" class="filter-select">
+      <option value="">Todos</option>
+    </select>
+  </div>
 
-            <button class="btn small" id="btnFilterStock" type="button">
-              📦 Con stock
-            </button>
+  <div class="filter-box">
+    <label class="filter-label">Categoría</label>
+    <select id="filterCategoria" class="filter-select">
+      <option value="">Todas</option>
+    </select>
+  </div>
 
-            <button class="btn small ghost" id="btnClearFilters" type="button">
-              ❌ Quitar filtros
-            </button>
-          </div>
+  <div class="filter-actions">
+    <button class="btn small" id="btnFilterStock" type="button">
+      📦 Con stock
+    </button>
 
+    <button class="btn small ghost" id="btnClearFilters" type="button">
+      ❌ Sin Filtros
+    </button>
+  </div>
+
+</div>
           <div id="catalogInfo" class="note"></div>
 
           <div class="table-wrap">
@@ -327,7 +335,7 @@
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v2.26 · Carlos Tercero
+      Ferretería Universal · v2.3 · Carlos Tercero
     </footer>
   </div>
 
