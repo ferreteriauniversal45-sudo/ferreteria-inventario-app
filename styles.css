@@ -24,7 +24,7 @@ body{
     #e9edf5;
 }
 
-/* Contenedor responsive (sin marco negro) */
+/* Contenedor responsive */
 .phone-frame{
   width: min(1200px, calc(100% - 32px));
   margin: 18px auto;
@@ -35,7 +35,7 @@ body{
   box-shadow: 0 18px 55px rgba(0,0,0,.16);
 }
 
-/* Móvil: full screen */
+/* Móvil */
 @media(max-width:480px){
   body{ background: var(--bg); }
   .phone-frame{
@@ -211,7 +211,7 @@ body{
 .tile-title{ font-weight:900; font-size:15px; }
 .tile-desc{ color:var(--muted); font-size:12.5px; margin-top:2px; }
 
-/* ✅ Export más abajo para que no se vea amontonado */
+/* Export */
 #btnExport{ margin-top:18px; }
 @media(max-width:480px){ #btnExport{ margin-top:22px; } }
 
@@ -333,7 +333,7 @@ body{
   background:rgba(247,147,30,.18);
 }
 
-/* ✅ TABLAS (PC) / TARJETAS (MÓVIL) */
+/* TABLAS */
 .table-wrap{ margin-top:12px; }
 .table-head{ display:none; }
 .table-body{
@@ -467,113 +467,14 @@ body{
   font-size:12px;
 }
 
-/* ===== FILTROS CATALOGO ===== */
-.filters{
-  display:flex;
-  gap:10px;
-  margin:10px 0 12px;
-  flex-wrap:wrap;
-  align-items:flex-end;
-}
-
-/* ==============================
-   FILTROS COMPACTOS TIPO ICONO
-   ============================== */
-
-.filters-grid{
-  display:flex;
-  align-items:flex-end;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.filter-box.compact{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-
-.filter-box.compact .filter-label{
-  font-size:10px;
-  font-weight:900;
-  color:var(--muted);
-  letter-spacing:.35px;
-}
-
-.filter-select.compact{
-  appearance:none;
-  -webkit-appearance:none;
-  -moz-appearance:none;
-
-  height:34px;
-  width: min(190px, 46vw); /* ✅ pequeño, tipo chip */
-  padding:0 34px 0 12px;
-
-  border-radius:999px;
-  border:1.5px solid rgba(11,47,122,.35);
-  background:#fff;
-
-  font-size:12.5px;
-  font-weight:900;
-  letter-spacing:.3px;
-  cursor:pointer;
-
-  box-shadow:0 4px 10px rgba(0,0,0,.10);
-}
-
-.filter-box.compact::after{
-  content:"▾";
-  position:absolute;
-  right:14px;
-  bottom:9px;
-  font-size:11px;
-  color:#333;
-  pointer-events:none;
-}
-
-.filter-select.compact:hover{
-  border-color:var(--blue);
-}
-
-.filter-select.compact:focus{
-  outline:none;
-  border-color:var(--blue);
-  box-shadow:0 0 0 3px rgba(11,47,122,.15);
-}
-
-.filter-actions{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-/* Botones como iconos */
-.filter-actions .btn.small{
-  width:34px;
-  height:34px;
-  padding:0;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:15px;
-}
-
-/* Stock activo más visible */
-#btnFilterStock.active{
-  background:linear-gradient(120deg,var(--blue),#2b66d1);
-  color:#fff;
-  border:none;
-}
-
+/* ===== BOTÓN ghost ===== */
 .btn.ghost{
   background:transparent;
   border:1px dashed #bdbdbd;
   color:#555;
 }
 
-/* ===== CONFIRM MODAL (JS) ===== */
+/* ===== CONFIRM MODAL ===== */
 .confirm-overlay{
   position:fixed;
   inset:0;
@@ -703,7 +604,7 @@ body{
 
 .it-prod{ word-break:break-word; }
 
-/* Cantidad (editable, estilo papel) */
+/* Cantidad editable */
 .qty-input{
   width:100%;
   border:0;
@@ -769,7 +670,7 @@ body{
   color:#b91c1c;
 }
 
-/* Flash sutil cuando cambian totales */
+/* Flash */
 .invoice.invoice-flash{
   outline:2px solid rgba(247,147,30,.55);
   outline-offset:2px;
@@ -777,6 +678,126 @@ body{
 
 @media(min-width:900px){
   .invoice{ padding:14px; font-size:13px; }
+}
+
+/* =========================================
+   FILTROS "ICONO" + CHIPS (DEP / CAT)
+   ========================================= */
+
+.filters.filters-iconbar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:10px 0 14px;
+}
+
+/* Pastillita icono */
+.mini-pill{
+  position:relative;
+  height:34px;
+  width:64px;
+  border-radius:999px;
+  border:1.5px solid rgba(11,47,122,.35);
+  background:linear-gradient(180deg,#fff,#f4f6fb);
+  box-shadow:0 4px 10px rgba(0,0,0,.10);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  user-select:none;
+}
+.mini-pill:active{ transform:scale(.98); }
+
+.mini-label{
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.6px;
+  color:var(--blue);
+}
+.mini-caret{
+  font-size:11px;
+  color:#333;
+  margin-left:2px;
+}
+
+/* select invisible */
+.mini-select{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+}
+
+/* Chips */
+.filter-chip{
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:0 10px 0 12px;
+  border-radius:999px;
+  border:1px solid rgba(11,47,122,.18);
+  background:rgba(11,47,122,.06);
+  box-shadow:0 4px 10px rgba(0,0,0,.06);
+  font-weight:900;
+  font-size:12px;
+  color:#111;
+}
+
+.chip-text{
+  max-width:min(220px, 55vw);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.chip-x{
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:900;
+  line-height:1;
+}
+.chip-x:active{ transform:scale(.95); }
+
+.filter-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-left:auto;
+}
+
+/* Botones icono */
+.filters-iconbar .filter-actions .btn.small{
+  width:34px;
+  height:34px;
+  padding:0;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+}
+
+/* Stock activo */
+#btnFilterStock.active{
+  background:linear-gradient(120deg,var(--blue),#2b66d1);
+  color:#fff;
+  border:none;
+}
+
+@media(max-width:520px){
+  .filter-actions{ margin-left:0; }
 }
 
 /* ===== AUTOCOMPLETE (SOLO CÓDIGO) ===== */
@@ -820,4 +841,3 @@ body{
   margin-top:2px;
   color:#16a34a;
 }
-
