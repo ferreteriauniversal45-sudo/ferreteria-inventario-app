@@ -38,6 +38,13 @@
                 Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde computadora de Auditoria y se actualiza.
               </p>
 
+              <!-- ✅ Selector de bodega -->
+              <div class="bodega-switch">
+                <button class="bodega-btn active" id="btnBodegaPrincipal" type="button">🟦 PRINCIPAL</button>
+                <button class="bodega-btn" id="btnBodegaAnexo" type="button">🟧 ANEXO</button>
+              </div>
+              <div class="note" id="bodegaNote"></div>
+
               <div class="stats">
                 <div class="stat">
                   <div class="stat-label">Productos</div>
@@ -79,6 +86,12 @@
                   <div class="tile-emoji">➖</div>
                   <div class="tile-title">Salidas</div>
                   <div class="tile-desc">Registrar salida</div>
+                </button>
+
+                <button class="tile" id="btnTransferencia" type="button">
+                  <div class="tile-emoji">🔁</div>
+                  <div class="tile-title">Transferencia</div>
+                  <div class="tile-desc">Mover entre bodegas</div>
                 </button>
 
                 <button class="tile" id="btnHistorial" type="button">
@@ -177,8 +190,6 @@
               <input id="entradaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
               <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
             </div>
-
-            <!-- ✅ Autocomplete SOLO por código -->
             <div class="autocomplete-list" id="entradaAutoList"></div>
           </div>
 
@@ -210,8 +221,6 @@
           <button class="btn" id="btnAddEntradaItem" type="button">➕ Agregar producto a factura</button>
 
           <div class="note" id="entradaItemsInfo">Factura vacía.</div>
-
-          <!-- ✅ PREVIEW FACTURA -->
           <div id="entradaFacturaPreview"></div>
 
           <div class="btn-row">
@@ -236,8 +245,6 @@
               <input id="salidaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
               <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
             </div>
-
-            <!-- ✅ Autocomplete SOLO por código -->
             <div class="autocomplete-list" id="salidaAutoList"></div>
           </div>
 
@@ -265,13 +272,64 @@
           <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
 
           <div class="note" id="salidaItemsInfo">Factura vacía.</div>
-
-          <!-- ✅ PREVIEW FACTURA -->
           <div id="salidaFacturaPreview"></div>
 
           <div class="btn-row">
             <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
             <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TRANSFERENCIA -->
+      <section id="transferScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Transferencia</h2>
+            <button class="btn small" id="btnBackTransfer" type="button">⬅</button>
+          </div>
+
+          <div class="note" id="transferBodegasInfo"></div>
+
+          <div class="field">
+            <label class="label">Código</label>
+            <div class="input-row">
+              <input id="transferCodigo" class="input" placeholder="Ej: 08-0049-GL" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+              <button class="icon-btn" id="btnBuscarTransfer" type="button" title="Buscar producto">🔍</button>
+            </div>
+            <div class="autocomplete-list" id="transferAutoList"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Producto</label>
+            <input id="transferProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label">Cantidad</label>
+            <input id="transferCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 5">
+            <div class="note" id="transferStockInfo"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Referencia (opcional)</label>
+            <input id="transferReferencia" class="input" placeholder="Ej: TRF-001 o nota">
+          </div>
+
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input id="transferFecha" class="input" type="date">
+          </div>
+
+          <button class="btn" id="btnAddTransferItem" type="button">➕ Agregar producto a transferencia</button>
+
+          <div class="note" id="transferItemsInfo">Transferencia vacía.</div>
+          <div id="transferFacturaPreview"></div>
+
+          <div class="btn-row">
+            <button class="btn danger" id="btnClearTransferItems" type="button">🧹 Vaciar transferencia</button>
+            <button class="btn primary" id="btnGuardarTransferencia" type="button">Guardar transferencia</button>
           </div>
 
         </div>
@@ -311,10 +369,11 @@
 
           <div class="tabs">
             <button class="tab active" id="tabMov" type="button">Facturas</button>
+            <button class="tab" id="tabTrf" type="button">Transferencias</button>
             <button class="tab" id="tabDel" type="button">Eliminaciones</button>
           </div>
 
-          <input id="histSearch" class="input" placeholder="Buscar por factura, código o producto..." autocomplete="off">
+          <input id="histSearch" class="input" placeholder="Buscar..." autocomplete="off">
 
           <div class="table-wrap">
             <div id="histHeadDel" class="table-head cols-hdel hidden">
@@ -341,6 +400,28 @@
           <div class="confirm-actions">
             <button id="confirmCancel" class="btn" type="button">Cancelar</button>
             <button id="confirmOk" class="btn danger" type="button">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN MODAL -->
+      <div id="pinOverlay" class="confirm-overlay hidden">
+        <div class="confirm-box">
+          <div id="pinMessage" class="confirm-text"></div>
+
+          <input
+            id="pinInput"
+            class="input"
+            type="password"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="Ingresa el PIN"
+            autocomplete="off"
+          />
+
+          <div class="confirm-actions" style="margin-top:12px;">
+            <button id="pinCancel" class="btn" type="button">Cancelar</button>
+            <button id="pinOk" class="btn primary" type="button">Entrar</button>
           </div>
         </div>
       </div>
