@@ -114,11 +114,14 @@ function updateBodegaUI(){
     btnA.classList.add("anexo");
   }
 
-  if(note){
-    const pinTxt = activeBodega === BODEGA.ANEXO ? "2026" : "2025";
-    const ver = isPinVerified(activeBodega) ? "✅ verificado en este teléfono" : "🔒 requiere PIN";
-    note.textContent = `Bodega activa: ${activeBodega} · PIN: ${pinTxt} · ${ver}`;
-  }
+ if(note){
+  const ver = isPinVerified(activeBodega)
+    ? "✅ acceso autorizado en este teléfono"
+    : "🔒 acceso protegido";
+
+  note.textContent = `Bodega activa: ${activeBodega} · ${ver}`;
+}
+
 }
 
 // ==========================
