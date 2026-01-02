@@ -34,8 +34,8 @@ const BODEGA = {
 };
 
 const PIN = {
-  [BODEGA.PRINCIPAL]: "2025",
-  [BODEGA.ANEXO]: "2026"
+  [BODEGA.PRINCIPAL]: "1593574628",
+  [BODEGA.ANEXO]: "8264753951"
 };
 
 const $ = (id) => document.getElementById(id);
