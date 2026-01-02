@@ -106,7 +106,9 @@ body{
 /* Layout general */
 .container{ padding:14px; }
 .screen{ width:100%; }
-.hidden{ display:none; }
+
+/* ✅ FIX DEFINITIVO: hidden SIEMPRE gana */
+.hidden{ display:none !important; }
 
 .card{
   background:var(--card);
@@ -485,7 +487,7 @@ body{
   padding:18px;
   z-index:9999;
 }
-.confirm-overlay.hidden{ display:none; }
+.confirm-overlay.hidden{ display:none !important; }
 
 .confirm-box{
   width:min(420px, 100%);
@@ -636,18 +638,6 @@ body{
 .inv-action:hover{ opacity:1; }
 .inv-action.danger{ color:#b91c1c; }
 
-/* Totales */
-.invoice-totals{
-  display:grid;
-  gap:6px;
-  font-weight:900;
-}
-.itot-row{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-}
-
 /* Flash */
 .invoice.invoice-flash{
   outline:2px solid rgba(247,147,30,.55);
@@ -695,6 +685,9 @@ body{
   font-size:12px;
   color:#111;
 }
+
+/* ✅ Refuerzo extra por si acaso */
+.filter-chip.hidden{ display:none !important; }
 
 .chip-text{
   max-width:min(220px, 55vw);
@@ -852,7 +845,7 @@ body{
 }
 
 /* ==========================
-   ✅ FILTER MODAL (DEP/CAT)
+   FILTER MODAL (DEP/CAT)
    ========================== */
 .filter-box{
   width:min(860px, 100%);
