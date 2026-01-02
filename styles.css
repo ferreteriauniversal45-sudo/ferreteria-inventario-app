@@ -1,936 +1,450 @@
-:root{
-  --blue:#0b2f7a;
-  --orange:#f7931e;
-
-  --bg:#f6f7fb;
-  --card:#ffffff;
-  --text:#111827;
-  --muted:#6b7280;
-  --border:rgba(17,24,39,0.12);
-
-  --shadow:0 14px 34px rgba(17,24,39,0.10);
-  --radius:18px;
-}
-
-*{ box-sizing:border-box; }
-
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(1100px 540px at 20% -10%, rgba(11,47,122,.12), transparent 60%),
-    radial-gradient(900px 500px at 90% 10%, rgba(247,147,30,.12), transparent 55%),
-    #e9edf5;
-}
-
-/* Contenedor responsive */
-.phone-frame{
-  width: min(1200px, calc(100% - 32px));
-  margin: 18px auto;
-  background:var(--bg);
-  border-radius: 22px;
-  overflow:hidden;
-  border: 1px solid rgba(17,24,39,0.08);
-  box-shadow: 0 18px 55px rgba(0,0,0,.16);
-}
-
-/* Móvil */
-@media(max-width:480px){
-  body{ background: var(--bg); }
-  .phone-frame{
-    width: 100%;
-    margin: 0;
-    border-radius: 0;
-    border: 0;
-    box-shadow: none;
-  }
-}
-
-/* Tablet */
-@media(min-width:481px) and (max-width:899px){
-  .phone-frame{ width: min(950px, calc(100% - 32px)); }
-}
-
-/* HEADER */
-.app-header{
-  background:#fff;
-  padding:12px 14px 10px;
-  border-bottom:3px solid rgba(247,147,30,.85);
-}
-
-.header-top{
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  align-items:center;
-}
-
-.header-spacer{ width:28px; }
-
-.brand-center{
-  display:flex;
-  justify-content:center;
-}
-
-.brand-logo{
-  width:240px;
-  max-height:92px;
-  height:auto;
-  object-fit:contain;
-}
-
-/* Icono red */
-.net-icon{
-  justify-self:end;
-  font-size:26px;
-  line-height:1;
-  user-select:none;
-}
-
-.net-icon.online{ color:#16a34a; }
-.net-icon.offline{ color:#9ca3af; }
-
-.net-icon.online::after{
-  content:"●";
-  color:#16a34a;
-  font-size:10px;
-  margin-left:4px;
-}
-.net-icon.offline::after{
-  content:"●";
-  color:#dc2626;
-  font-size:10px;
-  margin-left:4px;
-}
-
-/* Layout general */
-.container{ padding:14px; }
-.screen{ width:100%; }
-
-/* ✅ FIX DEFINITIVO: hidden SIEMPRE gana */
-.hidden{ display:none !important; }
-
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:14px;
-  margin-bottom:14px;
-}
-
-.hero{ padding:16px; }
-
-.title{
-  margin:0 0 8px;
-  font-size:22px;
-  font-weight:900;
-}
-
-.subtitle{
-  margin:0 0 12px;
-  color:var(--muted);
-  line-height:1.35;
-  font-size:13.5px;
-}
-
-.h2{
-  margin:0;
-  font-size:17px;
-  font-weight:900;
-}
-
-.screen-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-/* HOME layout */
-.home-layout{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-.home-left, .home-right{ width:100%; }
-
-/* STATS */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin:10px 0 12px;
-}
-
-.stat{
-  background:linear-gradient(180deg, rgba(11,47,122,.06), rgba(11,47,122,.02));
-  border:1px solid rgba(11,47,122,.12);
-  border-radius:14px;
-  padding:10px;
-  text-align:center;
-}
-
-.stat-label{
-  font-size:11px;
-  color:var(--muted);
-  font-weight:800;
-}
-
-.stat-value{
-  font-size:16px;
-  font-weight:900;
-  margin-top:4px;
-  color:var(--blue);
-}
-
-.stat-value.small{
-  font-size:12px;
-  line-height:1.2;
-}
-
-/* GRID HOME */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.tile{
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:18px;
-  box-shadow:0 10px 22px rgba(17,24,39,.06);
-  padding:14px;
-  text-align:left;
-  cursor:pointer;
-  transition:transform .08s ease;
-}
-.tile:active{ transform:scale(.99); }
-
-.tile-emoji{ font-size:20px; margin-bottom:8px; }
-.tile-title{ font-weight:900; font-size:15px; }
-.tile-desc{ color:var(--muted); font-size:12.5px; margin-top:2px; }
-
-/* Export */
-#btnExport{ margin-top:18px; }
-@media(max-width:480px){ #btnExport{ margin-top:22px; } }
-
-/* INPUTS */
-.field{ margin-bottom:10px; }
-
-.label{
-  display:block;
-  font-size:12px;
-  color:var(--muted);
-  font-weight:800;
-  margin:0 0 6px;
-}
-
-.input{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:#fff;
-  outline:none;
-  font-size:14px;
-}
-.input:focus{
-  border-color:rgba(11,47,122,.45);
-  box-shadow:0 0 0 4px rgba(11,47,122,.10);
-}
-.input[readonly]{ background:rgba(17,24,39,.03); }
-
-/* input row */
-.input-row{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.icon-btn{
-  width:46px;
-  min-width:46px;
-  height:46px;
-  border-radius:14px;
-  border:1px solid rgba(11,47,122,.18);
-  background:rgba(11,47,122,.06);
-  cursor:pointer;
-  font-size:18px;
-}
-
-/* BUTTONS */
-.btn{
-  width:100%;
-  padding:12px;
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:#fff;
-  font-weight:900;
-  font-size:14px;
-  cursor:pointer;
-  transition:transform .08s ease;
-}
-.btn:active{ transform:scale(.99); }
-
-.btn.primary{
-  border:none;
-  background:linear-gradient(120deg, var(--orange), #ffb15a);
-  color:#111;
-}
-
-.btn.export{
-  border:none;
-  background:linear-gradient(120deg, var(--blue), #2b66d1);
-  color:#fff;
-}
-
-.btn.small{
-  width:auto;
-  padding:10px 12px;
-  border-radius:14px;
-}
-
-.btn.danger{
-  background:rgba(220,38,38,.08);
-  border:1px solid rgba(220,38,38,.25);
-  color:#b91c1c;
-}
-
-.note{
-  color:var(--muted);
-  font-size:12.5px;
-  margin:8px 0 10px;
-  line-height:1.35;
-}
-
-.hint{
-  color:var(--muted);
-  font-size:12px;
-  margin:12px 0 0;
-  line-height:1.35;
-}
-
-/* TABS */
-.tabs{
-  display:flex;
-  gap:8px;
-  margin:6px 0 10px;
-}
-
-.tab{
-  width:100%;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(11,47,122,.18);
-  background:rgba(11,47,122,.06);
-  font-weight:900;
-  cursor:pointer;
-}
-
-.tab.active{
-  border-color:rgba(247,147,30,.45);
-  background:rgba(247,147,30,.18);
-}
-
-/* TABLAS */
-.table-wrap{ margin-top:12px; }
-.table-head{ display:none; }
-.table-body{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.trow{
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:16px;
-  padding:12px;
-}
-
-.trow.selectable{ cursor:pointer; }
-
-.cell{
-  font-size:13px;
-  line-height:1.3;
-  margin-top:6px;
-  word-break: break-word;
-}
-.cell:first-child{ margin-top:0; }
-
-.cell::before{
-  content: attr(data-label) ": ";
-  color:var(--muted);
-  font-weight:800;
-}
-.cell:not([data-label])::before{ content:""; }
-.cell[data-label=""]::before{ content:""; }
-
-.right{ text-align:right; }
-.row-action{ width:auto; padding:8px 10px; border-radius:12px; }
-
-/* PC: tabla real */
-@media(min-width:900px){
-  .container{ padding: 22px 24px; }
-
-  .home-layout{
-    flex-direction:row;
-    align-items:flex-start;
-    gap:18px;
-  }
-
-  .home-left{ flex: 1.05; }
-  .home-right{ flex: 0.95; }
-  .brand-logo{ width: 280px; }
-
-  .table-head{
-    display:grid;
-    padding:10px 12px;
-    border-radius:14px;
-    background:rgba(17,24,39,.03);
-    border:1px solid var(--border);
-    color:var(--muted);
-    font-weight:900;
-    font-size:12px;
-    margin-bottom:10px;
-  }
-
-  .table-body{
-    display:block;
-    border:1px solid var(--border);
-    border-radius:16px;
-    overflow:hidden;
-    background:#fff;
-  }
-
-  .trow{
-    display:grid;
-    border:0;
-    border-bottom:1px solid rgba(17,24,39,0.08);
-    border-radius:0;
-    padding:10px 12px;
-  }
-  .trow:last-child{ border-bottom:0; }
-  .trow:hover{ background:rgba(11,47,122,.04); }
-
-  .cell{
-    margin-top:0;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .cell::before{ content:""; }
-
-  .cell.wrap{ white-space:normal; }
-
-  .cols-catalog{ grid-template-columns:110px 2fr 1fr 90px; gap:12px; }
-  .cols-search{ grid-template-columns:110px 2fr 1fr 90px 120px; gap:12px; }
-  .cols-hdel{ grid-template-columns:160px 90px 100px 2fr 80px 2fr; gap:12px; }
-}
-
-/* TOAST */
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:22px;
-  transform:translateX(-50%);
-  background:rgba(17,24,39,.92);
-  color:#fff;
-  padding:10px 12px;
-  border-radius:14px;
-  font-size:13px;
-  font-weight:800;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .2s ease, transform .2s ease;
-  max-width:92%;
-  z-index:999;
-}
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(-4px);
-}
-
-/* Spinner */
-@keyframes spin{
-  from{ transform:rotate(0deg); }
-  to{ transform:rotate(360deg); }
-}
-.spin{ animation:spin 1s linear infinite; }
-
-/* FOOTER */
-.footer{
-  padding:12px 10px 18px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-}
-
-/* ===== BOTÓN ghost ===== */
-.btn.ghost{
-  background:transparent;
-  border:1px dashed #bdbdbd;
-  color:#555;
-}
-
-/* ===== CONFIRM MODAL ===== */
-.confirm-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-  z-index:9999;
-}
-.confirm-overlay.hidden{ display:none !important; }
-
-.confirm-box{
-  width:min(420px, 100%);
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  box-shadow:0 18px 55px rgba(0,0,0,.22);
-  padding:14px;
-}
-.confirm-text{
-  font-weight:900;
-  font-size:14px;
-  margin-bottom:12px;
-  line-height:1.35;
-}
-.confirm-actions{
-  display:flex;
-  gap:10px;
-}
-.confirm-actions .btn{ width:100%; }
-
-/* ==============================
-   HISTORIAL + BORRADOR: FACTURA IMPRESA
-   ============================== */
-
-.hist-list{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-/* “Papel” */
-.invoice{
-  background:#fff;
-  color:#000;
-  border:1px solid rgba(0,0,0,.85);
-  border-radius:0;
-  padding:12px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size:12.5px;
-  box-shadow:none;
-}
-
-/* Encabezado */
-.invoice-header{
-  text-align:center;
-  margin-bottom:8px;
-}
-.invoice-company{
-  font-weight:900;
-  font-size:14px;
-  letter-spacing:.5px;
-}
-.invoice-sub{
-  font-size:11px;
-}
-
-/* Meta */
-.invoice-meta{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px 12px;
-  margin-top:8px;
-}
-.im-row{
-  display:flex;
-  gap:8px;
-  align-items:baseline;
-}
-.im-label{
-  font-weight:900;
-  min-width:78px;
-}
-.im-value{
-  flex:1;
-  min-width:0;
-  word-break:break-word;
-}
-
-.invoice-summary{
-  margin-top:8px;
-  font-weight:900;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.invoice-rule{
-  border-top:1px dashed #000;
-  margin:10px 0;
-}
-
-/* Tabla */
-.invoice-table{ width:100%; }
-
-.it-head,
-.it-row{
-  display:grid;
-  grid-template-columns:60px 1fr 72px 64px;
-  gap:8px;
-  align-items:center;
-}
-
-.it-head{
-  font-weight:900;
-  border-bottom:1px solid #000;
-  padding-bottom:6px;
-  margin-bottom:6px;
-}
-
-.it-row{
-  padding:6px 0;
-  border-bottom:1px dotted #999;
-}
-.it-row:last-child{ border-bottom:0; }
-
-.it-prod{ word-break:break-word; }
-
-/* Cantidad editable */
-.qty-input{
-  width:100%;
-  border:0;
-  border-bottom:1px solid #000;
-  background:transparent;
-  font:inherit;
-  text-align:right;
-  padding:0 2px;
-  outline:none;
-}
-.qty-input:focus{ background:rgba(0,0,0,.04); }
-
-/* Acciones por producto */
-.it-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:6px;
-}
-
-.inv-action{
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  font-size:14px;
-  line-height:1;
-  padding:0;
-  opacity:.8;
-}
-.inv-action:hover{ opacity:1; }
-.inv-action.danger{ color:#b91c1c; }
-
-/* Flash */
-.invoice.invoice-flash{
-  outline:2px solid rgba(247,147,30,.55);
-  outline-offset:2px;
-}
-
-@media(min-width:900px){
-  .invoice{ padding:14px; font-size:13px; }
-}
-
-/* =========================================
-   CHIPS / FILTROS (barra)
-   ========================================= */
-.filters.filters-iconbar{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  margin:10px 0 14px;
-}
-
-#btnOpenFilters{
-  width:auto;
-  height:34px;
-  padding:0 12px;
-  border-radius:999px;
-  border:1.5px solid rgba(11,47,122,.35);
-  background:linear-gradient(180deg,#fff,#f4f6fb);
-  box-shadow:0 4px 10px rgba(0,0,0,.10);
-  font-weight:1000;
-}
-#btnOpenFilters:active{ transform:scale(.99); }
-
-.filter-chip{
-  height:34px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:0 10px 0 12px;
-  border-radius:999px;
-  border:1px solid rgba(11,47,122,.18);
-  background:rgba(11,47,122,.06);
-  box-shadow:0 4px 10px rgba(0,0,0,.06);
-  font-weight:900;
-  font-size:12px;
-  color:#111;
-}
-
-/* ✅ Refuerzo extra por si acaso */
-.filter-chip.hidden{ display:none !important; }
-
-.chip-text{
-  max-width:min(220px, 55vw);
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.chip-x{
-  width:22px;
-  height:22px;
-  border-radius:999px;
-  border:1px solid rgba(0,0,0,.12);
-  background:#fff;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:900;
-  line-height:1;
-}
-.chip-x:active{ transform:scale(.95); }
-
-.filter-actions{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin-left:auto;
-}
-
-/* Botones icono */
-.filters-iconbar .filter-actions .btn.small{
-  width:34px;
-  height:34px;
-  padding:0;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:15px;
-}
-
-/* Stock activo */
-#btnFilterStock.active{
-  background:linear-gradient(120deg,var(--blue),#2b66d1);
-  color:#fff;
-  border:none;
-}
-
-@media(max-width:520px){
-  .filter-actions{ margin-left:0; }
-}
-
-/* ===== AUTOCOMPLETE (SOLO CÓDIGO) ===== */
-.autocomplete-list{
-  display:none;
-  margin-top:6px;
-  border-radius:14px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  background:#fff;
-  box-shadow:0 10px 22px rgba(0,0,0,.12);
-  max-height:240px;
-  overflow-y:auto;
-  z-index:50;
-}
-
-.autocomplete-item{
-  padding:10px 12px;
-  cursor:pointer;
-  border-bottom:1px solid rgba(0,0,0,.06);
-}
-.autocomplete-item:last-child{ border-bottom:0; }
-
-.autocomplete-item:hover{
-  background:rgba(11,47,122,.08);
-}
-
-.auto-code{
-  font-weight:900;
-  font-size:13px;
-}
-
-.auto-name{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:2px;
-}
-
-.auto-stock{
-  font-size:11px;
-  margin-top:2px;
-  color:#16a34a;
-}
-
-/* ===== BODEGA SWITCH ===== */
-.bodega-switch{
-  display:flex;
-  gap:10px;
-  margin:10px 0 6px;
-  flex-wrap:wrap;
-}
-
-.bodega-btn{
-  position:relative;
-  flex:1;
-  min-width:140px;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1.5px solid rgba(11,47,122,.22);
-  background:#fff;
-  font-weight:1000;
-  cursor:pointer;
-  box-shadow:0 6px 14px rgba(0,0,0,.08);
-}
-
-.bodega-btn.active{
-  border:none;
-  background:linear-gradient(120deg, var(--blue), #2b66d1);
-  color:#fff;
-}
-
-.bodega-btn.anexo.active{
-  background:linear-gradient(120deg, var(--orange), #ffb15a);
-  color:#111;
-}
-
-/* Etiqueta ACTIVA */
-.bodega-btn.active::after{
-  content:"ACTIVA";
-  position:absolute;
-  bottom:-10px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:10px;
-  font-weight:1000;
-  letter-spacing:.8px;
-  padding:2px 8px;
-  border-radius:999px;
-  background:#111;
-  color:#fff;
-}
-
-.bodega-btn.anexo.active::after{
-  background:#7c2d12;
-}
-
-/* PIN INPUT más claro */
-#pinInput{
-  margin-top:6px;
-  font-size:16px;
-  letter-spacing:2px;
-  text-align:center;
-}
-
-/* ==========================
-   FILTER MODAL (DEP/CAT)
-   ========================== */
-.filter-box{
-  width:min(860px, 100%);
-}
-
-.filter-modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.filter-modal-title{
-  font-weight:1000;
-  font-size:15px;
-}
-
-.filter-modal-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-  margin-top:12px;
-}
-
-@media(min-width:900px){
-  .filter-modal-grid{ grid-template-columns:1fr 1fr; }
-}
-
-.filter-pane-title{
-  font-size:11px;
-  color:var(--muted);
-  font-weight:1000;
-  letter-spacing:.7px;
-  margin:0 0 6px;
-}
-
-.filter-list{
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:#fff;
-  max-height:280px;
-  overflow:auto;
-  box-shadow:0 10px 22px rgba(0,0,0,.08);
-}
-
-.filter-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  cursor:pointer;
-  border-bottom:1px solid rgba(0,0,0,.06);
-}
-.filter-item:last-child{ border-bottom:0; }
-
-.filter-item:hover{
-  background:rgba(11,47,122,.06);
-}
-
-.filter-item.active{
-  background:rgba(247,147,30,.18);
-  border-left:4px solid rgba(247,147,30,.75);
-}
-
-.filter-count{
-  font-weight:1000;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.filter-empty{
-  padding:12px;
-  color:var(--muted);
-  font-weight:900;
-  font-size:12px;
-}
-
-.filter-modal-actions{
-  display:flex;
-  gap:10px;
-  margin-top:12px;
-}
-.filter-modal-actions .btn.small{
-  width:auto;
-  border-radius:14px;
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0b2f7a">
+  <title>Ferretería Universal</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <div class="phone-frame">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="header-spacer"></div>
+
+        <div class="brand-center">
+          <img src="logo.png" class="brand-logo" alt="Ferretería Universal" onerror="this.style.display='none'">
+        </div>
+
+        <div id="netIcon" class="net-icon offline" title="Sin conexión" aria-label="Estado de red" role="img">🌍</div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="container">
+
+      <!-- HOME -->
+      <section id="homeScreen" class="screen">
+        <div class="card hero">
+          <div class="home-layout">
+            <!-- IZQUIERDA -->
+            <div class="home-left">
+              <h1 class="title">Control de Inventario</h1>
+              <p class="subtitle">
+                Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro y se actualiza.
+              </p>
+
+              <!-- Selector de bodega -->
+              <div class="bodega-switch">
+                <button class="bodega-btn active" id="btnBodegaPrincipal" type="button">🟦 PRINCIPAL</button>
+                <button class="bodega-btn" id="btnBodegaAnexo" type="button">🟧 ANEXO</button>
+              </div>
+              <div class="note" id="bodegaNote"></div>
+
+              <div class="stats">
+                <div class="stat">
+                  <div class="stat-label">Productos</div>
+                  <div class="stat-value" id="homeProductos">0</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Versión</div>
+                  <div class="stat-value small" id="homeVersion">—</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Mov. hoy</div>
+                  <div class="stat-value" id="homeMovHoy">0</div>
+                </div>
+                <div class="stat">
+                  <div class="stat-label">Estado</div>
+                  <div class="stat-value" id="homeEstado">OFF</div>
+                </div>
+              </div>
+
+              <button class="btn primary" id="btnSync" type="button">Actualizar inventario</button>
+            </div>
+
+            <!-- DERECHA -->
+            <div class="home-right">
+              <div class="grid">
+                <button class="tile" id="btnCatalogo" type="button">
+                  <div class="tile-emoji">📦</div>
+                  <div class="tile-title">Catálogo</div>
+                  <div class="tile-desc">Buscar productos</div>
+                </button>
+
+                <button class="tile" id="btnEntrada" type="button">
+                  <div class="tile-emoji">➕</div>
+                  <div class="tile-title">Entradas</div>
+                  <div class="tile-desc">Registrar ingreso</div>
+                </button>
+
+                <button class="tile" id="btnSalida" type="button">
+                  <div class="tile-emoji">➖</div>
+                  <div class="tile-title">Salidas</div>
+                  <div class="tile-desc">Registrar salida</div>
+                </button>
+
+                <button class="tile" id="btnTransferencia" type="button">
+                  <div class="tile-emoji">🔁</div>
+                  <div class="tile-title">Transferencia</div>
+                  <div class="tile-desc">Mover entre bodegas</div>
+                </button>
+
+                <button class="tile" id="btnHistorial" type="button">
+                  <div class="tile-emoji">📜</div>
+                  <div class="tile-title">Historial</div>
+                  <div class="tile-desc">Facturas, transferencias y eliminaciones</div>
+                </button>
+              </div>
+
+              <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
+              <p class="hint">
+                El Excel se genera en el teléfono. En Android quedará en <b>Descargas</b>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATALOGO -->
+      <section id="catalogScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Catálogo</h2>
+            <button class="btn small" id="btnBackCatalog" type="button">⬅</button>
+          </div>
+
+          <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
+
+          <div class="filters filters-iconbar">
+            <button class="btn small" id="btnOpenFilters" type="button" title="Filtrar por Departamento y Categoría">🔎 Filtros</button>
+
+            <div id="chipDep" class="filter-chip hidden">
+              <span id="chipDepText" class="chip-text"></span>
+              <button id="chipDepClear" class="chip-x" type="button" aria-label="Quitar departamento">✕</button>
+            </div>
+
+            <div id="chipCat" class="filter-chip hidden">
+              <span id="chipCatText" class="chip-text"></span>
+              <button id="chipCatClear" class="chip-x" type="button" aria-label="Quitar categoría">✕</button>
+            </div>
+
+            <div class="filter-actions">
+              <button class="btn small" id="btnFilterStock" type="button" title="Con stock">📦</button>
+              <button class="btn small ghost" id="btnClearFilters" type="button" title="Limpiar filtros">✖</button>
+            </div>
+          </div>
+
+          <div id="catalogInfo" class="note"></div>
+
+          <div class="table-wrap">
+            <div class="table-head cols-catalog">
+              <div>Código</div>
+              <div>Producto</div>
+              <div>Departamento</div>
+              <div class="right">Stock</div>
+            </div>
+            <div id="catalogList" class="table-body"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ENTRADAS -->
+      <section id="entradaScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Entrada</h2>
+            <button class="btn small" id="btnBackEntrada" type="button">⬅</button>
+          </div>
+
+          <div class="field">
+            <label class="label">Código</label>
+            <div class="input-row">
+              <input id="entradaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+              <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
+            </div>
+            <div class="autocomplete-list" id="entradaAutoList"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Producto</label>
+            <input id="entradaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label">Cantidad</label>
+            <input id="entradaCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 10">
+          </div>
+
+          <div class="field">
+            <label class="label">Proveedor</label>
+            <input id="entradaProveedor" class="input" placeholder="Ej: Proveedor XYZ">
+          </div>
+
+          <div class="field">
+            <label class="label">Factura</label>
+            <input id="entradaFactura" class="input" placeholder="Ej: FAC-001">
+          </div>
+
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input id="entradaFecha" class="input" type="date">
+          </div>
+
+          <button class="btn" id="btnAddEntradaItem" type="button">➕ Agregar producto a factura</button>
+
+          <div class="note" id="entradaItemsInfo">Factura vacía.</div>
+          <div id="entradaFacturaPreview"></div>
+
+          <div class="btn-row">
+            <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
+            <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar factura</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SALIDAS -->
+      <section id="salidaScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Salida</h2>
+            <button class="btn small" id="btnBackSalida" type="button">⬅</button>
+          </div>
+
+          <div class="field">
+            <label class="label">Código</label>
+            <div class="input-row">
+              <input id="salidaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+              <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
+            </div>
+            <div class="autocomplete-list" id="salidaAutoList"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Producto</label>
+            <input id="salidaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label">Cantidad</label>
+            <input id="salidaCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 2">
+            <div class="note" id="salidaStockInfo"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Factura</label>
+            <input id="salidaFactura" class="input" placeholder="Ej: FAC-123">
+          </div>
+
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input id="salidaFecha" class="input" type="date">
+          </div>
+
+          <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
+
+          <div class="note" id="salidaItemsInfo">Factura vacía.</div>
+          <div id="salidaFacturaPreview"></div>
+
+          <div class="btn-row">
+            <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
+            <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSFERENCIA -->
+      <section id="transferScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Transferencia</h2>
+            <button class="btn small" id="btnBackTransfer" type="button">⬅</button>
+          </div>
+
+          <div class="note" id="transferBodegasInfo"></div>
+
+          <div class="field">
+            <label class="label">Código</label>
+            <div class="input-row">
+              <input id="transferCodigo" class="input" placeholder="Ej: 08-0049-GL" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+              <button class="icon-btn" id="btnBuscarTransfer" type="button" title="Buscar producto">🔍</button>
+            </div>
+            <div class="autocomplete-list" id="transferAutoList"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Producto</label>
+            <input id="transferProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          </div>
+
+          <div class="field">
+            <label class="label">Cantidad</label>
+            <input id="transferCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 5">
+            <div class="note" id="transferStockInfo"></div>
+          </div>
+
+          <div class="field">
+            <label class="label">Referencia (opcional)</label>
+            <input id="transferReferencia" class="input" placeholder="Ej: TRF-001 o nota">
+          </div>
+
+          <div class="field">
+            <label class="label">Fecha</label>
+            <input id="transferFecha" class="input" type="date">
+          </div>
+
+          <button class="btn" id="btnAddTransferItem" type="button">➕ Agregar producto a transferencia</button>
+
+          <div class="note" id="transferItemsInfo">Transferencia vacía.</div>
+          <div id="transferFacturaPreview"></div>
+
+          <div class="btn-row">
+            <button class="btn danger" id="btnClearTransferItems" type="button">🧹 Vaciar transferencia</button>
+            <button class="btn primary" id="btnGuardarTransferencia" type="button">Guardar transferencia</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- BUSCADOR -->
+      <section id="searchScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Buscar producto</h2>
+            <button class="btn small" id="btnBackSearch" type="button">⬅</button>
+          </div>
+
+          <input id="searchInput" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
+          <div id="searchInfo" class="note"></div>
+
+          <div class="table-wrap">
+            <div class="table-head cols-search">
+              <div>Código</div>
+              <div>Producto</div>
+              <div>Departamento</div>
+              <div class="right">Stock</div>
+              <div class="right">Acción</div>
+            </div>
+            <div id="searchList" class="table-body"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORIAL -->
+      <section id="historialScreen" class="screen hidden">
+        <div class="card">
+          <div class="screen-head">
+            <h2 class="h2">Historial</h2>
+            <button class="btn small" id="btnBackHistorial" type="button">⬅</button>
+          </div>
+
+          <div class="tabs">
+            <button class="tab active" id="tabMov" type="button">Facturas</button>
+            <button class="tab" id="tabTrf" type="button">Transferencias</button>
+            <button class="tab" id="tabDel" type="button">Eliminaciones</button>
+          </div>
+
+          <input id="histSearch" class="input" placeholder="Buscar por factura, bodega, código o producto..." autocomplete="off">
+
+          <div class="table-wrap">
+            <div id="histHeadDel" class="table-head cols-hdel hidden">
+              <div>Fecha/Hora</div>
+              <div>Tipo</div>
+              <div>Bodega</div>
+              <div>Código</div>
+              <div>Producto</div>
+              <div class="right">Cant.</div>
+              <div>Detalle</div>
+            </div>
+
+            <div id="histList" class="hist-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOAST -->
+      <div id="toast" class="toast" aria-live="polite"></div>
+
+      <!-- CONFIRM MODAL -->
+      <div id="confirmOverlay" class="confirm-overlay hidden">
+        <div class="confirm-box">
+          <div id="confirmMessage" class="confirm-text"></div>
+          <div class="confirm-actions">
+            <button id="confirmCancel" class="btn" type="button">Cancelar</button>
+            <button id="confirmOk" class="btn danger" type="button">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN MODAL -->
+      <div id="pinOverlay" class="confirm-overlay hidden">
+        <div class="confirm-box">
+          <div id="pinMessage" class="confirm-text"></div>
+
+          <input
+            id="pinInput"
+            class="input"
+            type="password"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="Ingresa el PIN"
+            autocomplete="off"
+          />
+
+          <div class="confirm-actions" style="margin-top:12px;">
+            <button id="pinCancel" class="btn" type="button">Cancelar</button>
+            <button id="pinOk" class="btn primary" type="button">Entrar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER MODAL -->
+      <div id="filterOverlay" class="confirm-overlay hidden">
+        <div class="confirm-box filter-box">
+          <div class="filter-modal-head">
+            <div class="filter-modal-title">Filtros de catálogo</div>
+            <button class="btn small" id="btnCloseFilters" type="button">✕</button>
+          </div>
+
+          <input
+            id="filterModalSearch"
+            class="input"
+            placeholder="Escribe para buscar departamento o categoría..."
+            autocomplete="off"
+          />
+
+          <div class="filter-modal-grid">
+            <div class="filter-pane">
+              <div class="filter-pane-title">DEPARTAMENTOS</div>
+              <div id="filterDepList" class="filter-list"></div>
+            </div>
+
+            <div class="filter-pane">
+              <div class="filter-pane-title">CATEGORÍAS</div>
+              <div id="filterCatList" class="filter-list"></div>
+            </div>
+          </div>
+
+          <div class="filter-modal-actions">
+            <button class="btn small" id="btnModalClearFilters" type="button">🧹 Limpiar</button>
+            <button class="btn small primary" id="btnModalDone" type="button">Hecho</button>
+          </div>
+
+          <div class="note" id="filterModalHint"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="footer">
+      Ferretería Universal · v3.0 · Carlos Tercero
+    </footer>
+  </div>
+
+  <!-- Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
