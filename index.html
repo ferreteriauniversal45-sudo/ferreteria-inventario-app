@@ -29,16 +29,15 @@
       <!-- HOME -->
       <section id="homeScreen" class="screen">
         <div class="card hero">
-
           <div class="home-layout">
             <!-- IZQUIERDA -->
             <div class="home-left">
               <h1 class="title">Control de Inventario</h1>
               <p class="subtitle">
-                Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro desde computadora de Auditoria y se actualiza.
+                Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro y se actualiza.
               </p>
 
-              <!-- ✅ Selector de bodega -->
+              <!-- Selector de bodega -->
               <div class="bodega-switch">
                 <button class="bodega-btn active" id="btnBodegaPrincipal" type="button">🟦 PRINCIPAL</button>
                 <button class="bodega-btn" id="btnBodegaAnexo" type="button">🟧 ANEXO</button>
@@ -97,17 +96,16 @@
                 <button class="tile" id="btnHistorial" type="button">
                   <div class="tile-emoji">📜</div>
                   <div class="tile-title">Historial</div>
-                  <div class="tile-desc">Facturas y eliminaciones</div>
+                  <div class="tile-desc">Facturas, transferencias y eliminaciones</div>
                 </button>
               </div>
 
               <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
               <p class="hint">
-                El Excel se genera en el teléfono. En Android quedara en <b>Descargas</b>.
+                El Excel se genera en el teléfono. En Android quedará en <b>Descargas</b>.
               </p>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -121,25 +119,19 @@
 
           <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
 
-          <!-- ✅ FILTROS PRO (con modal buscador) -->
           <div class="filters filters-iconbar">
-            <button class="btn small" id="btnOpenFilters" type="button" title="Filtrar por Departamento y Categoría">
-              🔎 Filtros
-            </button>
+            <button class="btn small" id="btnOpenFilters" type="button" title="Filtrar por Departamento y Categoría">🔎 Filtros</button>
 
-            <!-- Chip DEP -->
             <div id="chipDep" class="filter-chip hidden">
               <span id="chipDepText" class="chip-text"></span>
               <button id="chipDepClear" class="chip-x" type="button" aria-label="Quitar departamento">✕</button>
             </div>
 
-            <!-- Chip CAT -->
             <div id="chipCat" class="filter-chip hidden">
               <span id="chipCatText" class="chip-text"></span>
               <button id="chipCatClear" class="chip-x" type="button" aria-label="Quitar categoría">✕</button>
             </div>
 
-            <!-- Acciones -->
             <div class="filter-actions">
               <button class="btn small" id="btnFilterStock" type="button" title="Con stock">📦</button>
               <button class="btn small ghost" id="btnClearFilters" type="button" title="Limpiar filtros">✖</button>
@@ -211,7 +203,6 @@
             <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
             <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar factura</button>
           </div>
-
         </div>
       </section>
 
@@ -262,7 +253,6 @@
             <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
             <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
           </div>
-
         </div>
       </section>
 
@@ -315,11 +305,10 @@
             <button class="btn danger" id="btnClearTransferItems" type="button">🧹 Vaciar transferencia</button>
             <button class="btn primary" id="btnGuardarTransferencia" type="button">Guardar transferencia</button>
           </div>
-
         </div>
       </section>
 
-      <!-- BUSCADOR (B2) -->
+      <!-- BUSCADOR -->
       <section id="searchScreen" class="screen hidden">
         <div class="card">
           <div class="screen-head">
@@ -357,12 +346,13 @@
             <button class="tab" id="tabDel" type="button">Eliminaciones</button>
           </div>
 
-          <input id="histSearch" class="input" placeholder="Buscar..." autocomplete="off">
+          <input id="histSearch" class="input" placeholder="Buscar por factura, bodega, código o producto..." autocomplete="off">
 
           <div class="table-wrap">
             <div id="histHeadDel" class="table-head cols-hdel hidden">
               <div>Fecha/Hora</div>
               <div>Tipo</div>
+              <div>Bodega</div>
               <div>Código</div>
               <div>Producto</div>
               <div class="right">Cant.</div>
@@ -410,7 +400,7 @@
         </div>
       </div>
 
-      <!-- ✅ FILTER MODAL -->
+      <!-- FILTER MODAL -->
       <div id="filterOverlay" class="confirm-overlay hidden">
         <div class="confirm-box filter-box">
           <div class="filter-modal-head">
@@ -449,7 +439,7 @@
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v2.2 · Carlos Tercero
+      Ferretería Universal · v3.0 · Carlos Tercero
     </footer>
   </div>
 
