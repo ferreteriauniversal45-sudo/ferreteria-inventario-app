@@ -841,3 +841,63 @@ body{
   margin-top:2px;
   color:#16a34a;
 }
+
+/* ===== BODEGA SWITCH ===== */
+.bodega-switch{
+  display:flex;
+  gap:10px;
+  margin:10px 0 6px;
+  flex-wrap:wrap;
+}
+
+.bodega-btn{
+  position:relative;
+  flex:1;
+  min-width:140px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1.5px solid rgba(11,47,122,.22);
+  background:#fff;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
+}
+
+.bodega-btn.active{
+  border:none;
+  background:linear-gradient(120deg, var(--blue), #2b66d1);
+  color:#fff;
+}
+
+.bodega-btn.anexo.active{
+  background:linear-gradient(120deg, var(--orange), #ffb15a);
+  color:#111;
+}
+
+/* Etiqueta ACTIVA */
+.bodega-btn.active::after{
+  content:"ACTIVA";
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.8px;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+}
+
+.bodega-btn.anexo.active::after{
+  background:#7c2d12;
+}
+
+/* PIN INPUT más claro */
+#pinInput{
+  margin-top:6px;
+  font-size:16px;
+  letter-spacing:2px;
+  text-align:center;
+}
