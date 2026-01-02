@@ -121,31 +121,16 @@
 
           <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
 
-          <!-- ✅ FILTROS TIPO ICONO + CHIPS -->
+          <!-- ✅ FILTROS PRO (con modal buscador) -->
           <div class="filters filters-iconbar">
-
-            <!-- DEP mini-icon -->
-            <div class="mini-pill" title="Filtrar por departamento">
-              <span class="mini-label">DEP</span>
-              <span class="mini-caret">▾</span>
-              <select id="filterDepartamento" class="mini-select" aria-label="Departamento">
-                <option value="">Todos</option>
-              </select>
-            </div>
+            <button class="btn small" id="btnOpenFilters" type="button" title="Filtrar por Departamento y Categoría">
+              🔎 Filtros
+            </button>
 
             <!-- Chip DEP -->
             <div id="chipDep" class="filter-chip hidden">
               <span id="chipDepText" class="chip-text"></span>
               <button id="chipDepClear" class="chip-x" type="button" aria-label="Quitar departamento">✕</button>
-            </div>
-
-            <!-- CAT mini-icon -->
-            <div class="mini-pill" title="Filtrar por categoría">
-              <span class="mini-label">CAT</span>
-              <span class="mini-caret">▾</span>
-              <select id="filterCategoria" class="mini-select" aria-label="Categoría">
-                <option value="">Todas</option>
-              </select>
             </div>
 
             <!-- Chip CAT -->
@@ -159,7 +144,6 @@
               <button class="btn small" id="btnFilterStock" type="button" title="Con stock">📦</button>
               <button class="btn small ghost" id="btnClearFilters" type="button" title="Limpiar filtros">✖</button>
             </div>
-
           </div>
 
           <div id="catalogInfo" class="note"></div>
@@ -426,10 +410,46 @@
         </div>
       </div>
 
+      <!-- ✅ FILTER MODAL (Buscador DEP/CAT) -->
+      <div id="filterOverlay" class="confirm-overlay hidden">
+        <div class="confirm-box filter-box">
+          <div class="filter-modal-head">
+            <div class="filter-modal-title">Filtros de catálogo</div>
+            <button class="btn small" id="btnCloseFilters" type="button">✕</button>
+          </div>
+
+          <input
+            id="filterModalSearch"
+            class="input"
+            placeholder="Escribe para buscar departamento o categoría..."
+            autocomplete="off"
+          />
+
+          <div class="filter-modal-grid">
+            <div class="filter-pane">
+              <div class="filter-pane-title">DEPARTAMENTOS</div>
+              <div id="filterDepList" class="filter-list"></div>
+            </div>
+
+            <div class="filter-pane">
+              <div class="filter-pane-title">CATEGORÍAS</div>
+              <div id="filterCatList" class="filter-list"></div>
+            </div>
+          </div>
+
+          <div class="filter-modal-actions">
+            <button class="btn small" id="btnModalClearFilters" type="button">🧹 Limpiar</button>
+            <button class="btn small primary" id="btnModalDone" type="button">Hecho</button>
+          </div>
+
+          <div class="note" id="filterModalHint"></div>
+        </div>
+      </div>
+
     </main>
 
     <footer class="footer">
-      Ferretería Universal · v3.1 · Carlos Tercero
+      Ferretería Universal · v2.2 · Carlos Tercero
     </footer>
   </div>
 
