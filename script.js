@@ -2023,18 +2023,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Chips clear
-  $("chipDepClear")?.addEventListener("click", () => {
-    filtroDepartamento = "";
-    filtroCategoria = "";
-    updateFilterChips();
-    rerenderCatalogIfOpen();
-  });
+$("chipDepClear")?.addEventListener("click", () => {
+  filtroDepartamento = "";
+  filtroCategoria = "";
 
-  $("chipCatClear")?.addEventListener("click", () => {
-    filtroCategoria = "";
-    updateFilterChips();
-    rerenderCatalogIfOpen();
-  });
+  updateFilterChips();        // 🔴 OCULTA el chip
+  rerenderCatalogIfOpen();    // 🔄 actualiza catálogo
+
+  if (!$("filterOverlay")?.classList.contains("hidden")) {
+    renderFilterModal();      // 🔁 sincroniza el modal si está abierto
+  }
+});
+
+$("chipCatClear")?.addEventListener("click", () => {
+  filtroCategoria = "";
+
+  updateFilterChips();        // 🔴 OCULTA el chip
+  rerenderCatalogIfOpen();    // 🔄 actualiza catálogo
+
+  if (!$("filterOverlay")?.classList.contains("hidden")) {
+    renderFilterModal();      // 🔁 sincroniza el modal si está abierto
+  }
+});
+
 
   // Botones add/save
   $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
