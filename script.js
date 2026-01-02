@@ -2,7 +2,14 @@
 // CONFIG (GitHub Pages)
 // ==========================
 const BASE_URL = "https://ferreteriauniversal45-sudo.github.io/ferreteria-inventario-app";
-const INVENTARIO_URL = `${BASE_URL}/inventario.json`;
+
+// Inventarios por bodega (catálogos distintos)
+const INVENTARIO_URLS = {
+  PRINCIPAL: `${BASE_URL}/inventario.json`,
+  ANEXO: `${BASE_URL}/inventarioanexo.json` // ⚠️ debes crear este archivo
+};
+
+// Versión general (cuando cambies cualquiera, actualiza esto)
 const VERSION_URL = `${BASE_URL}/inventario_version.json`;
 
 // ==========================
@@ -12,23 +19,192 @@ const K = {
   BASE: "fu_base_inv",
   VER: "fu_base_ver",
   MOV: "fu_movimientos",
-  DEL: "fu_eliminaciones"
+  DEL: "fu_eliminaciones",
+  BOD: "fu_bodega_activa",
+  PINOK_P: "fu_pinok_principal",
+  PINOK_A: "fu_pinok_anexo"
+};
+
+// ==========================
+// BODEGAS + PIN
+// ==========================
+const BODEGA = {
+  PRINCIPAL: "PRINCIPAL",
+  ANEXO: "ANEXO"
+};
+
+const PIN = {
+  [BODEGA.PRINCIPAL]: "2025",
+  [BODEGA.ANEXO]: "2026"
 };
 
 const $ = (id) => document.getElementById(id);
 
-let currentSearchContext = null; // "entrada" | "salida"
-let historialTab = "mov";        // "mov" | "del"
+let activeBodega = localStorage.getItem(K.BOD) || BODEGA.PRINCIPAL;
 
-let baseCache = {};
+function otherBodega(bod){
+  return bod === BODEGA.PRINCIPAL ? BODEGA.ANEXO : BODEGA.PRINCIPAL;
+}
+
+function pinOkKey(bodega){
+  return bodega === BODEGA.ANEXO ? K.PINOK_A : K.PINOK_P;
+}
+
+function isPinVerified(bodega){
+  return localStorage.getItem(pinOkKey(bodega)) === "1";
+}
+
+function setPinVerified(bodega){
+  localStorage.setItem(pinOkKey(bodega), "1");
+}
+
+function setActiveBodega(bodega){
+  activeBodega = bodega;
+  localStorage.setItem(K.BOD, bodega);
+
+  // reset filtros al cambiar bodega
+  filtroDepartamento = "";
+  filtroCategoria = "";
+  filtroStock = false;
+
+  const selDep = $("filterDepartamento");
+  const selCat = $("filterCategoria");
+  const btnStock = $("btnFilterStock");
+  if(selDep) selDep.value = "";
+  if(selCat) selCat.value = "";
+  if(btnStock) btnStock.classList.remove("active");
+
+  updateBodegaUI();
+
+  cargarDepartamentos();
+  cargarCategorias("");
+  updateFilterChips();
+
+  refreshHome();
+
+  // si catálogo/buscador está abierto, re-render
+  const cat = $("catalogScreen");
+  if(cat && !cat.classList.contains("hidden")){
+    $("catalogSearch").value = "";
+    renderCatalog("");
+  }
+
+  const search = $("searchScreen");
+  if(search && !search.classList.contains("hidden")){
+    $("searchInput").value = "";
+    renderSearch("");
+  }
+
+  // actualizar hints si estaban en memoria
+  updateSalidaStockHint();
+  updateTransferStockHint();
+}
+
+function updateBodegaUI(){
+  const btnP = $("btnBodegaPrincipal");
+  const btnA = $("btnBodegaAnexo");
+  const note = $("bodegaNote");
+
+  if(btnP){
+    btnP.classList.toggle("active", activeBodega === BODEGA.PRINCIPAL);
+    btnP.classList.remove("anexo");
+  }
+  if(btnA){
+    btnA.classList.toggle("active", activeBodega === BODEGA.ANEXO);
+    btnA.classList.add("anexo");
+  }
+
+  if(note){
+    const pinTxt = activeBodega === BODEGA.ANEXO ? "2026" : "2025";
+    const ver = isPinVerified(activeBodega) ? "✅ verificado en este teléfono" : "🔒 requiere PIN";
+    note.textContent = `Bodega activa: ${activeBodega} · PIN: ${pinTxt} · ${ver}`;
+  }
+}
+
+// ==========================
+// PIN MODAL
+// ==========================
+function uiPinPrompt(bodega){
+  return new Promise(resolve => {
+    const overlay = $("pinOverlay");
+    const msg = $("pinMessage");
+    const inp = $("pinInput");
+    const btnOk = $("pinOk");
+    const btnCancel = $("pinCancel");
+
+    if(!overlay || !msg || !inp || !btnOk || !btnCancel){
+      const entered = prompt(`PIN para ${bodega}:`);
+      resolve(String(entered || "") === PIN[bodega]);
+      return;
+    }
+
+    msg.textContent = `Ingresa el PIN para entrar a ${bodega}`;
+    inp.value = "";
+
+    overlay.classList.remove("hidden");
+
+    const cleanup = (result) => {
+      overlay.classList.add("hidden");
+      btnOk.onclick = null;
+      btnCancel.onclick = null;
+      overlay.onclick = null;
+      inp.onkeydown = null;
+      resolve(result);
+    };
+
+    const check = () => {
+      const val = String(inp.value || "").trim();
+      if(val === PIN[bodega]){
+        setPinVerified(bodega);
+        updateBodegaUI();
+        cleanup(true);
+      }else{
+        toast("❌ PIN incorrecto");
+        inp.value = "";
+        inp.focus();
+      }
+    };
+
+    btnOk.onclick = check;
+    btnCancel.onclick = () => cleanup(false);
+
+    overlay.onclick = (e) => {
+      if(e.target === overlay) cleanup(false);
+    };
+
+    inp.onkeydown = (e) => {
+      if(e.key === "Enter") check();
+    };
+
+    setTimeout(() => inp.focus(), 50);
+  });
+}
+
+async function ensurePinForBodega(bodega){
+  if(isPinVerified(bodega)) return true;
+  return await uiPinPrompt(bodega);
+}
+
+// ==========================
+// STATE
+// ==========================
+let currentSearchContext = null; // "entrada" | "salida" | "transfer"
+let historialTab = "mov";        // "mov" | "trf" | "del"
+
+// Inventarios por bodega
+let baseCache = {
+  [BODEGA.PRINCIPAL]: {},
+  [BODEGA.ANEXO]: {}
+};
+
 let deltaDirty = true;
-let deltaCache = { ent: {}, sal: {} };
+let deltaCache = { entP:{}, salP:{}, entA:{}, salA:{} };
 
 // ==========================
 // CATALOGO FILTERS (UI STATE)
 // ==========================
-let filtroDepartamento = ""; // principal (antes del "-")
-let filtroCategoria = "";    // después del "-"
+let filtroDepartamento = "";
+let filtroCategoria = "";
 let filtroStock = false;
 
 const CATALOG_INITIAL_LIMIT = 80;
@@ -37,8 +213,9 @@ const CATALOG_MAX_RENDER = 250;
 // ==========================
 // FACTURAS MULTI-ITEM (DRAFTS)
 // ==========================
-let entradaItems = []; // [{codigo, cantidad}]
-let salidaItems  = []; // [{codigo, cantidad}]
+let entradaItems = [];  // [{codigo, cantidad}]
+let salidaItems  = [];  // [{codigo, cantidad}]
+let transferItems = []; // [{codigo, cantidad}]
 
 function sumItems(items, code){
   const c = String(code || "").trim().toUpperCase();
@@ -54,6 +231,12 @@ function clearSalidaDraft(){
   salidaItems = [];
   renderSalidaItems();
   updateSalidaStockHint();
+}
+
+function clearTransferDraft(){
+  transferItems = [];
+  renderTransferItems();
+  updateTransferStockHint();
 }
 
 // ==========================
@@ -151,7 +334,7 @@ function hasLetters(str){
 
 /**
  * allowText=true -> SOLO aplica máscara si el usuario escribe numérico (sin letras).
- * allowText=false -> forzar solo dígitos (entradaCodigo/salidaCodigo).
+ * allowText=false -> forzar solo dígitos (entradaCodigo/salidaCodigo/transferCodigo).
  */
 function attachCodigoMask(input, { allowText=false } = {}){
   if(!input) return;
@@ -173,7 +356,7 @@ function attachCodigoMask(input, { allowText=false } = {}){
 // ==========================
 // UI NAV
 // ==========================
-const screens = ["homeScreen","catalogScreen","entradaScreen","salidaScreen","searchScreen","historialScreen"];
+const screens = ["homeScreen","catalogScreen","entradaScreen","salidaScreen","transferScreen","searchScreen","historialScreen"];
 function showScreen(id){
   for(const s of screens){
     const el = $(s);
@@ -183,6 +366,7 @@ function showScreen(id){
   // evitar listas pegadas al navegar
   hideCodigoAutoList("entradaAutoList");
   hideCodigoAutoList("salidaAutoList");
+  hideCodigoAutoList("transferAutoList");
 }
 
 // ==========================
@@ -235,6 +419,14 @@ function normalizeBase(inv){
   return out;
 }
 
+function baseKeyFor(bodega){
+  return `${K.BASE}_${bodega}`;
+}
+
+function getBase(bodega = activeBodega){
+  return baseCache[bodega] || {};
+}
+
 // ==========================
 // DEPARTAMENTO / CATEGORIA (split por "-")
 // ==========================
@@ -260,8 +452,10 @@ function cargarDepartamentos(){
   const prev = (filtroDepartamento || select.value || "").trim();
   const depsSet = new Set();
 
-  for(const code of Object.keys(baseCache || {})){
-    const depFull = baseCache[code]?.departamento;
+  const base = getBase();
+
+  for(const code of Object.keys(base || {})){
+    const depFull = base[code]?.departamento;
     const depMain = getDepartamentoPrincipal(depFull);
     if(depMain) depsSet.add(depMain);
   }
@@ -289,8 +483,10 @@ function cargarCategorias(depMainFilter = filtroDepartamento){
   const prev = (filtroCategoria || select.value || "").trim();
   const set = new Set();
 
-  for(const code of Object.keys(baseCache || {})){
-    const depFull = baseCache[code]?.departamento || "";
+  const base = getBase();
+
+  for(const code of Object.keys(base || {})){
+    const depFull = base[code]?.departamento || "";
     const depMain = getDepartamentoPrincipal(depFull);
     const cat = getCategoria(depFull);
 
@@ -343,36 +539,62 @@ function updateFilterChips(){
 }
 
 // ==========================
-// DELTAS
+// DELTAS (por bodega) + transferencias
 // ==========================
 function rebuildDelta(){
   const movs = readJSON(K.MOV, []);
-  const ent = {};
-  const sal = {};
+
+  const entP = {}, salP = {};
+  const entA = {}, salA = {};
+
   for(const m of movs){
     const c = String(m.codigo||"").trim().toUpperCase();
     const q = Number(m.cantidad||0);
     if(!c || !Number.isFinite(q)) continue;
-    if(m.tipo === "entrada") ent[c] = (ent[c] || 0) + q;
-    if(m.tipo === "salida")  sal[c] = (sal[c] || 0) + q;
+
+    const bod = String(m.bodega || BODEGA.PRINCIPAL);
+
+    const ent = (bod === BODEGA.ANEXO) ? entA : entP;
+    const sal = (bod === BODEGA.ANEXO) ? salA : salP;
+
+    const isEnt = (m.tipo === "entrada") || (m.tipo === "transferencia" && m.subTipo === "entrada");
+    const isSal = (m.tipo === "salida")  || (m.tipo === "transferencia" && m.subTipo === "salida");
+
+    if(isEnt) ent[c] = (ent[c] || 0) + q;
+    if(isSal) sal[c] = (sal[c] || 0) + q;
   }
-  deltaCache = { ent, sal };
+
+  deltaCache = { entP, salP, entA, salA };
   deltaDirty = false;
 }
 
-function getStock(code){
+function getStock(code, bodega = activeBodega){
   if(deltaDirty) rebuildDelta();
   const c = String(code||"").trim().toUpperCase();
-  const base = baseCache[c]?.stock ?? 0;
-  const ent = deltaCache.ent[c] || 0;
-  const sal = deltaCache.sal[c] || 0;
+  const base = (baseCache[bodega]?.[c]?.stock ?? 0);
+
+  const ent = (bodega === BODEGA.ANEXO) ? (deltaCache.entA[c] || 0) : (deltaCache.entP[c] || 0);
+  const sal = (bodega === BODEGA.ANEXO) ? (deltaCache.salA[c] || 0) : (deltaCache.salP[c] || 0);
+
   return Number(base) + Number(ent) - Number(sal);
 }
 
 // ==========================
-// SYNC
+// SYNC (versionado general)
 // ==========================
 let syncing = false;
+
+function migrateOldBaseIfNeeded(){
+  // compat: si venías de la versión vieja (un solo K.BASE), lo tratamos como PRINCIPAL
+  const old = localStorage.getItem(K.BASE);
+  const newP = localStorage.getItem(baseKeyFor(BODEGA.PRINCIPAL));
+  if(old && !newP){
+    try{
+      const parsed = JSON.parse(old);
+      writeJSON(baseKeyFor(BODEGA.PRINCIPAL), parsed);
+    }catch{}
+  }
+}
 
 async function syncBase(showMsg){
   if(syncing) return;
@@ -388,6 +610,8 @@ async function syncBase(showMsg){
   if(icon) icon.classList.add("spin");
 
   try{
+    migrateOldBaseIfNeeded();
+
     const verRes = await fetch(VERSION_URL, { cache: "no-store" });
     if(!verRes.ok) throw new Error("No se pudo leer versión");
     const verJson = await verRes.json();
@@ -395,20 +619,27 @@ async function syncBase(showMsg){
     if(!remoteVer) throw new Error("Versión inválida");
 
     const localVer = localStorage.getItem(K.VER) || "";
+    const missingLocal =
+      !localStorage.getItem(baseKeyFor(BODEGA.PRINCIPAL)) ||
+      !localStorage.getItem(baseKeyFor(BODEGA.ANEXO));
 
-    if(localVer !== remoteVer || !localStorage.getItem(K.BASE)){
-      const invRes = await fetch(INVENTARIO_URL, { cache: "no-store" });
-      if(!invRes.ok) throw new Error("No se pudo leer inventario");
-      const invJson = await invRes.json();
-
-      const normalized = normalizeBase(invJson);
-      writeJSON(K.BASE, normalized);
+    if(localVer !== remoteVer || missingLocal){
+      // descargar ambos
+      for(const bod of [BODEGA.PRINCIPAL, BODEGA.ANEXO]){
+        const url = INVENTARIO_URLS[bod];
+        const invRes = await fetch(url, { cache: "no-store" });
+        if(!invRes.ok) throw new Error(`No se pudo leer inventario ${bod}`);
+        const invJson = await invRes.json();
+        const normalized = normalizeBase(invJson);
+        writeJSON(baseKeyFor(bod), normalized);
+        baseCache[bod] = normalized;
+      }
       localStorage.setItem(K.VER, remoteVer);
-
-      baseCache = normalized;
-      if(showMsg) toast("✅ Inventario actualizado");
+      if(showMsg) toast("✅ Inventarios actualizados");
     }else{
-      baseCache = readJSON(K.BASE, {});
+      // cargar local
+      baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
+      baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
       if(showMsg) toast("✅ Ya estabas actualizado");
     }
 
@@ -418,24 +649,29 @@ async function syncBase(showMsg){
     updateFilterChips();
     refreshHome();
 
-    const cat = $("catalogScreen");
-    if(cat && !cat.classList.contains("hidden")){
+    // re-render si está abierto
+    if($("catalogScreen") && !$("catalogScreen").classList.contains("hidden")){
       renderCatalog($("catalogSearch")?.value || "");
+    }
+    if($("searchScreen") && !$("searchScreen").classList.contains("hidden")){
+      renderSearch($("searchInput")?.value || "");
     }
 
   }catch(err){
-    baseCache = readJSON(K.BASE, {});
+    baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
+    baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
     setNetworkState(navigator.onLine);
 
     cargarDepartamentos();
     cargarCategorias(filtroDepartamento);
     updateFilterChips();
-
     refreshHome();
 
-    const cat = $("catalogScreen");
-    if(cat && !cat.classList.contains("hidden")){
+    if($("catalogScreen") && !$("catalogScreen").classList.contains("hidden")){
       renderCatalog($("catalogSearch")?.value || "");
+    }
+    if($("searchScreen") && !$("searchScreen").classList.contains("hidden")){
+      renderSearch($("searchInput")?.value || "");
     }
 
     if(showMsg) toast("⚠️ Sin internet: usando inventario local");
@@ -457,17 +693,26 @@ function refreshHome(){
   const ver = localStorage.getItem(K.VER) || "—";
   if($("homeVersion")) $("homeVersion").textContent = ver;
 
-  const total = Object.keys(baseCache || {}).length;
+  const total = Object.keys(getBase() || {}).length;
   if($("homeProductos")) $("homeProductos").textContent = String(total);
 
   const movs = readJSON(K.MOV, []);
   const h = todayISO();
-  const movHoy = movs.filter(m => String(m.fecha||"").slice(0,10) === h).length;
+
+  // contar movimientos del día SOLO de la bodega activa (compat: sin bodega -> PRINCIPAL)
+  const movHoy = movs.filter(m => {
+    const fechaOk = String(m.fecha||"").slice(0,10) === h;
+    const bod = String(m.bodega || BODEGA.PRINCIPAL);
+    return fechaOk && bod === activeBodega;
+  }).length;
+
   if($("homeMovHoy")) $("homeMovHoy").textContent = String(movHoy);
+
+  updateBodegaUI();
 }
 
 // ==========================
-// CATALOGO (TABLA) + FILTROS
+// CATALOGO (TABLA) + FILTROS (stock SOLO bodega activa)
 // ==========================
 function renderCatalog(query){
   const list = $("catalogList");
@@ -478,7 +723,7 @@ function renderCatalog(query){
 
   const q = (query || "").toLowerCase().trim();
 
-  let entries = Object.entries(baseCache || {});
+  let entries = Object.entries(getBase() || {});
   const baseTotal = entries.length;
 
   if(baseTotal === 0){
@@ -499,7 +744,7 @@ function renderCatalog(query){
   }
 
   if(filtroStock){
-    entries = entries.filter(([code]) => getStock(code) > 0);
+    entries = entries.filter(([code]) => getStock(code, activeBodega) > 0);
   }
 
   if(q.length === 0){
@@ -508,10 +753,10 @@ function renderCatalog(query){
 
     info.textContent = entries.length > show.length
       ? `Mostrando ${show.length} de ${entries.length}. Escribe para buscar o usa filtros.`
-      : `Productos: ${entries.length}`;
+      : `Productos: ${entries.length} · Bodega: ${activeBodega}`;
 
     for(const [code, data] of show){
-      const stock = getStock(code);
+      const stock = getStock(code, activeBodega);
       const row = document.createElement("div");
       row.className = "trow cols-catalog";
       row.innerHTML = `
@@ -538,10 +783,10 @@ function renderCatalog(query){
   const show = filtered.slice(0, CATALOG_MAX_RENDER);
   info.textContent = filtered.length > show.length
     ? `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`
-    : `Resultados: ${filtered.length}`;
+    : `Resultados: ${filtered.length} · Bodega: ${activeBodega}`;
 
   for(const [code, data] of show){
-    const stock = getStock(code);
+    const stock = getStock(code, activeBodega);
     const row = document.createElement("div");
     row.className = "trow cols-catalog";
     row.innerHTML = `
@@ -555,10 +800,10 @@ function renderCatalog(query){
 }
 
 // ==========================
-// BUSCADOR (B2) - pantalla lupa
+// BUSCADOR (B2) - pantalla lupa (solo productos de bodega activa)
 // ==========================
 function selectProduct(code){
-  const data = baseCache[code];
+  const data = getBase()[code];
   if(!data) return;
 
   if(currentSearchContext === "entrada"){
@@ -574,6 +819,13 @@ function selectProduct(code){
     showScreen("salidaScreen");
     return;
   }
+  if(currentSearchContext === "transfer"){
+    $("transferCodigo").value = code;
+    $("transferProducto").value = data.producto || "";
+    updateTransferStockHint();
+    showScreen("transferScreen");
+    return;
+  }
 
   showScreen("homeScreen");
 }
@@ -586,7 +838,7 @@ function renderSearch(query){
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
-  const entries = Object.entries(baseCache || {});
+  const entries = Object.entries(getBase() || {});
   const total = entries.length;
 
   if(total > 500 && q.length < 2){
@@ -607,10 +859,10 @@ function renderSearch(query){
   const show = filtered.slice(0, 250);
   info.textContent = filtered.length > show.length
     ? `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`
-    : `Resultados: ${filtered.length}`;
+    : `Resultados: ${filtered.length} · Bodega: ${activeBodega}`;
 
   for(const [code, data] of show){
-    const stock = getStock(code);
+    const stock = getStock(code, activeBodega);
 
     const row = document.createElement("div");
     row.className = "trow cols-search selectable";
@@ -635,7 +887,7 @@ function renderSearch(query){
 }
 
 // ==========================
-// ✅ AUTOCOMPLETE SOLO POR CÓDIGO (ENTRADA / SALIDA)
+// ✅ AUTOCOMPLETE SOLO POR CÓDIGO (ENTRADA / SALIDA / TRANSFER)
 // ==========================
 function hideCodigoAutoList(listId){
   const list = $(listId);
@@ -644,12 +896,18 @@ function hideCodigoAutoList(listId){
   list.style.display = "none";
 }
 
-function renderCodigoAutoList(context){
-  const inputId = context === "entrada" ? "entradaCodigo" : "salidaCodigo";
-  const listId  = context === "entrada" ? "entradaAutoList" : "salidaAutoList";
+const CODE_CTX = {
+  entrada: { inputId:"entradaCodigo", listId:"entradaAutoList", productId:"entradaProducto", focusId:"entradaCantidad" },
+  salida: { inputId:"salidaCodigo", listId:"salidaAutoList", productId:"salidaProducto", focusId:"salidaCantidad" },
+  transfer:{ inputId:"transferCodigo", listId:"transferAutoList", productId:"transferProducto", focusId:"transferCantidad" }
+};
 
-  const input = $(inputId);
-  const list = $(listId);
+function renderCodigoAutoList(context){
+  const cfg = CODE_CTX[context];
+  if(!cfg) return;
+
+  const input = $(cfg.inputId);
+  const list = $(cfg.listId);
   if(!input || !list) return;
 
   const q = String(input.value || "").trim().toUpperCase();
@@ -657,13 +915,13 @@ function renderCodigoAutoList(context){
   // solo mostrar cuando ya tenga 2 dígitos
   const digits = q.replace(/\D/g, "");
   if(digits.length < 2){
-    hideCodigoAutoList(listId);
+    hideCodigoAutoList(cfg.listId);
     return;
   }
 
-  const codes = Object.keys(baseCache || {});
+  const codes = Object.keys(getBase() || {});
   if(codes.length === 0){
-    hideCodigoAutoList(listId);
+    hideCodigoAutoList(cfg.listId);
     return;
   }
 
@@ -672,15 +930,15 @@ function renderCodigoAutoList(context){
     .slice(0, 8);
 
   if(matches.length === 0){
-    hideCodigoAutoList(listId);
+    hideCodigoAutoList(cfg.listId);
     return;
   }
 
   list.innerHTML = "";
 
   for(const code of matches){
-    const data = baseCache[code] || {};
-    const stock = getStock(code);
+    const data = getBase()[code] || {};
+    const stock = getStock(code, activeBodega);
 
     const item = document.createElement("div");
     item.className = "autocomplete-item";
@@ -698,16 +956,15 @@ function renderCodigoAutoList(context){
 
       input.value = code;
 
-      if(context === "entrada"){
-        $("entradaProducto").value = data.producto || "";
-        $("entradaCantidad")?.focus();
-      }else{
-        $("salidaProducto").value = data.producto || "";
-        updateSalidaStockHint();
-        $("salidaCantidad")?.focus();
-      }
+      const prod = $(cfg.productId);
+      if(prod) prod.value = data.producto || "";
 
-      hideCodigoAutoList(listId);
+      if(context === "salida") updateSalidaStockHint();
+      if(context === "transfer") updateTransferStockHint();
+
+      $(cfg.focusId)?.focus();
+
+      hideCodigoAutoList(cfg.listId);
     };
 
     item.addEventListener("pointerdown", select);
@@ -721,22 +978,27 @@ function renderCodigoAutoList(context){
 }
 
 // ==========================
-// ENTRADAS / SALIDAS (AUTO-LLENADO)
+// ENTRADAS / SALIDAS / TRANSFER (AUTO-LLENADO)
 // ==========================
 function fillProductoFromCode(context){
-  if(context === "entrada"){
-    const code = String($("entradaCodigo").value||"").trim().toUpperCase();
-    $("entradaProducto").value = baseCache[code]?.producto || "";
-  }
-  if(context === "salida"){
-    const code = String($("salidaCodigo").value||"").trim().toUpperCase();
-    $("salidaProducto").value = baseCache[code]?.producto || "";
-    updateSalidaStockHint();
-  }
+  const cfg = CODE_CTX[context];
+  if(!cfg) return;
+
+  const code = String($(cfg.inputId)?.value||"").trim().toUpperCase();
+  const prod = $(cfg.productId);
+  if(!prod) return;
+
+  prod.value = getBase()[code]?.producto || "";
+
+  if(context === "salida") updateSalidaStockHint();
+  if(context === "transfer") updateTransferStockHint();
 }
 
+// ==========================
+// STOCK HINTS
+// ==========================
 function updateSalidaStockHint(){
-  const code = String($("salidaCodigo").value||"").trim().toUpperCase();
+  const code = String($("salidaCodigo")?.value||"").trim().toUpperCase();
   const out = $("salidaStockInfo");
   if(!out) return;
 
@@ -744,12 +1006,34 @@ function updateSalidaStockHint(){
     out.textContent = "";
     return;
   }
-  const stockReal = getStock(code);
+
+  const stockReal = getStock(code, activeBodega);
   const reservado = sumItems(salidaItems, code);
   const disponible = stockReal - reservado;
 
   const extra = reservado > 0 ? ` (en factura: ${reservado})` : "";
-  out.textContent = `Stock disponible: ${disponible}${extra}`;
+  out.textContent = `Stock disponible (${activeBodega}): ${disponible}${extra}`;
+}
+
+function updateTransferStockHint(){
+  const code = String($("transferCodigo")?.value||"").trim().toUpperCase();
+  const out = $("transferStockInfo");
+  if(!out) return;
+
+  if(!code){
+    out.textContent = "";
+    return;
+  }
+
+  const origen = activeBodega;
+  const destino = otherBodega(activeBodega);
+
+  const stockReal = getStock(code, origen);
+  const reservado = sumItems(transferItems, code);
+  const disponible = stockReal - reservado;
+
+  const extra = reservado > 0 ? ` (en transferencia: ${reservado})` : "";
+  out.textContent = `Disponible en ${origen}: ${disponible}${extra} · Destino: ${destino}`;
 }
 
 // ==========================
@@ -763,7 +1047,11 @@ function flashInvoiceEl(el){
 }
 
 function updateDraftTotalsFromDOM(context){
-  const preview = context === "entrada" ? $("entradaFacturaPreview") : $("salidaFacturaPreview");
+  const preview =
+    context === "entrada" ? $("entradaFacturaPreview") :
+    context === "salida"  ? $("salidaFacturaPreview")  :
+    context === "transfer"? $("transferFacturaPreview") : null;
+
   const inv = preview?.querySelector(`.invoice[data-draft="${context}"]`);
   if(!inv) return;
 
@@ -784,43 +1072,84 @@ function updateDraftTotalsFromDOM(context){
 
 function renderDraftFactura(context){
   const isEntrada = context === "entrada";
-  const items = isEntrada ? entradaItems : salidaItems;
+  const isSalida  = context === "salida";
+  const isTransfer= context === "transfer";
 
-  const info = isEntrada ? $("entradaItemsInfo") : $("salidaItemsInfo");
-  const preview = isEntrada ? $("entradaFacturaPreview") : $("salidaFacturaPreview");
+  const items = isEntrada ? entradaItems : isSalida ? salidaItems : transferItems;
+
+  const info =
+    isEntrada ? $("entradaItemsInfo") :
+    isSalida  ? $("salidaItemsInfo")  :
+    $("transferItemsInfo");
+
+  const preview =
+    isEntrada ? $("entradaFacturaPreview") :
+    isSalida  ? $("salidaFacturaPreview")  :
+    $("transferFacturaPreview");
+
   if(!info || !preview) return;
 
   preview.innerHTML = "";
 
   if(items.length === 0){
-    info.textContent = "Factura vacía.";
+    info.textContent = isTransfer ? "Transferencia vacía." : "Factura vacía.";
     return;
   }
 
-  const fecha = (isEntrada ? $("entradaFecha")?.value : $("salidaFecha")?.value) || todayISO();
-  const factura = (isEntrada ? $("entradaFactura")?.value : $("salidaFactura")?.value) || "";
+  const fecha =
+    (isEntrada ? $("entradaFecha")?.value :
+     isSalida  ? $("salidaFecha")?.value :
+     $("transferFecha")?.value) || todayISO();
+
+  const factura =
+    (isEntrada ? $("entradaFactura")?.value :
+     isSalida  ? $("salidaFactura")?.value :
+     $("transferReferencia")?.value) || "";
 
   const proveedor = isEntrada ? String($("entradaProveedor")?.value || "").trim() : "";
-  const tipoLabel = isEntrada ? "ENTRADA" : "SALIDA";
+  const tipoLabel = isEntrada ? "ENTRADA" : isSalida ? "SALIDA" : "TRANSFERENCIA";
 
   const totalPiezas = items.reduce((a,it)=>a+Number(it.cantidad||0),0);
-  info.textContent = `Productos en factura: ${items.length} · Total piezas: ${totalPiezas}`;
+  info.textContent = (isTransfer ? "Productos en transferencia: " : "Productos en factura: ")
+    + `${items.length} · Total piezas: ${totalPiezas}`;
+
+  const origen = isTransfer ? activeBodega : "";
+  const destino = isTransfer ? otherBodega(activeBodega) : "";
 
   const inv = document.createElement("div");
   inv.className = "invoice";
   inv.dataset.draft = context;
 
-  inv.innerHTML = `
-    <div class="invoice-header">
-      <div class="invoice-company">FERRETERÍA UNIVERSAL</div>
-      <div class="invoice-sub">FACTURA (BORRADOR)</div>
-    </div>
-
-    <div class="invoice-meta">
+  // meta dinámico
+  let metaHtml = "";
+  if(isTransfer){
+    metaHtml = `
+      <div class="im-row"><span class="im-label">REF</span><span class="im-value">${escapeHtml(factura || "—")}</span></div>
+      <div class="im-row"><span class="im-label">TIPO</span><span class="im-value">${escapeHtml(tipoLabel)}</span></div>
+      <div class="im-row"><span class="im-label">FECHA</span><span class="im-value">${escapeHtml(fecha)}</span></div>
+      <div class="im-row"><span class="im-label">ORIGEN</span><span class="im-value">${escapeHtml(origen)}</span></div>
+      <div class="im-row"><span class="im-label">DESTINO</span><span class="im-value">${escapeHtml(destino)}</span></div>
+    `;
+  }else{
+    const proveedorLabel = isEntrada ? "PROVEEDOR" : "REFERENCIA";
+    const proveedorVal = isEntrada ? (proveedor || "—") : "—";
+    metaHtml = `
       <div class="im-row"><span class="im-label">FACTURA</span><span class="im-value">${escapeHtml(factura || "—")}</span></div>
       <div class="im-row"><span class="im-label">TIPO</span><span class="im-value">${escapeHtml(tipoLabel)}</span></div>
       <div class="im-row"><span class="im-label">FECHA</span><span class="im-value">${escapeHtml(fecha)}</span></div>
-      <div class="im-row"><span class="im-label">${isEntrada ? "PROVEEDOR" : "REFERENCIA"}</span><span class="im-value">${escapeHtml(isEntrada ? (proveedor || "—") : "—")}</span></div>
+      <div class="im-row"><span class="im-label">${escapeHtml(proveedorLabel)}</span><span class="im-value">${escapeHtml(proveedorVal)}</span></div>
+      <div class="im-row"><span class="im-label">BODEGA</span><span class="im-value">${escapeHtml(activeBodega)}</span></div>
+    `;
+  }
+
+  inv.innerHTML = `
+    <div class="invoice-header">
+      <div class="invoice-company">FERRETERÍA UNIVERSAL</div>
+      <div class="invoice-sub">${isTransfer ? "TRANSFERENCIA (BORRADOR)" : "FACTURA (BORRADOR)"}</div>
+    </div>
+
+    <div class="invoice-meta">
+      ${metaHtml}
     </div>
 
     <div class="invoice-summary">
@@ -838,7 +1167,7 @@ function renderDraftFactura(context){
       </div>
 
       ${items.map(it=>{
-        const data = baseCache[it.codigo] || {};
+        const data = getBase()[it.codigo] || {};
         return `
           <div class="it-row">
             <div class="it-code">${escapeHtml(it.codigo)}</div>
@@ -876,9 +1205,10 @@ function renderDraftFactura(context){
 
 function renderEntradaItems(){ renderDraftFactura("entrada"); }
 function renderSalidaItems(){ renderDraftFactura("salida"); }
+function renderTransferItems(){ renderDraftFactura("transfer"); }
 
 // ==========================
-// FACTURAS MULTI-ITEM: ADD ITEM
+// ADD ITEMS
 // ==========================
 function addEntradaItem(){
   const codigo = String($("entradaCodigo").value||"").trim().toUpperCase();
@@ -888,8 +1218,8 @@ function addEntradaItem(){
     toast("Código y cantidad válidos.");
     return;
   }
-  if(!baseCache[codigo]){
-    toast("Código no existe en inventario base.");
+  if(!getBase()[codigo]){
+    toast(`Código no existe en ${activeBodega}.`);
     return;
   }
 
@@ -914,12 +1244,12 @@ function addSalidaItem(){
     toast("Código y cantidad válidos.");
     return;
   }
-  if(!baseCache[codigo]){
-    toast("Código no existe en inventario base.");
+  if(!getBase()[codigo]){
+    toast(`Código no existe en ${activeBodega}.`);
     return;
   }
 
-  const stockReal = getStock(codigo);
+  const stockReal = getStock(codigo, activeBodega);
   const reservado = sumItems(salidaItems, codigo);
   const disponible = stockReal - reservado;
 
@@ -942,8 +1272,52 @@ function addSalidaItem(){
   toast("➕ Agregado a la factura");
 }
 
+function addTransferItem(){
+  const codigo = String($("transferCodigo").value||"").trim().toUpperCase();
+  const cantidad = Number($("transferCantidad").value);
+
+  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0){
+    toast("Código y cantidad válidos.");
+    return;
+  }
+
+  const origen = activeBodega;
+  const destino = otherBodega(activeBodega);
+
+  if(!baseCache[origen]?.[codigo]){
+    toast(`Código no existe en ${origen}.`);
+    return;
+  }
+  if(!baseCache[destino]?.[codigo]){
+    toast(`No se puede transferir: el producto NO existe en ${destino}.`);
+    return;
+  }
+
+  const stockReal = getStock(codigo, origen);
+  const reservado = sumItems(transferItems, codigo);
+  const disponible = stockReal - reservado;
+
+  if(cantidad > disponible){
+    toast(`Stock insuficiente en ${origen}. Disponible: ${disponible}`);
+    return;
+  }
+
+  const idx = transferItems.findIndex(x => x.codigo === codigo);
+  if(idx >= 0) transferItems[idx].cantidad += cantidad;
+  else transferItems.push({ codigo, cantidad });
+
+  $("transferCodigo").value = "";
+  $("transferProducto").value = "";
+  $("transferCantidad").value = "";
+  hideCodigoAutoList("transferAutoList");
+
+  renderTransferItems();
+  updateTransferStockHint();
+  toast("➕ Agregado a transferencia");
+}
+
 // ==========================
-// FACTURAS MULTI-ITEM: SAVE FACTURA
+// SAVE FACTURAS / TRANSFERENCIAS
 // ==========================
 function saveFacturaEntrada(){
   const proveedor = String($("entradaProveedor").value||"").trim();
@@ -970,9 +1344,10 @@ function saveFacturaEntrada(){
       id: makeId(),
       grupoId,
       tipo: "entrada",
+      bodega: activeBodega,
       codigo,
-      producto: baseCache[codigo]?.producto || "",
-      departamento: baseCache[codigo]?.departamento || "",
+      producto: getBase()[codigo]?.producto || "",
+      departamento: getBase()[codigo]?.departamento || "",
       cantidad,
       proveedor,
       factura,
@@ -1003,9 +1378,9 @@ function saveFacturaSalida(){
     return;
   }
 
-  // validación final
+  // validación final (por bodega activa)
   for(const it of salidaItems){
-    const stockReal = getStock(it.codigo);
+    const stockReal = getStock(it.codigo, activeBodega);
     const reservadoOtros = sumItems(salidaItems, it.codigo) - Number(it.cantidad || 0);
     const disponible = stockReal - reservadoOtros;
     if(Number(it.cantidad) > disponible){
@@ -1025,9 +1400,10 @@ function saveFacturaSalida(){
       id: makeId(),
       grupoId,
       tipo: "salida",
+      bodega: activeBodega,
       codigo,
-      producto: baseCache[codigo]?.producto || "",
-      departamento: baseCache[codigo]?.departamento || "",
+      producto: getBase()[codigo]?.producto || "",
+      departamento: getBase()[codigo]?.departamento || "",
       cantidad,
       proveedor: "",
       factura,
@@ -1046,8 +1422,225 @@ function saveFacturaSalida(){
   showScreen("homeScreen");
 }
 
+function saveTransferencia(){
+  const fecha = $("transferFecha").value || todayISO();
+  const referencia = String($("transferReferencia")?.value || "").trim();
+
+  if(transferItems.length === 0){
+    toast("Agrega al menos 1 producto.");
+    return;
+  }
+  if(!fecha){
+    toast("Completa la Fecha.");
+    return;
+  }
+
+  const origen = activeBodega;
+  const destino = otherBodega(activeBodega);
+
+  // validación final
+  for(const it of transferItems){
+    const code = it.codigo;
+
+    if(!baseCache[origen]?.[code]){
+      toast(`Producto ${code} ya no existe en ${origen}`);
+      return;
+    }
+    if(!baseCache[destino]?.[code]){
+      toast(`No se puede transferir ${code}: no existe en ${destino}`);
+      return;
+    }
+
+    const stockReal = getStock(code, origen);
+    const reservadoOtros = sumItems(transferItems, code) - Number(it.cantidad || 0);
+    const disponible = stockReal - reservadoOtros;
+
+    if(Number(it.cantidad) > disponible){
+      toast(`Stock insuficiente en ${code} (${origen}). Disponible: ${disponible}`);
+      return;
+    }
+  }
+
+  const trfId = "TRF-" + makeId();
+  const movs = readJSON(K.MOV, []);
+
+  for(const it of transferItems){
+    const codigo = it.codigo;
+    const cantidad = Number(it.cantidad);
+    const prod = baseCache[origen]?.[codigo]?.producto || "";
+    const dep  = baseCache[origen]?.[codigo]?.departamento || "";
+
+    // SALIDA origen
+    movs.push({
+      id: makeId(),
+      grupoId: trfId,
+      transferenciaId: trfId,
+      tipo: "transferencia",
+      subTipo: "salida",
+      bodega: origen,
+      bodegaDestino: destino,
+      codigo,
+      producto: prod,
+      departamento: dep,
+      cantidad,
+      referencia,
+      fecha,
+      timestamp: Date.now()
+    });
+
+    // ENTRADA destino
+    movs.push({
+      id: makeId(),
+      grupoId: trfId,
+      transferenciaId: trfId,
+      tipo: "transferencia",
+      subTipo: "entrada",
+      bodega: destino,
+      bodegaOrigen: origen,
+      codigo,
+      producto: prod,
+      departamento: dep,
+      cantidad,
+      referencia,
+      fecha,
+      timestamp: Date.now()
+    });
+  }
+
+  writeJSON(K.MOV, movs);
+  deltaDirty = true;
+
+  toast("🔁 Transferencia guardada");
+  refreshHome();
+  clearTransferDraft();
+  showScreen("homeScreen");
+}
+
 // ==========================
-// HISTORIAL (FACTURAS)
+// BORRADOR: acciones por producto + totales dinámicos
+// ==========================
+function setupDraftPreview(previewId, context){
+  const preview = $(previewId);
+  if(!preview) return;
+
+  preview.addEventListener("click", (e) => {
+    const btnDel = e.target.closest("button[data-del-draft]");
+    if(btnDel){
+      const code = String(btnDel.dataset.delDraft || "").trim().toUpperCase();
+
+      if(context === "entrada"){
+        entradaItems = entradaItems.filter(it => it.codigo !== code);
+        renderEntradaItems();
+      }else if(context === "salida"){
+        salidaItems = salidaItems.filter(it => it.codigo !== code);
+        renderSalidaItems();
+        updateSalidaStockHint();
+      }else if(context === "transfer"){
+        transferItems = transferItems.filter(it => it.codigo !== code);
+        renderTransferItems();
+        updateTransferStockHint();
+      }
+
+      toast("Producto quitado");
+      return;
+    }
+
+    const btnEdit = e.target.closest("button[data-edit-draft]");
+    if(btnEdit){
+      const row = btnEdit.closest(".it-row");
+      const inp = row?.querySelector("input.draft-cantidad");
+      if(inp){
+        inp.focus();
+        inp.select?.();
+      }
+    }
+  });
+
+  preview.addEventListener("input", (e) => {
+    const inp = e.target.closest("input.draft-cantidad");
+    if(!inp) return;
+    updateDraftTotalsFromDOM(context);
+  });
+
+  preview.addEventListener("change", (e) => {
+    const inp = e.target.closest("input.draft-cantidad");
+    if(!inp) return;
+
+    const code = String(inp.dataset.codigo || "").trim().toUpperCase();
+    const nueva = Number(inp.value);
+
+    if(!Number.isFinite(nueva) || nueva <= 0){
+      toast("Cantidad inválida");
+      if(context === "entrada") renderEntradaItems();
+      else if(context === "salida") renderSalidaItems();
+      else renderTransferItems();
+      return;
+    }
+
+    if(context === "entrada"){
+      const it = entradaItems.find(x => x.codigo === code);
+      if(!it) return;
+      it.cantidad = nueva;
+      renderEntradaItems();
+      toast("✅ Cantidad actualizada");
+      return;
+    }
+
+    if(context === "salida"){
+      const it = salidaItems.find(x => x.codigo === code);
+      if(!it) return;
+
+      const stockReal = getStock(code, activeBodega);
+      const reservadoOtros = sumItems(salidaItems, code) - Number(it.cantidad || 0);
+      const disponible = stockReal - reservadoOtros;
+
+      if(nueva > disponible){
+        toast(`Stock insuficiente. Disponible: ${disponible}`);
+        renderSalidaItems();
+        updateSalidaStockHint();
+        return;
+      }
+
+      it.cantidad = nueva;
+      renderSalidaItems();
+      updateSalidaStockHint();
+      toast("✅ Cantidad actualizada");
+      return;
+    }
+
+    // TRANSFER (validar stock origen)
+    const it = transferItems.find(x => x.codigo === code);
+    if(!it) return;
+
+    const origen = activeBodega;
+    const destino = otherBodega(activeBodega);
+
+    if(!baseCache[destino]?.[code]){
+      toast(`No existe en destino ${destino}`);
+      renderTransferItems();
+      return;
+    }
+
+    const stockReal = getStock(code, origen);
+    const reservadoOtros = sumItems(transferItems, code) - Number(it.cantidad || 0);
+    const disponible = stockReal - reservadoOtros;
+
+    if(nueva > disponible){
+      toast(`Stock insuficiente en ${origen}. Disponible: ${disponible}`);
+      renderTransferItems();
+      updateTransferStockHint();
+      return;
+    }
+
+    it.cantidad = nueva;
+    renderTransferItems();
+    updateTransferStockHint();
+    toast("✅ Cantidad actualizada");
+  });
+}
+
+// ==========================
+// HISTORIAL (FACTURAS) + TRANSFERENCIAS
 // ==========================
 function movGroupKey(m){
   return String(m?.grupoId || m?.factura || m?.id || "").trim();
@@ -1087,47 +1680,6 @@ function calcFacturaTotalsFromItems(items){
   return { totalProductos, totalPiezas };
 }
 
-function flashInvoice(grupoId){
-  const inv = document.querySelector(`.invoice[data-grupo="${grupoId}"]`);
-  if(!inv) return;
-  inv.classList.add("invoice-flash");
-  clearTimeout(inv._flashTimer);
-  inv._flashTimer = setTimeout(() => inv.classList.remove("invoice-flash"), 250);
-}
-
-function updateTotalsFromDOM(grupoId){
-  const inv = document.querySelector(`.invoice[data-grupo="${grupoId}"]`);
-  if(!inv) return;
-
-  const inputs = inv.querySelectorAll("input.edit-cantidad");
-  const totalProductos = inputs.length;
-
-  let totalPiezas = 0;
-  for(const inp of inputs){
-    const v = Number(inp.value);
-    if(Number.isFinite(v) && v > 0) totalPiezas += v;
-  }
-
-  inv.querySelectorAll(".t-prod").forEach(el => el.textContent = String(totalProductos));
-  inv.querySelectorAll(".t-pzas").forEach(el => el.textContent = String(totalPiezas));
-
-  flashInvoice(grupoId);
-}
-
-function updateFacturaTotalsFromStorage(grupoId){
-  const movs = readJSON(K.MOV, []);
-  const items = movs.filter(m => movGroupKey(m) === String(grupoId));
-  const { totalProductos, totalPiezas } = calcFacturaTotalsFromItems(items);
-
-  const inv = document.querySelector(`.invoice[data-grupo="${grupoId}"]`);
-  if(!inv) return;
-
-  inv.querySelectorAll(".t-prod").forEach(el => el.textContent = String(totalProductos));
-  inv.querySelectorAll(".t-pzas").forEach(el => el.textContent = String(totalPiezas));
-
-  flashInvoice(grupoId);
-}
-
 function renderFacturaCard(group, container){
   const items = group.items || [];
   if(items.length === 0) return;
@@ -1141,6 +1693,7 @@ function renderFacturaCard(group, container){
   const proveedor = String(f.proveedor || "");
   const proveedorLabel = (f.tipo === "entrada") ? "PROVEEDOR" : "REFERENCIA";
   const proveedorVal = (f.tipo === "entrada") ? (proveedor || "—") : "—";
+  const bodega = String(f.bodega || BODEGA.PRINCIPAL);
 
   const { totalProductos, totalPiezas } = calcFacturaTotalsFromItems(items);
 
@@ -1159,6 +1712,7 @@ function renderFacturaCard(group, container){
       <div class="im-row"><span class="im-label">TIPO</span><span class="im-value">${escapeHtml(tipoLabel)}</span></div>
       <div class="im-row"><span class="im-label">FECHA</span><span class="im-value">${escapeHtml(fecha)}</span></div>
       <div class="im-row"><span class="im-label">${escapeHtml(proveedorLabel)}</span><span class="im-value">${escapeHtml(proveedorVal)}</span></div>
+      <div class="im-row"><span class="im-label">BODEGA</span><span class="im-value">${escapeHtml(bodega)}</span></div>
     </div>
 
     <div class="invoice-summary">
@@ -1214,16 +1768,113 @@ function renderFacturaCard(group, container){
   container.appendChild(el);
 }
 
+function groupTransferencias(movs){
+  const tr = movs
+    .filter(m => m.tipo === "transferencia")
+    .slice()
+    .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+
+  const map = new Map();
+  for(const m of tr){
+    const key = String(m.transferenciaId || m.grupoId || "").trim();
+    if(!key) continue;
+
+    if(!map.has(key)) map.set(key, { key, ts: m.timestamp||0, items: [] });
+    map.get(key).items.push(m);
+  }
+
+  const groups = Array.from(map.values());
+  groups.sort((a,b) => (b.ts||0)-(a.ts||0));
+  return groups;
+}
+
+function renderTransferCard(group, container){
+  const items = group.items || [];
+  if(items.length === 0) return;
+
+  const key = group.key;
+
+  // tomamos origen/destino desde un item salida si existe, si no del primero
+  const salida = items.find(x => x.subTipo === "salida") || items[0];
+  const origen = String(salida.bodega || BODEGA.PRINCIPAL);
+  const destino = String(salida.bodegaDestino || otherBodega(origen));
+  const fecha = String(salida.fecha || "—");
+  const ref = String(salida.referencia || "—");
+
+  // consolidar por código usando SOLO subTipo=salida (1 fila por producto)
+  const rows = items
+    .filter(x => x.subTipo === "salida")
+    .map(x => ({
+      codigo: x.codigo,
+      producto: x.producto,
+      cantidad: x.cantidad
+    }))
+    .sort((a,b)=> String(a.codigo).localeCompare(String(b.codigo), "es", { numeric:true, sensitivity:"base" }));
+
+  const totalProductos = rows.length;
+  const totalPiezas = rows.reduce((a,r)=>a+(Number(r.cantidad)||0),0);
+
+  const el = document.createElement("div");
+  el.className = "invoice";
+  el.dataset.trf = key;
+
+  el.innerHTML = `
+    <div class="invoice-header">
+      <div class="invoice-company">FERRETERÍA UNIVERSAL</div>
+      <div class="invoice-sub">TRANSFERENCIA ENTRE BODEGAS</div>
+    </div>
+
+    <div class="invoice-meta">
+      <div class="im-row"><span class="im-label">ID</span><span class="im-value">${escapeHtml(key)}</span></div>
+      <div class="im-row"><span class="im-label">REF</span><span class="im-value">${escapeHtml(ref)}</span></div>
+      <div class="im-row"><span class="im-label">FECHA</span><span class="im-value">${escapeHtml(fecha)}</span></div>
+      <div class="im-row"><span class="im-label">ORIGEN</span><span class="im-value">${escapeHtml(origen)}</span></div>
+      <div class="im-row"><span class="im-label">DESTINO</span><span class="im-value">${escapeHtml(destino)}</span></div>
+    </div>
+
+    <div class="invoice-summary">
+      Productos: <b class="t-prod">${totalProductos}</b> · Piezas: <b class="t-pzas">${totalPiezas}</b>
+    </div>
+
+    <div class="invoice-rule"></div>
+
+    <div class="invoice-table">
+      <div class="it-head">
+        <div>CÓD</div>
+        <div>PRODUCTO</div>
+        <div class="right">CANT</div>
+        <div class="right">ACC</div>
+      </div>
+
+      ${rows.map(r => `
+        <div class="it-row">
+          <div class="it-code">${escapeHtml(r.codigo)}</div>
+          <div class="it-prod">${escapeHtml(r.producto)}</div>
+          <div class="right">${escapeHtml(String(r.cantidad))}</div>
+          <div class="it-actions">
+            <button class="inv-action danger" type="button" data-del-trf="${escapeHtml(key)}" title="Eliminar transferencia">🗑</button>
+          </div>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="invoice-rule"></div>
+
+    <div class="invoice-totals">
+      <div class="itot-row"><span>TOTAL PRODUCTOS</span><span class="t-prod">${totalProductos}</span></div>
+      <div class="itot-row"><span>TOTAL PIEZAS</span><span class="t-pzas">${totalPiezas}</span></div>
+    </div>
+  `;
+
+  container.appendChild(el);
+}
+
 function setHistTab(tab){
   historialTab = tab;
 
-  const tMov = $("tabMov");
-  const tDel = $("tabDel");
-  tMov?.classList.remove("active");
-  tDel?.classList.remove("active");
-
-  if(tab === "mov") tMov?.classList.add("active");
-  else tDel?.classList.add("active");
+  $("tabMov")?.classList.toggle("active", tab === "mov");
+  $("tabTrf")?.classList.toggle("active", tab === "trf");
+  $("tabDel")?.classList.toggle("active", tab === "del");
 
   $("histHeadDel")?.classList.toggle("hidden", tab !== "del");
 
@@ -1240,8 +1891,10 @@ function renderHistorial(){
 
   list.innerHTML = "";
 
+  const movsAll = readJSON(K.MOV, []);
+
   if(historialTab === "mov"){
-    const movs = readJSON(K.MOV, []);
+    const movs = movsAll.filter(m => m.tipo === "entrada" || m.tipo === "salida");
     const groups = groupFacturas(movs);
 
     const filtered = groups.filter(g => {
@@ -1250,8 +1903,9 @@ function renderHistorial(){
       const factura = String(f.factura||"").toLowerCase();
       const prov = String(f.proveedor||"").toLowerCase();
       const fecha = String(f.fecha||"").toLowerCase();
+      const bod = String(f.bodega||"").toLowerCase();
 
-      if(factura.includes(q) || prov.includes(q) || fecha.includes(q)) return true;
+      if(factura.includes(q) || prov.includes(q) || fecha.includes(q) || bod.includes(q)) return true;
 
       return g.items.some(m => {
         const c = String(m.codigo||"").toLowerCase();
@@ -1267,6 +1921,33 @@ function renderHistorial(){
 
     for(const g of filtered){
       renderFacturaCard(g, list);
+    }
+    return;
+  }
+
+  if(historialTab === "trf"){
+    const groups = groupTransferencias(movsAll);
+
+    const filtered = groups.filter(g => {
+      if(!q) return true;
+      if(String(g.key||"").toLowerCase().includes(q)) return true;
+      return g.items.some(m => {
+        const c = String(m.codigo||"").toLowerCase();
+        const p = String(m.producto||"").toLowerCase();
+        const ref = String(m.referencia||"").toLowerCase();
+        const bod = String(m.bodega||"").toLowerCase();
+        const dst = String(m.bodegaDestino||"").toLowerCase();
+        return c.includes(q) || p.includes(q) || ref.includes(q) || bod.includes(q) || dst.includes(q);
+      });
+    });
+
+    if(filtered.length === 0){
+      list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin transferencias.</div></div>`;
+      return;
+    }
+
+    for(const g of filtered){
+      renderTransferCard(g, list);
     }
     return;
   }
@@ -1322,6 +2003,8 @@ async function deleteMovimiento(id){
   writeJSON(K.MOV, movs);
   deltaDirty = true;
 
+  const bod = String(m.bodega || BODEGA.PRINCIPAL);
+
   const dels = readJSON(K.DEL, []);
   dels.push({
     id: makeId(),
@@ -1329,7 +2012,7 @@ async function deleteMovimiento(id){
     codigo: m.codigo,
     producto: m.producto,
     cantidad: m.cantidad,
-    detalle: `Artículo eliminado de factura ${m.factura||""}`,
+    detalle: `Artículo eliminado de factura ${m.factura||""} (Bodega: ${bod})`,
     fechaHora: nowISO(),
     timestamp: Date.now()
   });
@@ -1339,7 +2022,11 @@ async function deleteMovimiento(id){
   refreshHome();
   renderHistorial();
 
-  if(grupoId) updateFacturaTotalsFromStorage(grupoId);
+  // actualizar totales visuales
+  if(grupoId){
+    // simple: re-render historial para recalcular
+    renderHistorial();
+  }
 }
 
 async function deleteFactura(grupoId){
@@ -1360,13 +2047,14 @@ async function deleteFactura(grupoId){
 
   const dels = readJSON(K.DEL, []);
   for(const m of eliminar){
+    const bod = String(m.bodega || BODEGA.PRINCIPAL);
     dels.push({
       id: makeId(),
       tipo: m.tipo,
       codigo: m.codigo,
       producto: m.producto,
       cantidad: m.cantidad,
-      detalle: `Factura eliminada: ${m.factura||""}`,
+      detalle: `Factura eliminada: ${m.factura||""} (Bodega: ${bod})`,
       fechaHora: nowISO(),
       timestamp: Date.now()
     });
@@ -1374,6 +2062,46 @@ async function deleteFactura(grupoId){
   writeJSON(K.DEL, dels);
 
   toast("🧾 Factura eliminada");
+  refreshHome();
+  renderHistorial();
+}
+
+async function deleteTransferencia(trfId){
+  const ok = await uiConfirm("¿Eliminar TRANSFERENCIA COMPLETA? (Se registrará en Eliminaciones)");
+  if(!ok) return;
+
+  const movs = readJSON(K.MOV, []);
+  const eliminar = movs.filter(m => m.tipo === "transferencia" && String(m.transferenciaId||"") === String(trfId));
+  const restantes = movs.filter(m => !(m.tipo === "transferencia" && String(m.transferenciaId||"") === String(trfId)));
+
+  if(eliminar.length === 0){
+    toast("No se encontró la transferencia.");
+    return;
+  }
+
+  writeJSON(K.MOV, restantes);
+  deltaDirty = true;
+
+  // registrar eliminaciones SOLO por subTipo=salida (1 fila por producto)
+  const dels = readJSON(K.DEL, []);
+  const salidas = eliminar.filter(x => x.subTipo === "salida");
+  for(const m of salidas){
+    const origen = String(m.bodega || BODEGA.PRINCIPAL);
+    const destino = String(m.bodegaDestino || "");
+    dels.push({
+      id: makeId(),
+      tipo: "transferencia",
+      codigo: m.codigo,
+      producto: m.producto,
+      cantidad: m.cantidad,
+      detalle: `Transferencia eliminada: ${trfId} (${origen} → ${destino})`,
+      fechaHora: nowISO(),
+      timestamp: Date.now()
+    });
+  }
+  writeJSON(K.DEL, dels);
+
+  toast("🔁 Transferencia eliminada");
   refreshHome();
   renderHistorial();
 }
@@ -1414,7 +2142,7 @@ function uiConfirm(message){
 }
 
 // ==========================
-// EXPORT EXCEL
+// EXPORT EXCEL (incluye hoja TRANSFERENCIAS)
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -1432,17 +2160,41 @@ function exportExcel(){
 
   const entradas = movs
     .filter(m => m.tipo === "entrada")
-    .map(m => ({ ...m, fechaHora: formatFechaHora(m.timestamp) }));
+    .map(m => ({
+      ...m,
+      fechaHora: formatFechaHora(m.timestamp),
+      bodega: m.bodega || BODEGA.PRINCIPAL
+    }));
 
   const salidas = movs
     .filter(m => m.tipo === "salida")
-    .map(m => ({ ...m, fechaHora: formatFechaHora(m.timestamp) }));
+    .map(m => ({
+      ...m,
+      fechaHora: formatFechaHora(m.timestamp),
+      bodega: m.bodega || BODEGA.PRINCIPAL
+    }));
+
+  // Transferencias: exportar SOLO subTipo=salida (1 fila por producto transferido)
+  const transferencias = movs
+    .filter(m => m.tipo === "transferencia" && m.subTipo === "salida")
+    .map(m => ({
+      transferenciaId: m.transferenciaId,
+      referencia: m.referencia || "",
+      codigo: m.codigo,
+      producto: m.producto,
+      cantidad: m.cantidad,
+      origen: m.bodega || BODEGA.PRINCIPAL,
+      destino: m.bodegaDestino || "",
+      fecha: m.fecha,
+      fechaHora: formatFechaHora(m.timestamp)
+    }));
 
   const eliminaciones = dels.map(d => ({ ...d, fechaHora: formatFechaHora(d.timestamp) }));
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(entradas), "ENTRADAS");
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salidas), "SALIDAS");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(transferencias), "TRANSFERENCIAS");
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(eliminaciones), "ELIMINACIONES");
 
   const filename = `reporte_${todayISO()}.xlsx`;
@@ -1489,8 +2241,14 @@ function exportExcel(){
 // INIT
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
-  baseCache = readJSON(K.BASE, {});
+  migrateOldBaseIfNeeded();
+
+  // cargar local inicialmente
+  baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
+  baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+
   setNetworkState(navigator.onLine);
+  updateBodegaUI();
 
   cargarDepartamentos();
   cargarCategorias("");
@@ -1501,20 +2259,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if($("entradaFecha")) $("entradaFecha").value = todayISO();
   if($("salidaFecha")) $("salidaFecha").value = todayISO();
+  if($("transferFecha")) $("transferFecha").value = todayISO();
 
   // Máscara de código
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"),  { allowText:false });
+  attachCodigoMask($("transferCodigo"),{ allowText:false });
 
   // Búsquedas: permite texto
   attachCodigoMask($("searchInput"),   { allowText:true });
   attachCodigoMask($("catalogSearch"), { allowText:true });
   attachCodigoMask($("histSearch"),    { allowText:true });
 
+  // Botones bodega
+  $("btnBodegaPrincipal")?.addEventListener("click", () => setActiveBodega(BODEGA.PRINCIPAL));
+  $("btnBodegaAnexo")?.addEventListener("click", () => setActiveBodega(BODEGA.ANEXO));
+
   $("btnSync")?.addEventListener("click", () => syncBase(true));
   $("btnExport")?.addEventListener("click", exportExcel);
 
-  $("btnCatalogo")?.addEventListener("click", () => {
+  // Accesos con PIN según bodega activa
+  $("btnCatalogo")?.addEventListener("click", async () => {
+    const ok = await ensurePinForBodega(activeBodega);
+    if(!ok) return;
+
     showScreen("catalogScreen");
     $("catalogSearch").value = "";
 
@@ -1537,7 +2305,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCatalog("");
   });
 
-  $("btnEntrada")?.addEventListener("click", () => {
+  $("btnEntrada")?.addEventListener("click", async () => {
+    const ok = await ensurePinForBodega(activeBodega);
+    if(!ok) return;
+
     showScreen("entradaScreen");
     $("entradaFecha").value = todayISO();
     $("entradaCodigo").value = "";
@@ -1547,7 +2318,10 @@ document.addEventListener("DOMContentLoaded", () => {
     clearEntradaDraft();
   });
 
-  $("btnSalida")?.addEventListener("click", () => {
+  $("btnSalida")?.addEventListener("click", async () => {
+    const ok = await ensurePinForBodega(activeBodega);
+    if(!ok) return;
+
     showScreen("salidaScreen");
     $("salidaFecha").value = todayISO();
     $("salidaCodigo").value = "";
@@ -1556,6 +2330,25 @@ document.addEventListener("DOMContentLoaded", () => {
     $("salidaFactura").value = "";
     hideCodigoAutoList("salidaAutoList");
     clearSalidaDraft();
+  });
+
+  $("btnTransferencia")?.addEventListener("click", async () => {
+    const ok = await ensurePinForBodega(activeBodega);
+    if(!ok) return;
+
+    showScreen("transferScreen");
+    $("transferFecha").value = todayISO();
+    $("transferCodigo").value = "";
+    $("transferProducto").value = "";
+    $("transferCantidad").value = "";
+    $("transferReferencia").value = "";
+    hideCodigoAutoList("transferAutoList");
+    clearTransferDraft();
+
+    const info = $("transferBodegasInfo");
+    if(info){
+      info.textContent = `Origen: ${activeBodega} ➜ Destino: ${otherBodega(activeBodega)}`;
+    }
   });
 
   $("btnHistorial")?.addEventListener("click", () => {
@@ -1567,25 +2360,30 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnBackCatalog")?.addEventListener("click", () => showScreen("homeScreen"));
   $("btnBackEntrada")?.addEventListener("click", () => showScreen("homeScreen"));
   $("btnBackSalida")?.addEventListener("click", () => showScreen("homeScreen"));
+  $("btnBackTransfer")?.addEventListener("click", () => showScreen("homeScreen"));
   $("btnBackHistorial")?.addEventListener("click", () => showScreen("homeScreen"));
 
   $("btnBackSearch")?.addEventListener("click", () => {
     if(currentSearchContext === "entrada") showScreen("entradaScreen");
     else if(currentSearchContext === "salida") showScreen("salidaScreen");
+    else if(currentSearchContext === "transfer") showScreen("transferScreen");
     else showScreen("homeScreen");
   });
 
   $("catalogSearch")?.addEventListener("input", (e) => renderCatalog(e.target.value));
 
-  // Auto-llenado + autocomplete por código (entrada/salida)
+  // Auto-llenado + autocomplete por código
   $("entradaCodigo")?.addEventListener("input", () => fillProductoFromCode("entrada"));
   $("salidaCodigo")?.addEventListener("input", () => fillProductoFromCode("salida"));
+  $("transferCodigo")?.addEventListener("input", () => fillProductoFromCode("transfer"));
 
   $("entradaCodigo")?.addEventListener("input", () => renderCodigoAutoList("entrada"));
   $("salidaCodigo")?.addEventListener("input", () => renderCodigoAutoList("salida"));
+  $("transferCodigo")?.addEventListener("input", () => renderCodigoAutoList("transfer"));
 
   $("entradaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("entradaAutoList"), 220));
   $("salidaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("salidaAutoList"), 220));
+  $("transferCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("transferAutoList"), 220));
 
   // Lupa (buscar por nombre)
   $("btnBuscarEntrada")?.addEventListener("click", () => {
@@ -1602,18 +2400,21 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSearch("");
   });
 
+  $("btnBuscarTransfer")?.addEventListener("click", () => {
+    currentSearchContext = "transfer";
+    showScreen("searchScreen");
+    $("searchInput").value = "";
+    renderSearch("");
+  });
+
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // ===== filtros catálogo (selects invisibles) =====
+  // ===== filtros catálogo =====
   const selDep = $("filterDepartamento");
   if(selDep){
     selDep.addEventListener("change", (e) => {
       filtroDepartamento = e.target.value || "";
-
-      // si cambia dep, re-carga categorías para ese dep
       cargarCategorias(filtroDepartamento);
-
-      // si ya no existe la categoría en ese dep, cargarCategorias la limpia
       renderCatalog($("catalogSearch")?.value || "");
       updateFilterChips();
     });
@@ -1651,7 +2452,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateFilterChips();
   });
 
-  // Chips: quitar DEP (y CAT)
   $("chipDepClear")?.addEventListener("click", () => {
     filtroDepartamento = "";
     filtroCategoria = "";
@@ -1664,7 +2464,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateFilterChips();
   });
 
-  // Chips: quitar CAT
   $("chipCatClear")?.addEventListener("click", () => {
     filtroCategoria = "";
     if(selCat) selCat.value = "";
@@ -1672,7 +2471,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateFilterChips();
   });
 
-  // ====== BORRADOR: re-render si cambian datos de factura ======
+  // ====== BORRADOR: re-render si cambian datos ======
   $("entradaFactura")?.addEventListener("input", () => renderEntradaItems());
   $("entradaProveedor")?.addEventListener("input", () => renderEntradaItems());
   $("entradaFecha")?.addEventListener("change", () => renderEntradaItems());
@@ -1680,111 +2479,34 @@ document.addEventListener("DOMContentLoaded", () => {
   $("salidaFactura")?.addEventListener("input", () => renderSalidaItems());
   $("salidaFecha")?.addEventListener("change", () => renderSalidaItems());
 
-  // ====== FACTURAS MULTI-ITEM: BOTONES ======
+  $("transferReferencia")?.addEventListener("input", () => renderTransferItems());
+  $("transferFecha")?.addEventListener("change", () => renderTransferItems());
+
+  // ====== BOTONES ======
   $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
-  $("btnClearEntradaItems")?.addEventListener("click", () => {
-    clearEntradaDraft();
-    toast("Factura vaciada");
-  });
+  $("btnClearEntradaItems")?.addEventListener("click", () => { clearEntradaDraft(); toast("Factura vaciada"); });
   $("btnGuardarEntrada")?.addEventListener("click", saveFacturaEntrada);
 
   $("btnAddSalidaItem")?.addEventListener("click", addSalidaItem);
-  $("btnClearSalidaItems")?.addEventListener("click", () => {
-    clearSalidaDraft();
-    toast("Factura vaciada");
-  });
+  $("btnClearSalidaItems")?.addEventListener("click", () => { clearSalidaDraft(); toast("Factura vaciada"); });
   $("btnGuardarSalida")?.addEventListener("click", saveFacturaSalida);
 
-  // BORRADOR: acciones por producto + totales dinámicos
-  function setupDraftPreview(previewId, context){
-    const preview = $(previewId);
-    if(!preview) return;
+  $("btnAddTransferItem")?.addEventListener("click", addTransferItem);
+  $("btnClearTransferItems")?.addEventListener("click", () => { clearTransferDraft(); toast("Transferencia vaciada"); });
+  $("btnGuardarTransferencia")?.addEventListener("click", saveTransferencia);
 
-    preview.addEventListener("click", (e) => {
-      const btnDel = e.target.closest("button[data-del-draft]");
-      if(btnDel){
-        const code = String(btnDel.dataset.delDraft || "").trim().toUpperCase();
-        if(context === "entrada"){
-          entradaItems = entradaItems.filter(it => it.codigo !== code);
-          renderEntradaItems();
-        }else{
-          salidaItems = salidaItems.filter(it => it.codigo !== code);
-          renderSalidaItems();
-          updateSalidaStockHint();
-        }
-        toast("Producto quitado");
-        return;
-      }
-
-      const btnEdit = e.target.closest("button[data-edit-draft]");
-      if(btnEdit){
-        const row = btnEdit.closest(".it-row");
-        const inp = row?.querySelector("input.draft-cantidad");
-        if(inp){
-          inp.focus();
-          inp.select?.();
-        }
-      }
-    });
-
-    preview.addEventListener("input", (e) => {
-      const inp = e.target.closest("input.draft-cantidad");
-      if(!inp) return;
-      updateDraftTotalsFromDOM(context);
-    });
-
-    preview.addEventListener("change", (e) => {
-      const inp = e.target.closest("input.draft-cantidad");
-      if(!inp) return;
-
-      const code = String(inp.dataset.codigo || "").trim().toUpperCase();
-      const nueva = Number(inp.value);
-
-      if(!Number.isFinite(nueva) || nueva <= 0){
-        toast("Cantidad inválida");
-        if(context === "entrada") renderEntradaItems(); else renderSalidaItems();
-        return;
-      }
-
-      if(context === "entrada"){
-        const it = entradaItems.find(x => x.codigo === code);
-        if(!it) return;
-        it.cantidad = nueva;
-        renderEntradaItems();
-        toast("✅ Cantidad actualizada");
-        return;
-      }
-
-      // SALIDA: validar stock
-      const it = salidaItems.find(x => x.codigo === code);
-      if(!it) return;
-
-      const stockReal = getStock(code);
-      const reservadoOtros = sumItems(salidaItems, code) - Number(it.cantidad || 0);
-      const disponible = stockReal - reservadoOtros;
-
-      if(nueva > disponible){
-        toast(`Stock insuficiente. Disponible: ${disponible}`);
-        renderSalidaItems();
-        updateSalidaStockHint();
-        return;
-      }
-
-      it.cantidad = nueva;
-      renderSalidaItems();
-      updateSalidaStockHint();
-      toast("✅ Cantidad actualizada");
-    });
-  }
-
+  // setup previews
   setupDraftPreview("entradaFacturaPreview", "entrada");
   setupDraftPreview("salidaFacturaPreview", "salida");
+  setupDraftPreview("transferFacturaPreview", "transfer");
 
-  // HISTORIAL
+  // HISTORIAL tabs + search
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
+  $("tabTrf")?.addEventListener("click", () => setHistTab("trf"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
   $("histSearch")?.addEventListener("input", () => renderHistorial());
 
+  // acciones historial
   $("histList")?.addEventListener("click", (e) => {
     const btnDel = e.target.closest("button[data-del]");
     if(btnDel){
@@ -1802,6 +2524,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const btnDelTrf = e.target.closest("button[data-del-trf]");
+    if(btnDelTrf){
+      e.preventDefault();
+      e.stopPropagation();
+      deleteTransferencia(btnDelTrf.dataset.delTrf);
+      return;
+    }
+
     const btnEdit = e.target.closest("button[data-edit]");
     if(btnEdit){
       const row = btnEdit.closest(".it-row");
@@ -1813,26 +2543,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Totales dinámicos mientras escribe en historial
-  $("histList")?.addEventListener("input", (e) => {
-    const inp = e.target.closest("input.edit-cantidad");
-    if(!inp) return;
-    const gid = inp.dataset.grupo;
-    if(gid) updateTotalsFromDOM(gid);
-  });
-
-  // Guardar cambio en historial (validación stock negativo)
+  // edición cantidades SOLO en tab mov
   $("histList")?.addEventListener("change", (e) => {
+    if(historialTab !== "mov") return;
+
     const inp = e.target.closest("input.edit-cantidad");
     if(!inp) return;
 
     const id = inp.dataset.id;
-    const gid = inp.dataset.grupo;
     const nueva = Number(inp.value);
 
     if(!Number.isFinite(nueva) || nueva <= 0){
       toast("Cantidad inválida");
-      updateFacturaTotalsFromStorage(gid);
       renderHistorial();
       return;
     }
@@ -1845,10 +2567,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const bod = String(m.bodega || BODEGA.PRINCIPAL);
     const oldQty = Number(m.cantidad||0);
     const code = String(m.codigo||"").trim().toUpperCase();
 
-    const stockActual = getStock(code);
+    const stockActual = getStock(code, bod);
     let stockNuevo = stockActual;
 
     if(m.tipo === "entrada"){
@@ -1860,7 +2583,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(stockNuevo < 0){
       toast("❌ No se puede: dejaría stock negativo");
       inp.value = String(oldQty);
-      updateTotalsFromDOM(gid);
       return;
     }
 
@@ -1870,7 +2592,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toast("✅ Cantidad actualizada");
     refreshHome();
-    updateFacturaTotalsFromStorage(gid);
+    renderHistorial();
   });
 
   // sync silencioso al iniciar
@@ -1879,4 +2601,5 @@ document.addEventListener("DOMContentLoaded", () => {
   // render inicial
   renderEntradaItems();
   renderSalidaItems();
+  renderTransferItems();
 });
