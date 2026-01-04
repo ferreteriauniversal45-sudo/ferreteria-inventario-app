@@ -1,450 +1,631 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="theme-color" content="#0b2f7a">
-  <title>Ferretería Universal</title>
-  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b2f7a" />
+  <title>Ferretería Universal · Inventario</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
   <div class="phone-frame">
-    <!-- HEADER -->
-    <header class="app-header">
+    <div class="header">
       <div class="header-top">
         <div class="header-spacer"></div>
 
         <div class="brand-center">
-          <img src="logo.png" class="brand-logo" alt="Ferretería Universal" onerror="this.style.display='none'">
+          <div class="brand-mark">🧰</div>
+          <div class="brand-title">FERRETERÍA UNIVERSAL</div>
+          <div class="brand-sub">Control interno</div>
         </div>
 
-        <div id="netIcon" class="net-icon offline" title="Sin conexión" aria-label="Estado de red" role="img">🌍</div>
+        <div class="header-right">
+          <div id="roleBadge" class="role-badge hidden"></div>
+          <button id="btnLogout" class="logout-btn hidden" type="button" title="Cerrar sesión" aria-label="Cerrar sesión">⎋</button>
+          <div id="netIcon" class="net-icon offline" title="Estado de red" aria-label="Estado de red">📶</div>
+        </div>
       </div>
-    </header>
+    </div>
 
-    <!-- MAIN -->
-    <main class="container">
+    <div class="container">
 
-      <!-- HOME -->
-      <section id="homeScreen" class="screen">
+      <!-- ==========================
+           LOGIN
+      =========================== -->
+      <div id="loginScreen" class="screen">
+        <div class="card hero login-card">
+          <h1 class="title">Iniciar sesión</h1>
+          <p class="subtitle">Elige el rol para entrar a la aplicación.</p>
+
+          <div class="btn-row">
+            <button id="btnLoginOperador" class="btn primary" type="button">Entrar como OPERADOR</button>
+            <button id="btnLoginVendedor" class="btn" type="button">Entrar como VENDEDOR</button>
+          </div>
+
+          <div class="hint">
+            <b>Nota:</b> El PIN se solicita al entrar. <br/>
+            Operador: movimientos de inventario · Vendedor: cotizaciones/facturas con precios.
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================
+           HOME OPERADOR
+      =========================== -->
+      <div id="homeScreen" class="screen hidden">
         <div class="card hero">
-          <div class="home-layout">
-            <!-- IZQUIERDA -->
-            <div class="home-left">
-              <h1 class="title">Control de Inventario</h1>
-              <p class="subtitle">
-                Trabaja <b>offline</b>. Con internet, la app descarga el inventario maestro y se actualiza.
-              </p>
+          <h2 class="title">Panel Operador</h2>
+          <p class="subtitle">
+            Inventario local con sincronización cuando hay internet.
+          </p>
 
-              <!-- Selector de bodega -->
-              <div class="bodega-switch">
-                <button class="bodega-btn active" id="btnBodegaPrincipal" type="button">🟦 PRINCIPAL</button>
-                <button class="bodega-btn" id="btnBodegaAnexo" type="button">🟧 ANEXO</button>
-              </div>
-              <div class="note" id="bodegaNote"></div>
+          <div class="stats">
+            <div class="stat">
+              <div class="k">Versión</div>
+              <div class="v" id="homeVersion">—</div>
+            </div>
+            <div class="stat">
+              <div class="k">Productos</div>
+              <div class="v" id="homeProductos">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">Mov. hoy</div>
+              <div class="v" id="homeMovHoy">0</div>
+            </div>
+          </div>
 
-              <div class="stats">
-                <div class="stat">
-                  <div class="stat-label">Productos</div>
-                  <div class="stat-value" id="homeProductos">0</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-label">Versión</div>
-                  <div class="stat-value small" id="homeVersion">—</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-label">Mov. hoy</div>
-                  <div class="stat-value" id="homeMovHoy">0</div>
-                </div>
-                <div class="stat">
-                  <div class="stat-label">Estado</div>
-                  <div class="stat-value" id="homeEstado">OFF</div>
-                </div>
-              </div>
+          <div class="note">
+            Conexión: <b id="homeEstado">OFF</b>
+          </div>
 
-              <button class="btn primary" id="btnSync" type="button">Actualizar inventario</button>
+          <div class="btn-row">
+            <button id="btnSync" class="btn primary" type="button">Actualizar inventario</button>
+            <button id="btnExport" class="btn export" type="button">Exportar Excel</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="h2">Bodega activa</div>
+
+          <div class="btn-row">
+            <button id="btnBodegaPrincipal" class="btn small" type="button">PRINCIPAL</button>
+            <button id="btnBodegaAnexo" class="btn small" type="button">ANEXO</button>
+          </div>
+
+          <div id="bodegaNote" class="note"></div>
+        </div>
+
+        <div class="grid">
+          <button id="btnCatalogo" class="tile" type="button">
+            <div class="tile-emoji">📦</div>
+            <div>
+              <div class="tile-title">Catálogo</div>
+              <div class="tile-desc">Buscar productos, ver stock y filtrar por departamento/categoría.</div>
+            </div>
+          </button>
+
+          <button id="btnEntrada" class="tile" type="button">
+            <div class="tile-emoji">⬆️</div>
+            <div>
+              <div class="tile-title">Entrada</div>
+              <div class="tile-desc">Registrar factura de entrada (suma stock).</div>
+            </div>
+          </button>
+
+          <button id="btnSalida" class="tile" type="button">
+            <div class="tile-emoji">⬇️</div>
+            <div>
+              <div class="tile-title">Salida</div>
+              <div class="tile-desc">Registrar factura de salida (resta stock).</div>
+            </div>
+          </button>
+
+          <button id="btnTransferencia" class="tile" type="button">
+            <div class="tile-emoji">🔁</div>
+            <div>
+              <div class="tile-title">Transferencia</div>
+              <div class="tile-desc">Mover stock entre PRINCIPAL y ANEXO.</div>
+            </div>
+          </button>
+
+          <button id="btnHistorial" class="tile" type="button">
+            <div class="tile-emoji">🧾</div>
+            <div>
+              <div class="tile-title">Historial</div>
+              <div class="tile-desc">Ver, editar y eliminar facturas (con registro de eliminaciones).</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ==========================
+           HOME VENDEDOR
+      =========================== -->
+      <div id="sellerHomeScreen" class="screen hidden">
+        <div class="card hero">
+          <h2 class="title">Panel Vendedor</h2>
+          <p class="subtitle">
+            Genera <b>FACTURAS</b> y <b>COTIZACIONES</b> internas con precios desde <code>precios.json</code>.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="k">Productos</div>
+              <div class="v" id="sellerProductos">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">Códigos con precio</div>
+              <div class="v" id="sellerPrecios">0</div>
+            </div>
+            <div class="stat">
+              <div class="k">Docs hoy</div>
+              <div class="v" id="sellerDocsHoy">0</div>
+            </div>
+          </div>
+
+          <div class="note">
+            Conexión: <b id="sellerEstado">OFF</b>
+          </div>
+
+          <div class="btn-row">
+            <button id="btnSellerNewFactura" class="btn primary" type="button">Nueva FACTURA</button>
+            <button id="btnSellerNewCotizacion" class="btn" type="button">Nueva COTIZACIÓN</button>
+          </div>
+
+          <div class="btn-row">
+            <button id="btnSellerHist" class="btn" type="button">Historial de documentos</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================
+           VENDEDOR: DOCUMENTO
+      =========================== -->
+      <div id="sellerDocScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackSellerDoc" class="btn small" type="button">← Atrás</button>
+          <div class="h2" id="sellerDocTitle">Factura</div>
+          <div style="width:88px;"></div>
+        </div>
+
+        <div class="card">
+          <div class="seller-type-pills">
+            <button id="sellerTypeFactura" class="pill active" type="button">FACTURA</button>
+            <button id="sellerTypeCotizacion" class="pill" type="button">COTIZACIÓN</button>
+          </div>
+
+          <div class="seller-meta-grid" style="margin-top:10px;">
+            <div>
+              <label class="label">Fecha</label>
+              <input id="sellerFecha" class="input" type="date" />
             </div>
 
-            <!-- DERECHA -->
-            <div class="home-right">
-              <div class="grid">
-                <button class="tile" id="btnCatalogo" type="button">
-                  <div class="tile-emoji">📦</div>
-                  <div class="tile-title">Catálogo</div>
-                  <div class="tile-desc">Buscar productos</div>
-                </button>
+            <div>
+              <label class="label">Documento No.</label>
+              <input id="sellerDocNo" class="input" type="text" placeholder="FAC-..." />
+            </div>
 
-                <button class="tile" id="btnEntrada" type="button">
-                  <div class="tile-emoji">➕</div>
-                  <div class="tile-title">Entradas</div>
-                  <div class="tile-desc">Registrar ingreso</div>
-                </button>
+            <div>
+              <label class="label">Cliente</label>
+              <input id="sellerCliente" class="input" type="text" placeholder="Nombre del cliente" />
+            </div>
 
-                <button class="tile" id="btnSalida" type="button">
-                  <div class="tile-emoji">➖</div>
-                  <div class="tile-title">Salidas</div>
-                  <div class="tile-desc">Registrar salida</div>
-                </button>
+            <div>
+              <label class="label">Teléfono</label>
+              <input id="sellerTelefono" class="input" type="tel" placeholder="Opcional" />
+            </div>
 
-                <button class="tile" id="btnTransferencia" type="button">
-                  <div class="tile-emoji">🔁</div>
-                  <div class="tile-title">Transferencia</div>
-                  <div class="tile-desc">Mover entre bodegas</div>
-                </button>
+            <div>
+              <label class="label">Tipo de precio</label>
+              <select id="sellerPrecioTipo" class="input">
+                <option value="precio">Precio</option>
+                <option value="precioA">Precio A</option>
+                <option value="precioB">Precio B</option>
+                <option value="precioC">Precio C</option>
+                <option value="mayoreo">Mayoreo</option>
+              </select>
+            </div>
 
-                <button class="tile" id="btnHistorial" type="button">
-                  <div class="tile-emoji">📜</div>
-                  <div class="tile-title">Historial</div>
-                  <div class="tile-desc">Facturas, transferencias y eliminaciones</div>
-                </button>
-              </div>
-
-              <button class="btn export" id="btnExport" type="button">📤 Exportar reporte diario (Excel)</button>
-              <p class="hint">
-                El Excel se genera en el teléfono. En Android quedará en <b>Descargas</b>.
-              </p>
+            <div>
+              <label class="label">Moneda</label>
+              <select id="sellerMoneda" class="input">
+                <option value="Q">Q</option>
+                <option value="$">$</option>
+              </select>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- CATALOGO -->
-      <section id="catalogScreen" class="screen hidden">
-        <div class="card">
-          <div class="screen-head">
-            <h2 class="h2">Catálogo</h2>
-            <button class="btn small" id="btnBackCatalog" type="button">⬅</button>
+        <div class="card" style="margin-top:12px;">
+          <div class="h2">Agregar producto</div>
+
+          <label class="label">Código</label>
+          <div class="input-row">
+            <input id="sellerCodigo" class="input" type="text" placeholder="Ej: 12-345 o 12345" />
+            <button id="btnBuscarSeller" class="icon-btn" type="button" title="Buscar producto">🔎</button>
           </div>
+          <div id="sellerAutoList" class="autocomplete-list"></div>
 
-          <input id="catalogSearch" class="input" placeholder="Buscar por código o nombre...">
+          <label class="label">Producto</label>
+          <input id="sellerProducto" class="input" type="text" disabled />
 
-          <div class="filters filters-iconbar">
-            <button class="btn small" id="btnOpenFilters" type="button" title="Filtrar por Departamento y Categoría">🔎 Filtros</button>
-
-            <div id="chipDep" class="filter-chip hidden">
-              <span id="chipDepText" class="chip-text"></span>
-              <button id="chipDepClear" class="chip-x" type="button" aria-label="Quitar departamento">✕</button>
+          <div class="input-row" style="margin-top:10px;">
+            <div style="flex:1;">
+              <label class="label">Cantidad</label>
+              <input id="sellerCantidad" class="input" type="number" min="1" placeholder="0" />
             </div>
-
-            <div id="chipCat" class="filter-chip hidden">
-              <span id="chipCatText" class="chip-text"></span>
-              <button id="chipCatClear" class="chip-x" type="button" aria-label="Quitar categoría">✕</button>
-            </div>
-
-            <div class="filter-actions">
-              <button class="btn small" id="btnFilterStock" type="button" title="Con stock">📦</button>
-              <button class="btn small ghost" id="btnClearFilters" type="button" title="Limpiar filtros">✖</button>
+            <div style="flex:1;">
+              <label class="label">Precio unitario</label>
+              <input id="sellerPrecioUnit" class="input" type="number" min="0" step="0.01" placeholder="0.00" />
             </div>
           </div>
 
-          <div id="catalogInfo" class="note"></div>
+          <div id="sellerPrecioHint" class="note"></div>
 
-          <div class="table-wrap">
-            <div class="table-head cols-catalog">
-              <div>Código</div>
-              <div>Producto</div>
-              <div>Departamento</div>
-              <div class="right">Stock</div>
-            </div>
-            <div id="catalogList" class="table-body"></div>
+          <div class="btn-row">
+            <button id="btnAddSellerItem" class="btn primary" type="button">Agregar</button>
+            <button id="btnClearSellerItems" class="btn danger" type="button">Vaciar</button>
           </div>
         </div>
-      </section>
 
-      <!-- ENTRADAS -->
-      <section id="entradaScreen" class="screen hidden">
+        <div class="card" style="margin-top:12px;">
+          <div class="h2">Productos en el documento</div>
+          <div id="sellerItemsInfo" class="note"></div>
+
+          <div class="table">
+            <div id="sellerItemsEditor"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px;">
+          <div class="h2">Vista previa</div>
+          <div id="sellerDocPreview"></div>
+
+          <div class="btn-row" style="margin-top:12px;">
+            <button id="btnSellerSave" class="btn primary" type="button">Guardar</button>
+            <button id="btnSellerExportExcel" class="btn export" type="button">Excel</button>
+          </div>
+          <div class="btn-row">
+            <button id="btnSellerExportPng" class="btn" type="button">Imagen</button>
+            <button id="btnSellerExportPdf" class="btn" type="button">PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================
+           VENDEDOR: HISTORIAL
+      =========================== -->
+      <div id="sellerHistScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackSellerHist" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Historial vendedor</div>
+          <div style="width:88px;"></div>
+        </div>
+
         <div class="card">
-          <div class="screen-head">
-            <h2 class="h2">Entrada</h2>
-            <button class="btn small" id="btnBackEntrada" type="button">⬅</button>
+          <label class="label">Buscar</label>
+          <input id="sellerHistSearch" class="input" type="text" placeholder="Documento, cliente, teléfono, código..." />
+
+          <div class="table" style="margin-top:12px;">
+            <div id="sellerHistList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================
+           CATALOGO
+      =========================== -->
+      <div id="catalogScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackCatalog" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Catálogo</div>
+          <button id="btnOpenFilters" class="btn small" type="button">Filtros</button>
+        </div>
+
+        <label class="label">Buscar</label>
+        <input id="catalogSearch" class="input" type="text" placeholder="Código o producto..." />
+
+        <div class="btn-row">
+          <button id="btnFilterStock" class="btn small" type="button">Solo con stock</button>
+          <button id="btnClearFilters" class="btn small" type="button">Limpiar</button>
+        </div>
+
+        <div class="chips">
+          <div id="chipDep" class="chip hidden">
+            <span>DEP:</span>
+            <span id="chipDepText"></span>
+            <button id="chipDepClear" class="x" type="button">×</button>
           </div>
 
-          <div class="field">
-            <label class="label">Código</label>
-            <div class="input-row">
-              <input id="entradaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
-              <button class="icon-btn" id="btnBuscarEntrada" type="button" title="Buscar producto">🔍</button>
+          <div id="chipCat" class="chip hidden">
+            <span>CAT:</span>
+            <span id="chipCatText"></span>
+            <button id="chipCatClear" class="x" type="button">×</button>
+          </div>
+        </div>
+
+        <div class="note" id="catalogInfo"></div>
+
+        <div class="table">
+          <div id="catalogList"></div>
+        </div>
+      </div>
+
+      <!-- ==========================
+           ENTRADA
+      =========================== -->
+      <div id="entradaScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackEntrada" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Entrada</div>
+          <div style="width:88px;"></div>
+        </div>
+
+        <div class="card">
+          <label class="label">Proveedor</label>
+          <input id="entradaProveedor" class="input" type="text" placeholder="Nombre del proveedor" />
+
+          <div class="input-row" style="margin-top:10px;">
+            <div style="flex:1;">
+              <label class="label">Factura No.</label>
+              <input id="entradaFactura" class="input" type="text" placeholder="Ej: F-123" />
             </div>
-            <div class="autocomplete-list" id="entradaAutoList"></div>
+            <div style="flex:1;">
+              <label class="label">Fecha</label>
+              <input id="entradaFecha" class="input" type="date" />
+            </div>
           </div>
 
-          <div class="field">
-            <label class="label">Producto</label>
-            <input id="entradaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          <label class="label">Código</label>
+          <div class="input-row">
+            <input id="entradaCodigo" class="input" type="text" placeholder="Ej: 12-345" />
+            <button id="btnBuscarEntrada" class="icon-btn" type="button" title="Buscar producto">🔎</button>
+          </div>
+          <div id="entradaAutoList" class="autocomplete-list"></div>
+
+          <label class="label">Producto</label>
+          <input id="entradaProducto" class="input" type="text" disabled />
+
+          <label class="label">Cantidad</label>
+          <input id="entradaCantidad" class="input" type="number" min="1" placeholder="0" />
+
+          <div class="btn-row">
+            <button id="btnAddEntradaItem" class="btn primary" type="button">Agregar</button>
+            <button id="btnClearEntradaItems" class="btn danger" type="button">Vaciar</button>
           </div>
 
-          <div class="field">
-            <label class="label">Cantidad</label>
-            <input id="entradaCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 10">
-          </div>
-
-          <div class="field">
-            <label class="label">Proveedor</label>
-            <input id="entradaProveedor" class="input" placeholder="Ej: Proveedor XYZ">
-          </div>
-
-          <div class="field">
-            <label class="label">Factura</label>
-            <input id="entradaFactura" class="input" placeholder="Ej: FAC-001">
-          </div>
-
-          <div class="field">
-            <label class="label">Fecha</label>
-            <input id="entradaFecha" class="input" type="date">
-          </div>
-
-          <button class="btn" id="btnAddEntradaItem" type="button">➕ Agregar producto a factura</button>
-
-          <div class="note" id="entradaItemsInfo">Factura vacía.</div>
+          <div id="entradaItemsInfo" class="note"></div>
           <div id="entradaFacturaPreview"></div>
 
           <div class="btn-row">
-            <button class="btn danger" id="btnClearEntradaItems" type="button">🧹 Vaciar factura</button>
-            <button class="btn primary" id="btnGuardarEntrada" type="button">Guardar factura</button>
+            <button id="btnGuardarEntrada" class="btn export" type="button">Guardar factura</button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- SALIDAS -->
-      <section id="salidaScreen" class="screen hidden">
+      <!-- ==========================
+           SALIDA
+      =========================== -->
+      <div id="salidaScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackSalida" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Salida</div>
+          <div style="width:88px;"></div>
+        </div>
+
         <div class="card">
-          <div class="screen-head">
-            <h2 class="h2">Salida</h2>
-            <button class="btn small" id="btnBackSalida" type="button">⬅</button>
-          </div>
-
-          <div class="field">
-            <label class="label">Código</label>
-            <div class="input-row">
-              <input id="salidaCodigo" class="input" placeholder="Ej: 12-345" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
-              <button class="icon-btn" id="btnBuscarSalida" type="button" title="Buscar producto">🔍</button>
+          <div class="input-row">
+            <div style="flex:1;">
+              <label class="label">Factura No.</label>
+              <input id="salidaFactura" class="input" type="text" placeholder="Ej: S-456" />
             </div>
-            <div class="autocomplete-list" id="salidaAutoList"></div>
+            <div style="flex:1;">
+              <label class="label">Fecha</label>
+              <input id="salidaFecha" class="input" type="date" />
+            </div>
           </div>
 
-          <div class="field">
-            <label class="label">Producto</label>
-            <input id="salidaProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          <label class="label">Código</label>
+          <div class="input-row">
+            <input id="salidaCodigo" class="input" type="text" placeholder="Ej: 12-345" />
+            <button id="btnBuscarSalida" class="icon-btn" type="button" title="Buscar producto">🔎</button>
+          </div>
+          <div id="salidaAutoList" class="autocomplete-list"></div>
+
+          <label class="label">Producto</label>
+          <input id="salidaProducto" class="input" type="text" disabled />
+
+          <label class="label">Cantidad</label>
+          <input id="salidaCantidad" class="input" type="number" min="1" placeholder="0" />
+
+          <div id="salidaStockInfo" class="note"></div>
+
+          <div class="btn-row">
+            <button id="btnAddSalidaItem" class="btn primary" type="button">Agregar</button>
+            <button id="btnClearSalidaItems" class="btn danger" type="button">Vaciar</button>
           </div>
 
-          <div class="field">
-            <label class="label">Cantidad</label>
-            <input id="salidaCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 2">
-            <div class="note" id="salidaStockInfo"></div>
-          </div>
-
-          <div class="field">
-            <label class="label">Factura</label>
-            <input id="salidaFactura" class="input" placeholder="Ej: FAC-123">
-          </div>
-
-          <div class="field">
-            <label class="label">Fecha</label>
-            <input id="salidaFecha" class="input" type="date">
-          </div>
-
-          <button class="btn" id="btnAddSalidaItem" type="button">➕ Agregar producto a factura</button>
-
-          <div class="note" id="salidaItemsInfo">Factura vacía.</div>
+          <div id="salidaItemsInfo" class="note"></div>
           <div id="salidaFacturaPreview"></div>
 
           <div class="btn-row">
-            <button class="btn danger" id="btnClearSalidaItems" type="button">🧹 Vaciar factura</button>
-            <button class="btn primary" id="btnGuardarSalida" type="button">Guardar factura</button>
+            <button id="btnGuardarSalida" class="btn export" type="button">Guardar factura</button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- TRANSFERENCIA -->
-      <section id="transferScreen" class="screen hidden">
+      <!-- ==========================
+           TRANSFERENCIA
+      =========================== -->
+      <div id="transferScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackTransfer" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Transferencia</div>
+          <div style="width:88px;"></div>
+        </div>
+
         <div class="card">
-          <div class="screen-head">
-            <h2 class="h2">Transferencia</h2>
-            <button class="btn small" id="btnBackTransfer" type="button">⬅</button>
-          </div>
-
-          <div class="note" id="transferBodegasInfo"></div>
-
-          <div class="field">
-            <label class="label">Código</label>
-            <div class="input-row">
-              <input id="transferCodigo" class="input" placeholder="Ej: 08-0049-GL" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
-              <button class="icon-btn" id="btnBuscarTransfer" type="button" title="Buscar producto">🔍</button>
+          <div class="input-row">
+            <div style="flex:1;">
+              <label class="label">Referencia</label>
+              <input id="transferReferencia" class="input" type="text" placeholder="Opcional" />
             </div>
-            <div class="autocomplete-list" id="transferAutoList"></div>
+            <div style="flex:1;">
+              <label class="label">Fecha</label>
+              <input id="transferFecha" class="input" type="date" />
+            </div>
           </div>
 
-          <div class="field">
-            <label class="label">Producto</label>
-            <input id="transferProducto" class="input" placeholder="Se llena automáticamente" readonly>
+          <div id="transferBodegasInfo" class="note"></div>
+
+          <label class="label">Código</label>
+          <div class="input-row">
+            <input id="transferCodigo" class="input" type="text" placeholder="Ej: 12-345" />
+            <button id="btnBuscarTransfer" class="icon-btn" type="button" title="Buscar producto">🔎</button>
+          </div>
+          <div id="transferAutoList" class="autocomplete-list"></div>
+
+          <label class="label">Producto</label>
+          <input id="transferProducto" class="input" type="text" disabled />
+
+          <label class="label">Cantidad</label>
+          <input id="transferCantidad" class="input" type="number" min="1" placeholder="0" />
+
+          <div id="transferStockInfo" class="note"></div>
+
+          <div class="btn-row">
+            <button id="btnAddTransferItem" class="btn primary" type="button">Agregar</button>
+            <button id="btnClearTransferItems" class="btn danger" type="button">Vaciar</button>
           </div>
 
-          <div class="field">
-            <label class="label">Cantidad</label>
-            <input id="transferCantidad" class="input" type="number" min="1" inputmode="numeric" placeholder="Ej: 5">
-            <div class="note" id="transferStockInfo"></div>
-          </div>
-
-          <div class="field">
-            <label class="label">Referencia (opcional)</label>
-            <input id="transferReferencia" class="input" placeholder="Ej: TRF-001 o nota">
-          </div>
-
-          <div class="field">
-            <label class="label">Fecha</label>
-            <input id="transferFecha" class="input" type="date">
-          </div>
-
-          <button class="btn" id="btnAddTransferItem" type="button">➕ Agregar producto a transferencia</button>
-
-          <div class="note" id="transferItemsInfo">Transferencia vacía.</div>
+          <div id="transferItemsInfo" class="note"></div>
           <div id="transferFacturaPreview"></div>
 
           <div class="btn-row">
-            <button class="btn danger" id="btnClearTransferItems" type="button">🧹 Vaciar transferencia</button>
-            <button class="btn primary" id="btnGuardarTransferencia" type="button">Guardar transferencia</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- BUSCADOR -->
-      <section id="searchScreen" class="screen hidden">
-        <div class="card">
-          <div class="screen-head">
-            <h2 class="h2">Buscar producto</h2>
-            <button class="btn small" id="btnBackSearch" type="button">⬅</button>
-          </div>
-
-          <input id="searchInput" class="input" placeholder="Buscar por código o nombre..." autocomplete="off">
-          <div id="searchInfo" class="note"></div>
-
-          <div class="table-wrap">
-            <div class="table-head cols-search">
-              <div>Código</div>
-              <div>Producto</div>
-              <div>Departamento</div>
-              <div class="right">Stock</div>
-              <div class="right">Acción</div>
-            </div>
-            <div id="searchList" class="table-body"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- HISTORIAL -->
-      <section id="historialScreen" class="screen hidden">
-        <div class="card">
-          <div class="screen-head">
-            <h2 class="h2">Historial</h2>
-            <button class="btn small" id="btnBackHistorial" type="button">⬅</button>
-          </div>
-
-          <div class="tabs">
-            <button class="tab active" id="tabMov" type="button">Facturas</button>
-            <button class="tab" id="tabTrf" type="button">Transferencias</button>
-            <button class="tab" id="tabDel" type="button">Eliminaciones</button>
-          </div>
-
-          <input id="histSearch" class="input" placeholder="Buscar por factura, bodega, código o producto..." autocomplete="off">
-
-          <div class="table-wrap">
-            <div id="histHeadDel" class="table-head cols-hdel hidden">
-              <div>Fecha/Hora</div>
-              <div>Tipo</div>
-              <div>Bodega</div>
-              <div>Código</div>
-              <div>Producto</div>
-              <div class="right">Cant.</div>
-              <div>Detalle</div>
-            </div>
-
-            <div id="histList" class="hist-list"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TOAST -->
-      <div id="toast" class="toast" aria-live="polite"></div>
-
-      <!-- CONFIRM MODAL -->
-      <div id="confirmOverlay" class="confirm-overlay hidden">
-        <div class="confirm-box">
-          <div id="confirmMessage" class="confirm-text"></div>
-          <div class="confirm-actions">
-            <button id="confirmCancel" class="btn" type="button">Cancelar</button>
-            <button id="confirmOk" class="btn danger" type="button">Eliminar</button>
+            <button id="btnGuardarTransferencia" class="btn export" type="button">Guardar transferencia</button>
           </div>
         </div>
       </div>
 
-      <!-- PIN MODAL -->
-      <div id="pinOverlay" class="confirm-overlay hidden">
-        <div class="confirm-box">
-          <div id="pinMessage" class="confirm-text"></div>
+      <!-- ==========================
+           SEARCH (LUPA)
+      =========================== -->
+      <div id="searchScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackSearch" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Buscar producto</div>
+          <div style="width:88px;"></div>
+        </div>
 
-          <input
-            id="pinInput"
-            class="input"
-            type="password"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            placeholder="Ingresa el PIN"
-            autocomplete="off"
-          />
+        <label class="label">Buscar</label>
+        <input id="searchInput" class="input" type="text" placeholder="Código o nombre..." />
 
-          <div class="confirm-actions" style="margin-top:12px;">
-            <button id="pinCancel" class="btn" type="button">Cancelar</button>
-            <button id="pinOk" class="btn primary" type="button">Entrar</button>
-          </div>
+        <div id="searchInfo" class="note"></div>
+
+        <div class="table">
+          <div id="searchList"></div>
         </div>
       </div>
 
-      <!-- FILTER MODAL -->
-      <div id="filterOverlay" class="confirm-overlay hidden">
-        <div class="confirm-box filter-box">
-          <div class="filter-modal-head">
-            <div class="filter-modal-title">Filtros de catálogo</div>
-            <button class="btn small" id="btnCloseFilters" type="button">✕</button>
-          </div>
+      <!-- ==========================
+           HISTORIAL (OPERADOR)
+      =========================== -->
+      <div id="historialScreen" class="screen hidden">
+        <div class="screen-head">
+          <button id="btnBackHistorial" class="btn small" type="button">← Atrás</button>
+          <div class="h2">Historial</div>
+          <div style="width:88px;"></div>
+        </div>
 
-          <input
-            id="filterModalSearch"
-            class="input"
-            placeholder="Escribe para buscar departamento o categoría..."
-            autocomplete="off"
-          />
+        <label class="label">Buscar</label>
+        <input id="histSearch" class="input" type="text" placeholder="Factura, proveedor, fecha, código..." />
 
-          <div class="filter-modal-grid">
-            <div class="filter-pane">
-              <div class="filter-pane-title">DEPARTAMENTOS</div>
-              <div id="filterDepList" class="filter-list"></div>
-            </div>
+        <div class="tabs">
+          <div id="tabMov" class="tab active">Facturas</div>
+          <div id="tabTrf" class="tab">Transferencias</div>
+          <div id="tabDel" class="tab">Eliminaciones</div>
+        </div>
 
-            <div class="filter-pane">
-              <div class="filter-pane-title">CATEGORÍAS</div>
-              <div id="filterCatList" class="filter-list"></div>
-            </div>
-          </div>
+        <div id="histHeadDel" class="note hidden">
+          Aquí se muestran eliminaciones (artículos o facturas) con su detalle.
+        </div>
 
-          <div class="filter-modal-actions">
-            <button class="btn small" id="btnModalClearFilters" type="button">🧹 Limpiar</button>
-            <button class="btn small primary" id="btnModalDone" type="button">Hecho</button>
-          </div>
-
-          <div class="note" id="filterModalHint"></div>
+        <div class="table">
+          <div id="histList"></div>
         </div>
       </div>
 
-    </main>
+    </div>
 
-    <footer class="footer">
-      Ferretería Universal · v5.7 · Carlos Tercero
-    </footer>
+    <div class="footer">
+      © Ferretería Universal · App interna
+    </div>
   </div>
 
-  <!-- Excel -->
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <!-- PIN OVERLAY -->
+  <div id="pinOverlay" class="overlay hidden">
+    <div class="modal">
+      <h3 class="modal-title">PIN requerido</h3>
+      <p id="pinMessage" class="modal-msg">Ingresa el PIN</p>
+      <input id="pinInput" class="input" type="password" inputmode="numeric" placeholder="PIN" />
+      <div class="modal-actions" style="margin-top:12px;">
+        <button id="pinCancel" class="btn small" type="button">Cancelar</button>
+        <button id="pinOk" class="btn small primary" type="button">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM OVERLAY -->
+  <div id="confirmOverlay" class="overlay hidden">
+    <div class="modal">
+      <h3 class="modal-title">Confirmar</h3>
+      <p id="confirmMessage" class="modal-msg">¿Seguro?</p>
+      <div class="modal-actions">
+        <button id="confirmCancel" class="btn small" type="button">Cancelar</button>
+        <button id="confirmOk" class="btn small danger" type="button">Sí</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER OVERLAY -->
+  <div id="filterOverlay" class="overlay hidden">
+    <div class="modal">
+      <h3 class="modal-title">Filtros</h3>
+      <p id="filterModalHint" class="modal-msg"></p>
+
+      <label class="label">Buscar (departamento o categoría)</label>
+      <input id="filterModalSearch" class="input" type="text" placeholder="Escribe para filtrar..." />
+
+      <div class="filter-cols" style="margin-top:12px;">
+        <div>
+          <div class="filter-col-title">Departamentos</div>
+          <div id="filterDepList" class="filter-list"></div>
+        </div>
+
+        <div>
+          <div class="filter-col-title">Categorías</div>
+          <div id="filterCatList" class="filter-list"></div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:12px;">
+        <button id="btnModalClearFilters" class="btn small" type="button">Limpiar</button>
+        <button id="btnCloseFilters" class="btn small" type="button">Cerrar</button>
+        <button id="btnModalDone" class="btn small primary" type="button">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Libs -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="./script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <script src="script.js"></script>
 </body>
 </html>
