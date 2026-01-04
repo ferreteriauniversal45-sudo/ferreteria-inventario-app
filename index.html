@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -235,16 +236,7 @@
               <textarea id="sellerClienteDireccion" class="input" rows="2" placeholder="Opcional"></textarea>
             </div>
 
-            <div>
-              <label class="label">Tipo de precio</label>
-              <select id="sellerPrecioTipo" class="input">
-                <option value="precio">Precio</option>
-                <option value="precioA">Precio A</option>
-                <option value="precioB">Precio B</option>
-                <option value="precioC">Precio C</option>
-                <option value="mayoreo">Mayoreo</option>
-              </select>
-            </div>
+            
 
             <div>
               <label class="label">Moneda</label>
@@ -275,7 +267,17 @@
             </div>
             <div style="flex:1;">
               <label class="label">Precio unitario</label>
-              <input id="sellerPrecioUnit" class="input" type="number" min="0" step="0.01" placeholder="0.00" />
+              <select id="sellerPrecioTipo" class="input">
+                <option value="precio">Precio</option>
+                <option value="precioA">Precio A</option>
+                <option value="precioB">Precio B</option>
+                <option value="precioC">Precio C</option>
+                <option value="mayoreo">Mayoreo</option>
+                <option value="vendedor">Precio vendedor (manual)</option>
+              </select>
+
+              <input id="sellerPrecioUnit" class="input" type="number" min="0" step="0.01" placeholder="0.00" readonly style="margin-top:8px;" />
+
             </div>
           </div>
 
