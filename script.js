@@ -1,3 +1,4 @@
+
 // ==========================
 // CONFIG (GitHub Pages)
 // ==========================
@@ -9,6 +10,22 @@ const INVENTARIO_URLS = {
 };
 
 const VERSION_URL = `${BASE_URL}/inventario_version.json`;
+const PRECIOS_URL = `${BASE_URL}/precios.json`;
+
+// ==========================
+// ROLES (LOGIN)
+// ==========================
+const ROLE = {
+  OPERADOR: "OPERADOR",
+  VENDEDOR: "VENDEDOR"
+};
+
+const ROLE_PIN = {
+  [ROLE.OPERADOR]: "20251983",
+  [ROLE.VENDEDOR]: "20261983"
+};
+
+const SELLER_WATERMARK_TEXT = "ESTA FACTURA NO ES UNA FACTURA ORIGINAL";
 
 // ==========================
 // STORAGE KEYS
@@ -20,7 +37,11 @@ const K = {
   DEL: "fu_eliminaciones",
   BOD: "fu_bodega_activa",
   PINOK_P: "fu_pinok_principal",
-  PINOK_A: "fu_pinok_anexo"
+  PINOK_A: "fu_pinok_anexo",
+
+  PRICES: "fu_prices",
+  SALES: "fu_sales_docs",
+  ROLE_LAST: "fu_role_last"
 };
 
 const BODEGA = {
@@ -38,15 +59,19 @@ const $ = (id) => document.getElementById(id);
 // ==========================
 // STATE
 // ==========================
+let activeRole = null; // ROLE.OPERADOR | ROLE.VENDEDOR | null
+
 let activeBodega = localStorage.getItem(K.BOD) || BODEGA.PRINCIPAL;
 
-let currentSearchContext = null; // "entrada" | "salida" | "transfer"
+let currentSearchContext = null; // "entrada" | "salida" | "transfer" | "seller"
 let historialTab = "mov";        // "mov" | "trf" | "del"
 
 let baseCache = {
   [BODEGA.PRINCIPAL]: {},
   [BODEGA.ANEXO]: {}
 };
+
+let preciosCache = {};
 
 let deltaDirty = true;
 let deltaCache = { entP:{}, salP:{}, entA:{}, salA:{} };
@@ -59,10 +84,16 @@ let filtroStock = false;
 const CATALOG_INITIAL_LIMIT = 80;
 const CATALOG_MAX_RENDER = 250;
 
-// drafts
+// drafts operador
 let entradaItems = [];
 let salidaItems = [];
 let transferItems = [];
+
+// drafts vendedor
+let sellerDocId = null;
+let sellerDocType = "FACTURA"; // "FACTURA" | "COTIZACION"
+let sellerItems = [];
+let sellerManualUnit = false;
 
 // ==========================
 // HELPERS
@@ -111,6 +142,21 @@ function makeId(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 
+function sanitizeFileName(name){
+  return String(name || "documento")
+    .replaceAll(/[\\/:*?"<>|]/g, "-")
+    .replaceAll(/\s+/g, " ")
+    .trim()
+    .slice(0, 90);
+}
+
+function formatMoney(n, symbol){
+  const num = Number(n);
+  const v = Number.isFinite(num) ? num : 0;
+  const sym = symbol || "Q";
+  return `${sym} ${v.toFixed(2)}`;
+}
+
 let toastTimer = null;
 function toast(msg){
   const t = $("toast");
@@ -142,10 +188,61 @@ function downloadBlob(blob, filename){
   }
 }
 
+function b64ToBlob(base64, mime){
+  const bytes = atob(base64);
+  const len = bytes.length;
+  const buf = new Uint8Array(len);
+  for(let i=0;i<len;i++) buf[i] = bytes.charCodeAt(i);
+  return new Blob([buf], { type: mime });
+}
+
+function saveBase64File(base64, filename, mime){
+  let saved = false;
+
+  if(window.Android && typeof Android.saveFile === "function"){
+    try{
+      Android.saveFile(base64, filename);
+      saved = true;
+    }catch(e){
+      console.warn("Android.saveFile falló", e);
+    }
+  }
+
+  if(!saved){
+    try{
+      const blob = b64ToBlob(base64, mime);
+      saved = downloadBlob(blob, filename);
+    }catch(e){
+      console.warn("saveBase64File blob falló", e);
+    }
+  }
+
+  if(!saved){
+    toast("❌ No se pudo guardar");
+    return false;
+  }
+
+  toast("📥 Archivo guardado");
+  return true;
+}
+
 // ==========================
 // UI NAV
 // ==========================
-const screens = ["homeScreen","catalogScreen","entradaScreen","salidaScreen","transferScreen","searchScreen","historialScreen"];
+const screens = [
+  "loginScreen",
+  "homeScreen",
+  "sellerHomeScreen",
+  "sellerDocScreen",
+  "sellerHistScreen",
+  "catalogScreen",
+  "entradaScreen",
+  "salidaScreen",
+  "transferScreen",
+  "searchScreen",
+  "historialScreen"
+];
+
 function showScreen(id){
   for(const s of screens){
     const el = $(s);
@@ -154,6 +251,64 @@ function showScreen(id){
   hideCodigoAutoList("entradaAutoList");
   hideCodigoAutoList("salidaAutoList");
   hideCodigoAutoList("transferAutoList");
+  hideCodigoAutoList("sellerAutoList");
+}
+
+function goHome(){
+  if(activeRole === ROLE.VENDEDOR){
+    showScreen("sellerHomeScreen");
+    refreshSellerHome();
+    return;
+  }
+  if(activeRole === ROLE.OPERADOR){
+    showScreen("homeScreen");
+    refreshHome();
+    return;
+  }
+  showScreen("loginScreen");
+}
+
+// ==========================
+// HEADER ROLE UI
+// ==========================
+function updateRoleUI(){
+  const badge = $("roleBadge");
+  const btn = $("btnLogout");
+  if(badge){
+    if(activeRole){
+      badge.textContent = activeRole;
+      badge.classList.remove("hidden");
+    }else{
+      badge.textContent = "";
+      badge.classList.add("hidden");
+    }
+  }
+  if(btn){
+    btn.classList.toggle("hidden", !activeRole);
+  }
+}
+
+async function loginAs(role){
+  const ok = await uiPinOverlayPrompt({
+    message: `Ingresa el PIN para entrar como ${role}`,
+    expectedPin: ROLE_PIN[role]
+  });
+  if(!ok) return;
+
+  activeRole = role;
+  localStorage.setItem(K.ROLE_LAST, role);
+  updateRoleUI();
+  goHome();
+}
+
+async function logout(){
+  const ok = await uiConfirm("¿Cerrar sesión?");
+  if(!ok) return;
+
+  activeRole = null;
+  currentSearchContext = null;
+  updateRoleUI();
+  showScreen("loginScreen");
 }
 
 // ==========================
@@ -169,12 +324,16 @@ function setNetworkState(isOnline){
   }
   const estado = $("homeEstado");
   if(estado) estado.textContent = isOnline ? "ON" : "OFF";
+
+  const sEstado = $("sellerEstado");
+  if(sEstado) sEstado.textContent = isOnline ? "ON" : "OFF";
 }
+
 window.addEventListener("online", () => setNetworkState(true));
 window.addEventListener("offline", () => setNetworkState(false));
 
 // ==========================
-// INVENTORY NORMALIZATION
+// INVENTORY + PRICES NORMALIZATION
 // ==========================
 function normalizeBase(inv){
   const out = {};
@@ -202,6 +361,31 @@ function normalizeBase(inv){
   return out;
 }
 
+function normalizePrices(p){
+  const out = {};
+  if(!p || typeof p !== "object") return out;
+
+  const fix = (x) => {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  for(const rawCode of Object.keys(p)){
+    const code = String(rawCode).trim().toUpperCase();
+    const val = p[rawCode];
+    if(!val || typeof val !== "object") continue;
+
+    out[code] = {
+      precio: fix(val.precio),
+      precioA: fix(val.precioA),
+      precioB: fix(val.precioB),
+      precioC: fix(val.precioC),
+      mayoreo: fix(val.mayoreo)
+    };
+  }
+  return out;
+}
+
 function baseKeyFor(bodega){
   return `${K.BASE}_${bodega}`;
 }
@@ -210,8 +394,18 @@ function getBase(bodega = activeBodega){
   return baseCache[bodega] || {};
 }
 
+function getUnionBase(){
+  // Preferimos datos de PRINCIPAL si existe el mismo código
+  return { ...(baseCache[BODEGA.ANEXO] || {}), ...(baseCache[BODEGA.PRINCIPAL] || {}) };
+}
+
+function getAnyData(code){
+  const c = String(code||"").trim().toUpperCase();
+  return baseCache[BODEGA.PRINCIPAL]?.[c] || baseCache[BODEGA.ANEXO]?.[c] || null;
+}
+
 // ==========================
-// PIN
+// PIN (overlay reutilizable)
 // ==========================
 function pinOkKey(bodega){
   return bodega === BODEGA.ANEXO ? K.PINOK_A : K.PINOK_P;
@@ -223,8 +417,13 @@ function setPinVerified(bodega){
   localStorage.setItem(pinOkKey(bodega), "1");
 }
 
-function uiPinPrompt(bodega){
+function uiPinOverlayPrompt({ message, expectedPin, rememberKey=null, onSuccess=null }){
   return new Promise(resolve => {
+    if(rememberKey && localStorage.getItem(rememberKey) === "1"){
+      resolve(true);
+      return;
+    }
+
     const overlay = $("pinOverlay");
     const msg = $("pinMessage");
     const inp = $("pinInput");
@@ -232,14 +431,16 @@ function uiPinPrompt(bodega){
     const btnCancel = $("pinCancel");
 
     if(!overlay || !msg || !inp || !btnOk || !btnCancel){
-      const entered = prompt(`PIN para ${bodega}:`);
-      resolve(String(entered || "") === PIN[bodega]);
+      const entered = prompt(message);
+      const ok = String(entered || "") === String(expectedPin);
+      if(ok && rememberKey) localStorage.setItem(rememberKey, "1");
+      if(ok && typeof onSuccess === "function") onSuccess();
+      resolve(ok);
       return;
     }
 
-    msg.textContent = `Ingresa el PIN para entrar a ${bodega}`;
+    msg.textContent = message;
     inp.value = "";
-
     overlay.classList.remove("hidden");
 
     const cleanup = (result) => {
@@ -253,9 +454,9 @@ function uiPinPrompt(bodega){
 
     const check = () => {
       const val = String(inp.value || "").trim();
-      if(val === PIN[bodega]){
-        setPinVerified(bodega);
-        updateBodegaUI();
+      if(val === String(expectedPin)){
+        if(rememberKey) localStorage.setItem(rememberKey, "1");
+        if(typeof onSuccess === "function") onSuccess();
         cleanup(true);
       }else{
         toast("❌ PIN incorrecto");
@@ -281,7 +482,16 @@ function uiPinPrompt(bodega){
 
 async function ensurePinForBodega(bodega){
   if(isPinVerified(bodega)) return true;
-  return await uiPinPrompt(bodega);
+  const ok = await uiPinOverlayPrompt({
+    message: `Ingresa el PIN para entrar a ${bodega}`,
+    expectedPin: PIN[bodega],
+    rememberKey: pinOkKey(bodega),
+    onSuccess: () => {
+      setPinVerified(bodega);
+      updateBodegaUI();
+    }
+  });
+  return ok;
 }
 
 // ==========================
@@ -421,7 +631,10 @@ async function syncBase(showMsg){
       !localStorage.getItem(baseKeyFor(BODEGA.PRINCIPAL)) ||
       !localStorage.getItem(baseKeyFor(BODEGA.ANEXO));
 
-    if(localVer !== remoteVer || missingLocal){
+    const missingPrices = !localStorage.getItem(K.PRICES);
+
+    if(localVer !== remoteVer || missingLocal || missingPrices){
+      // Inventarios
       for(const bod of [BODEGA.PRINCIPAL, BODEGA.ANEXO]){
         const url = INVENTARIO_URLS[bod];
         const invRes = await fetch(url, { cache: "no-store" });
@@ -431,11 +644,28 @@ async function syncBase(showMsg){
         writeJSON(baseKeyFor(bod), normalized);
         baseCache[bod] = normalized;
       }
+
+      // Precios
+      try{
+        const pRes = await fetch(PRECIOS_URL, { cache: "no-store" });
+        if(pRes.ok){
+          const pJson = await pRes.json();
+          const pNorm = normalizePrices(pJson);
+          writeJSON(K.PRICES, pNorm);
+          preciosCache = pNorm;
+        }else{
+          preciosCache = readJSON(K.PRICES, {});
+        }
+      }catch{
+        preciosCache = readJSON(K.PRICES, {});
+      }
+
       localStorage.setItem(K.VER, remoteVer);
       if(showMsg) toast("✅ Inventarios actualizados");
     }else{
       baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
       baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+      preciosCache = readJSON(K.PRICES, {});
       if(showMsg) toast("✅ Ya estabas actualizado");
     }
 
@@ -445,12 +675,16 @@ async function syncBase(showMsg){
 
     setNetworkState(true);
     refreshHome();
+    refreshSellerHome();
     rerenderCatalogIfOpen();
     rerenderSearchIfOpen();
+    sellerRerenderIfOpen();
 
   }catch(err){
     baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
     baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+    preciosCache = readJSON(K.PRICES, {});
+
     setNetworkState(navigator.onLine);
 
     filterIndex = null;
@@ -458,10 +692,12 @@ async function syncBase(showMsg){
     updateFilterChips();
 
     refreshHome();
+    refreshSellerHome();
     rerenderCatalogIfOpen();
     rerenderSearchIfOpen();
+    sellerRerenderIfOpen();
 
-    if(showMsg) toast("⚠️ Sin internet: usando inventario local");
+    if(showMsg) toast("⚠️ Sin internet: usando datos locales");
     console.warn(err);
   }
 
@@ -474,7 +710,7 @@ async function syncBase(showMsg){
 }
 
 // ==========================
-// HOME
+// HOME (OPERADOR)
 // ==========================
 function refreshHome(){
   const ver = localStorage.getItem(K.VER) || "—";
@@ -493,6 +729,22 @@ function refreshHome(){
 
   $("homeMovHoy") && ($("homeMovHoy").textContent = String(movHoy));
   updateBodegaUI();
+}
+
+// ==========================
+// HOME (VENDEDOR)
+// ==========================
+function refreshSellerHome(){
+  const baseTotal = Object.keys(getUnionBase() || {}).length;
+  const priceTotal = Object.keys(preciosCache || {}).length;
+
+  const docs = readJSON(K.SALES, []);
+  const h = todayISO();
+  const docsHoy = docs.filter(d => String(d.fecha||"").slice(0,10) === h).length;
+
+  $("sellerProductos") && ($("sellerProductos").textContent = String(baseTotal));
+  $("sellerPrecios") && ($("sellerPrecios").textContent = String(priceTotal));
+  $("sellerDocsHoy") && ($("sellerDocsHoy").textContent = String(docsHoy));
 }
 
 // ==========================
@@ -846,9 +1098,15 @@ function rerenderSearchIfOpen(){
     renderSearch($("searchInput")?.value || "");
   }
 }
+function sellerRerenderIfOpen(){
+  const s = $("sellerDocScreen");
+  if(s && !s.classList.contains("hidden")){
+    sellerRenderAll();
+  }
+}
 
 // ==========================
-// CATALOGO
+// CATALOGO (operador)
 // ==========================
 function renderCatalog(query){
   const list = $("catalogList");
@@ -938,7 +1196,7 @@ function renderCatalog(query){
 // SEARCH (pantalla lupa)
 // ==========================
 function selectProduct(code){
-  const data = getBase()[code];
+  const data = (currentSearchContext === "seller") ? getAnyData(code) : getBase()[code];
   if(!data) return;
 
   if(currentSearchContext === "entrada"){
@@ -961,6 +1219,14 @@ function selectProduct(code){
     showScreen("transferScreen");
     return;
   }
+  if(currentSearchContext === "seller"){
+    $("sellerCodigo").value = code;
+    $("sellerProducto").value = data.producto || "";
+    sellerManualUnit = false;
+    sellerUpdatePriceForCurrentCode();
+    showScreen("sellerDocScreen");
+    return;
+  }
 }
 
 function renderSearch(query){
@@ -971,7 +1237,9 @@ function renderSearch(query){
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
-  const entries = Object.entries(getBase() || {});
+
+  const baseForSearch = (currentSearchContext === "seller") ? getUnionBase() : getBase();
+  const entries = Object.entries(baseForSearch || {});
   const total = entries.length;
 
   if(total > 500 && q.length < 2){
@@ -992,7 +1260,7 @@ function renderSearch(query){
   const show = filtered.slice(0, 250);
   info.textContent = filtered.length > show.length
     ? `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`
-    : `Resultados: ${filtered.length} · Bodega: ${activeBodega}`;
+    : `Resultados: ${filtered.length}`;
 
   for(const [code, data] of show){
     const stock = getStock(code, activeBodega);
@@ -1033,7 +1301,8 @@ function renderCodigoAutoList(context){
   const map = {
     entrada: { inputId:"entradaCodigo", listId:"entradaAutoList", prodId:"entradaProducto", focusId:"entradaCantidad" },
     salida: { inputId:"salidaCodigo", listId:"salidaAutoList", prodId:"salidaProducto", focusId:"salidaCantidad" },
-    transfer: { inputId:"transferCodigo", listId:"transferAutoList", prodId:"transferProducto", focusId:"transferCantidad" }
+    transfer: { inputId:"transferCodigo", listId:"transferAutoList", prodId:"transferProducto", focusId:"transferCantidad" },
+    seller: { inputId:"sellerCodigo", listId:"sellerAutoList", prodId:"sellerProducto", focusId:"sellerCantidad" }
   };
   const cfg = map[context];
   if(!cfg) return;
@@ -1044,13 +1313,14 @@ function renderCodigoAutoList(context){
 
   const q = String(input.value || "").trim().toUpperCase();
   const digits = q.replace(/\D/g, "");
-  if(digits.length < 2){
+  if(digits.length < 2 && q.length < 2){
     hideCodigoAutoList(cfg.listId);
     return;
   }
 
-  const codes = Object.keys(getBase() || {});
-  const matches = codes.filter(c => c.startsWith(q)).slice(0,8);
+  const base = (context === "seller") ? getUnionBase() : getBase();
+  const codes = Object.keys(base || {});
+  const matches = codes.filter(c => String(c).startsWith(q)).slice(0,8);
 
   if(matches.length === 0){
     hideCodigoAutoList(cfg.listId);
@@ -1059,7 +1329,7 @@ function renderCodigoAutoList(context){
 
   list.innerHTML = "";
   for(const code of matches){
-    const data = getBase()[code] || {};
+    const data = base[code] || {};
     const stock = getStock(code, activeBodega);
 
     const item = document.createElement("div");
@@ -1076,6 +1346,10 @@ function renderCodigoAutoList(context){
       $(cfg.prodId).value = data.producto || "";
       if(context === "salida") updateSalidaStockHint();
       if(context === "transfer") updateTransferStockHint();
+      if(context === "seller"){
+        sellerManualUnit = false;
+        sellerUpdatePriceForCurrentCode();
+      }
       $(cfg.focusId)?.focus();
       hideCodigoAutoList(cfg.listId);
     };
@@ -1104,6 +1378,12 @@ function fillProductoFromCode(context){
     const code = String($("transferCodigo").value||"").trim().toUpperCase();
     $("transferProducto").value = getBase()[code]?.producto || "";
     updateTransferStockHint();
+    return;
+  }
+  if(context === "seller"){
+    const code = String($("sellerCodigo").value||"").trim().toUpperCase();
+    $("sellerProducto").value = getAnyData(code)?.producto || "";
+    sellerUpdatePriceForCurrentCode();
   }
 }
 
@@ -1190,7 +1470,7 @@ function uiConfirm(message){
 }
 
 // ==========================
-// DRAFT PREVIEW (factura estilo papel)
+// DRAFT PREVIEW (operador - factura estilo papel)
 // ==========================
 function renderDraftFactura(context){
   const isEntrada = context === "entrada";
@@ -1313,7 +1593,7 @@ function clearSalidaDraft(){ salidaItems = []; renderSalidaItems(); updateSalida
 function clearTransferDraft(){ transferItems = []; renderTransferItems(); updateTransferStockHint(); }
 
 // ==========================
-// ADD ITEMS
+// ADD ITEMS (operador)
 // ==========================
 function addEntradaItem(){
   const codigo = String($("entradaCodigo").value||"").trim().toUpperCase();
@@ -1422,7 +1702,7 @@ function addTransferItem(){
 }
 
 // ==========================
-// SAVE FACTURAS + TRANSFER
+// SAVE FACTURAS + TRANSFER (operador)
 // ==========================
 function saveFacturaEntrada(){
   const proveedor = String($("entradaProveedor").value||"").trim();
@@ -1467,7 +1747,7 @@ function saveFacturaEntrada(){
   toast("✅ Factura de entrada guardada");
   refreshHome();
   clearEntradaDraft();
-  showScreen("homeScreen");
+  goHome();
 }
 
 function saveFacturaSalida(){
@@ -1522,7 +1802,7 @@ function saveFacturaSalida(){
   toast("✅ Factura de salida guardada");
   refreshHome();
   clearSalidaDraft();
-  showScreen("homeScreen");
+  goHome();
 }
 
 function saveTransferencia(){
@@ -1611,11 +1891,11 @@ function saveTransferencia(){
   toast("🔁 Transferencia guardada");
   refreshHome();
   clearTransferDraft();
-  showScreen("homeScreen");
+  goHome();
 }
 
 // ==========================
-// HISTORIAL (FACTURAS / TRF / DEL)
+// HISTORIAL (operador)
 // ==========================
 function movGroupKey(m){
   return String(m?.grupoId || m?.factura || m?.transferenciaId || m?.id || "").trim();
@@ -1995,7 +2275,7 @@ async function deleteFactura(grupoId){
 }
 
 // ==========================
-// EXPORT EXCEL (con transferencias)
+// EXPORT EXCEL (operador - con transferencias)
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -2080,6 +2360,634 @@ function exportExcel(){
 }
 
 // ==========================
+// VENDEDOR: FACTURAS / COTIZACIONES
+// ==========================
+function priceTierLabel(key){
+  const map = {
+    precio: "Precio",
+    precioA: "Precio A",
+    precioB: "Precio B",
+    precioC: "Precio C",
+    mayoreo: "Mayoreo"
+  };
+  return map[key] || "Precio";
+}
+
+function sellerGenerateDocNo(type){
+  const d = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  const ts = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  const prefix = (type === "COTIZACION") ? "COT" : "FAC";
+  return `${prefix}-${ts}`;
+}
+
+function sellerSetDocType(type){
+  sellerDocType = type === "COTIZACION" ? "COTIZACION" : "FACTURA";
+  $("sellerTypeFactura")?.classList.toggle("active", sellerDocType === "FACTURA");
+  $("sellerTypeCotizacion")?.classList.toggle("active", sellerDocType === "COTIZACION");
+  $("sellerDocTitle") && ($("sellerDocTitle").textContent = sellerDocType === "COTIZACION" ? "Cotización" : "Factura");
+
+  const docNoEl = $("sellerDocNo");
+  if(docNoEl && !String(docNoEl.value || "").trim()){
+    docNoEl.value = sellerGenerateDocNo(sellerDocType);
+  }
+  sellerRenderAll();
+}
+
+function sellerStartNew(type){
+  sellerDocId = makeId();
+  sellerItems = [];
+  sellerManualUnit = false;
+
+  sellerSetDocType(type);
+
+  $("sellerFecha") && ($("sellerFecha").value = todayISO());
+  $("sellerCliente") && ($("sellerCliente").value = "");
+  $("sellerTelefono") && ($("sellerTelefono").value = "");
+  $("sellerDocNo") && ($("sellerDocNo").value = sellerGenerateDocNo(sellerDocType));
+
+  $("sellerPrecioTipo") && ($("sellerPrecioTipo").value = "precio");
+  $("sellerMoneda") && ($("sellerMoneda").value = "Q");
+
+  $("sellerCodigo") && ($("sellerCodigo").value = "");
+  $("sellerProducto") && ($("sellerProducto").value = "");
+  $("sellerCantidad") && ($("sellerCantidad").value = "");
+  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
+
+  hideCodigoAutoList("sellerAutoList");
+
+  showScreen("sellerDocScreen");
+  sellerRenderAll();
+}
+
+function sellerBuildDocObject(){
+  const tipo = sellerDocType;
+  const fecha = $("sellerFecha")?.value || todayISO();
+  const cliente = String($("sellerCliente")?.value || "").trim();
+  const telefono = String($("sellerTelefono")?.value || "").trim();
+  const docNo = String($("sellerDocNo")?.value || "").trim() || sellerGenerateDocNo(tipo);
+  const precioTipo = $("sellerPrecioTipo")?.value || "precio";
+  const moneda = $("sellerMoneda")?.value || "Q";
+
+  const items = sellerItems.map(it => {
+    const data = getAnyData(it.codigo);
+    const producto = data?.producto || "(sin nombre)";
+    const cantidad = Number(it.cantidad || 0) || 0;
+    const precioUnit = Number(it.precioUnit || 0) || 0;
+    const totalLinea = cantidad * precioUnit;
+    return { codigo: it.codigo, producto, cantidad, precioUnit, totalLinea };
+  });
+
+  const subtotal = items.reduce((a,x)=>a + (Number(x.totalLinea)||0), 0);
+  const total = subtotal;
+
+  return {
+    id: sellerDocId || makeId(),
+    tipo,
+    docNo,
+    fecha,
+    cliente,
+    telefono,
+    precioTipo,
+    precioTipoLabel: priceTierLabel(precioTipo),
+    moneda,
+    items,
+    subtotal,
+    total,
+    timestamp: Date.now()
+  };
+}
+
+function sellerSaveToHistory({ showToast=true } = {}){
+  const doc = sellerBuildDocObject();
+  if(doc.items.length === 0){
+    toast("Agrega al menos 1 producto");
+    return null;
+  }
+
+  const docs = readJSON(K.SALES, []);
+  const idx = docs.findIndex(d => d.id === doc.id);
+  if(idx >= 0) docs[idx] = doc;
+  else docs.unshift(doc);
+
+  while(docs.length > 300) docs.pop();
+
+  writeJSON(K.SALES, docs);
+  refreshSellerHome();
+  if(showToast) toast("💾 Documento guardado");
+  return doc;
+}
+
+function sellerPriceForCode(code, tier){
+  const c = String(code||"").trim().toUpperCase();
+  const p = preciosCache?.[c];
+  const prefer = tier || "precio";
+  const val = Number(p?.[prefer] ?? p?.precio ?? 0);
+  return Number.isFinite(val) ? val : 0;
+}
+
+function sellerUpdatePrecioHint(code){
+  const hint = $("sellerPrecioHint");
+  if(!hint) return;
+
+  const c = String(code||"").trim().toUpperCase();
+  const p = preciosCache?.[c];
+  const sym = $("sellerMoneda")?.value || "Q";
+
+  if(!p){
+    hint.textContent = "⚠️ Sin precio en precios.json";
+    return;
+  }
+
+  hint.textContent =
+    `Precio: ${formatMoney(p.precio, sym)} · A: ${formatMoney(p.precioA, sym)} · ` +
+    `B: ${formatMoney(p.precioB, sym)} · C: ${formatMoney(p.precioC, sym)} · ` +
+    `Mayoreo: ${formatMoney(p.mayoreo, sym)}`;
+}
+
+function sellerUpdatePriceForCurrentCode(){
+  const code = String($("sellerCodigo")?.value || "").trim().toUpperCase();
+  const inp = $("sellerPrecioUnit");
+  if(!inp) return;
+
+  sellerUpdatePrecioHint(code);
+
+  if(!code){
+    if(!sellerManualUnit) inp.value = "";
+    return;
+  }
+
+  const tier = $("sellerPrecioTipo")?.value || "precio";
+  const auto = sellerPriceForCode(code, tier);
+  if(!sellerManualUnit){
+    inp.value = String(auto);
+  }
+}
+
+function sellerAddItem(){
+  const codigo = String($("sellerCodigo")?.value || "").trim().toUpperCase();
+  const cantidad = Number($("sellerCantidad")?.value);
+  const precioUnit = Number($("sellerPrecioUnit")?.value);
+
+  if(!codigo){
+    toast("Ingresa un código.");
+    return;
+  }
+  const data = getAnyData(codigo);
+  if(!data){
+    toast("Código no existe en inventario.");
+    return;
+  }
+  if(!Number.isFinite(cantidad) || cantidad <= 0){
+    toast("Cantidad válida.");
+    return;
+  }
+  if(!Number.isFinite(precioUnit) || precioUnit < 0){
+    toast("Precio válido.");
+    return;
+  }
+
+  const idx = sellerItems.findIndex(x => x.codigo === codigo);
+  if(idx >= 0){
+    sellerItems[idx].cantidad += cantidad;
+    if(!sellerManualUnit && sellerItems[idx].autoPrice){
+      sellerItems[idx].precioUnit = precioUnit;
+    }
+  }else{
+    sellerItems.push({
+      codigo,
+      cantidad,
+      precioUnit,
+      autoPrice: !sellerManualUnit
+    });
+  }
+
+  $("sellerCodigo") && ($("sellerCodigo").value = "");
+  $("sellerProducto") && ($("sellerProducto").value = "");
+  $("sellerCantidad") && ($("sellerCantidad").value = "");
+  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
+  sellerManualUnit = false;
+
+  hideCodigoAutoList("sellerAutoList");
+  sellerRenderAll();
+  toast("➕ Agregado");
+}
+
+function sellerClearDraft(){
+  sellerItems = [];
+  sellerManualUnit = false;
+  sellerRenderAll();
+  toast("🧹 Documento vaciado");
+}
+
+function sellerRenderItemsEditor(){
+  const container = $("sellerItemsEditor");
+  const info = $("sellerItemsInfo");
+  if(!container || !info) return;
+
+  container.innerHTML = "";
+
+  if(sellerItems.length === 0){
+    info.textContent = "Documento vacío.";
+    return;
+  }
+
+  const doc = sellerBuildDocObject();
+  info.textContent = `Productos: ${doc.items.length} · Total: ${formatMoney(doc.total, doc.moneda)}`;
+
+  for(const it of sellerItems){
+    const data = getAnyData(it.codigo);
+    const prod = data?.producto || "(sin nombre)";
+    const lineTotal = (Number(it.cantidad)||0) * (Number(it.precioUnit)||0);
+
+    const row = document.createElement("div");
+    row.className = "trow cols-seller";
+    row.innerHTML = `
+      <div class="cell" data-label="Código">${escapeHtml(it.codigo)}</div>
+      <div class="cell wrap" data-label="Producto">${escapeHtml(prod)}</div>
+      <div class="cell right" data-label="Cant.">
+        <input class="mini-input seller-qty" type="number" min="1"
+          value="${escapeHtml(String(it.cantidad))}"
+          data-codigo="${escapeHtml(it.codigo)}">
+      </div>
+      <div class="cell right" data-label="P. Unit">
+        <input class="mini-input seller-price" type="number" min="0" step="0.01"
+          value="${escapeHtml(String(it.precioUnit))}"
+          data-codigo="${escapeHtml(it.codigo)}">
+      </div>
+      <div class="cell right" data-label="Total">${escapeHtml(formatMoney(lineTotal, doc.moneda))}</div>
+      <div class="cell right" data-label="">
+        <button class="btn small row-action danger" type="button" data-seller-del="${escapeHtml(it.codigo)}">🗑</button>
+      </div>
+    `;
+    container.appendChild(row);
+  }
+}
+
+function sellerBuildInvoiceElement(doc){
+  const el = document.createElement("div");
+  el.className = "sale-doc watermarked";
+  el.dataset.watermark = SELLER_WATERMARK_TEXT;
+
+  el.innerHTML = `
+    <div class="sale-doc-inner">
+      <div class="sale-head">
+        <div class="sale-left">
+          <div class="sale-company">FERRETERÍA UNIVERSAL</div>
+          <div class="sale-sub">Documento de venta (interno)</div>
+        </div>
+        <div class="sale-right">
+          <div class="sale-badge">${escapeHtml(doc.tipo)}</div>
+          <div class="sale-docno">${escapeHtml(doc.docNo)}</div>
+          <div class="sale-sub">Fecha: ${escapeHtml(doc.fecha)}</div>
+        </div>
+      </div>
+
+      <div class="sale-meta">
+        <div class="sale-meta-item"><span class="sale-meta-label">Cliente</span><span class="sale-meta-value">${escapeHtml(doc.cliente || "—")}</span></div>
+        <div class="sale-meta-item"><span class="sale-meta-label">Teléfono</span><span class="sale-meta-value">${escapeHtml(doc.telefono || "—")}</span></div>
+        <div class="sale-meta-item"><span class="sale-meta-label">Precio</span><span class="sale-meta-value">${escapeHtml(doc.precioTipoLabel)}</span></div>
+        <div class="sale-meta-item"><span class="sale-meta-label">Moneda</span><span class="sale-meta-value">${escapeHtml(doc.moneda)}</span></div>
+      </div>
+
+      <table class="sale-table">
+        <thead>
+          <tr>
+            <th style="width:90px;">CÓD</th>
+            <th>PRODUCTO</th>
+            <th class="right" style="width:70px;">CANT</th>
+            <th class="right" style="width:90px;">P. UNIT</th>
+            <th class="right" style="width:100px;">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${doc.items.map(it => `
+            <tr>
+              <td>${escapeHtml(it.codigo)}</td>
+              <td>${escapeHtml(it.producto)}</td>
+              <td class="right">${escapeHtml(String(it.cantidad))}</td>
+              <td class="right">${escapeHtml(formatMoney(it.precioUnit, doc.moneda))}</td>
+              <td class="right">${escapeHtml(formatMoney(it.totalLinea, doc.moneda))}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+
+      <div class="sale-totals">
+        <div class="sale-totals-box">
+          <div class="sale-total-row"><span>Subtotal</span><span>${escapeHtml(formatMoney(doc.subtotal, doc.moneda))}</span></div>
+          <div class="sale-total-row grand"><span>Total</span><span>${escapeHtml(formatMoney(doc.total, doc.moneda))}</span></div>
+        </div>
+      </div>
+
+      <div class="sale-footer-note">
+        <b>${escapeHtml(SELLER_WATERMARK_TEXT)}.</b><br>
+        Documento generado por la aplicación interna. No tiene validez fiscal.
+      </div>
+    </div>
+  `;
+  return el;
+}
+
+function sellerRenderPreview(){
+  const preview = $("sellerDocPreview");
+  if(!preview) return;
+
+  preview.innerHTML = "";
+  if(sellerItems.length === 0) return;
+
+  const doc = sellerBuildDocObject();
+  const inv = sellerBuildInvoiceElement(doc);
+  inv.id = "sellerInvoice";
+  preview.appendChild(inv);
+}
+
+function sellerRenderAll(){
+  sellerRenderItemsEditor();
+  sellerRenderPreview();
+}
+
+function sellerCreateTempInvoice(doc){
+  const holder = document.createElement("div");
+  holder.style.position = "fixed";
+  holder.style.left = "-9999px";
+  holder.style.top = "0";
+  holder.style.width = "900px";
+  holder.style.background = "#ffffff";
+  holder.style.padding = "0";
+
+  const inv = sellerBuildInvoiceElement(doc);
+  inv.id = "tmpSellerInvoice";
+  holder.appendChild(inv);
+
+  document.body.appendChild(holder);
+
+  return {
+    el: inv,
+    cleanup: () => holder.remove()
+  };
+}
+
+async function sellerExportPng(doc=null){
+  if(typeof html2canvas !== "function"){
+    toast("No cargó html2canvas");
+    return;
+  }
+
+  const d = doc || sellerSaveToHistory({ showToast:false });
+  if(!d) return;
+
+  const tmp = doc ? sellerCreateTempInvoice(d) : null;
+  const target = doc ? tmp.el : $("sellerInvoice");
+  if(!target){
+    toast("No hay vista previa");
+    tmp?.cleanup?.();
+    return;
+  }
+
+  try{
+    const canvas = await html2canvas(target, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+    const dataUrl = canvas.toDataURL("image/png");
+    const base64 = dataUrl.split(",")[1] || "";
+    const filename = `${d.tipo}_${sanitizeFileName(d.docNo)}_${d.fecha}.png`;
+    saveBase64File(base64, filename, "image/png");
+  }catch(e){
+    console.warn(e);
+    toast("❌ Error al exportar imagen");
+  }finally{
+    tmp?.cleanup?.();
+  }
+}
+
+async function sellerExportPdf(doc=null){
+  if(typeof html2canvas !== "function"){
+    toast("No cargó html2canvas");
+    return;
+  }
+  const jsPDF = window.jspdf?.jsPDF;
+  if(typeof jsPDF !== "function"){
+    toast("No cargó jsPDF");
+    return;
+  }
+
+  const d = doc || sellerSaveToHistory({ showToast:false });
+  if(!d) return;
+
+  const tmp = doc ? sellerCreateTempInvoice(d) : null;
+  const target = doc ? tmp.el : $("sellerInvoice");
+  if(!target){
+    toast("No hay vista previa");
+    tmp?.cleanup?.();
+    return;
+  }
+
+  try{
+    const canvas = await html2canvas(target, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pageWidth;
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    let heightLeft = pdfHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+    heightLeft -= pageHeight;
+
+    while(heightLeft > 0){
+      position = heightLeft - pdfHeight; // negativo
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+    }
+
+    const dataUri = pdf.output("datauristring");
+    const base64 = dataUri.split(",")[1] || "";
+    const filename = `${d.tipo}_${sanitizeFileName(d.docNo)}_${d.fecha}.pdf`;
+    saveBase64File(base64, filename, "application/pdf");
+  }catch(e){
+    console.warn(e);
+    toast("❌ Error al exportar PDF");
+  }finally{
+    tmp?.cleanup?.();
+  }
+}
+
+function sellerExportExcel(doc=null){
+  if(typeof XLSX === "undefined"){
+    toast("No cargó Excel (XLSX)");
+    return;
+  }
+
+  const d = doc || sellerSaveToHistory({ showToast:false });
+  if(!d) return;
+
+  const wb = XLSX.utils.book_new();
+
+  const head = [{
+    tipo: d.tipo,
+    documento: d.docNo,
+    fecha: d.fecha,
+    cliente: d.cliente,
+    telefono: d.telefono,
+    precioTipo: d.precioTipoLabel,
+    moneda: d.moneda,
+    subtotal: d.subtotal,
+    total: d.total
+  }];
+
+  const items = d.items.map(it => ({
+    codigo: it.codigo,
+    producto: it.producto,
+    cantidad: it.cantidad,
+    precioUnit: it.precioUnit,
+    totalLinea: it.totalLinea
+  }));
+
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(head), "DOCUMENTO");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(items), "ITEMS");
+
+  const filename = `${d.tipo}_${sanitizeFileName(d.docNo)}_${d.fecha}.xlsx`;
+
+  let saved = false;
+
+  if(window.Android && typeof Android.saveFile === "function"){
+    try{
+      const wb64 = XLSX.write(wb, { bookType:"xlsx", type:"base64" });
+      Android.saveFile(wb64, filename);
+      saved = true;
+      toast("📥 Archivo guardado en Descargas");
+    }catch(e){
+      console.warn("Android.saveFile falló", e);
+    }
+  }
+
+  if(!saved){
+    try{
+      const wbarr = XLSX.write(wb, { bookType:"xlsx", type:"array" });
+      const blob = new Blob([wbarr], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      saved = downloadBlob(blob, filename);
+      if(saved) toast("📥 Descarga iniciada");
+    }catch(e){
+      console.warn("Export blob falló", e);
+    }
+  }
+
+  if(!saved){
+    toast("❌ No se pudo exportar");
+  }
+}
+
+function renderSellerHistory(){
+  const list = $("sellerHistList");
+  const q = ($("sellerHistSearch")?.value || "").toLowerCase().trim();
+  if(!list) return;
+
+  list.innerHTML = "";
+
+  const docs = readJSON(K.SALES, []).slice().sort((a,b)=> (b.timestamp||0)-(a.timestamp||0));
+
+  const filtered = docs.filter(d => {
+    if(!q) return true;
+    const tipo = String(d.tipo||"").toLowerCase();
+    const docNo = String(d.docNo||"").toLowerCase();
+    const cli = String(d.cliente||"").toLowerCase();
+    const tel = String(d.telefono||"").toLowerCase();
+    const fecha = String(d.fecha||"").toLowerCase();
+
+    if(tipo.includes(q) || docNo.includes(q) || cli.includes(q) || tel.includes(q) || fecha.includes(q)) return true;
+
+    return (d.items||[]).some(it =>
+      String(it.codigo||"").toLowerCase().includes(q) ||
+      String(it.producto||"").toLowerCase().includes(q)
+    );
+  });
+
+  if(filtered.length === 0){
+    list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin documentos.</div></div>`;
+    return;
+  }
+
+  for(const d of filtered){
+    const row = document.createElement("div");
+    row.className = "trow cols-seller-hist";
+    row.innerHTML = `
+      <div class="cell" data-label="Tipo">${escapeHtml(d.tipo || "")}</div>
+      <div class="cell" data-label="Documento">${escapeHtml(d.docNo || "")}</div>
+      <div class="cell" data-label="Fecha">${escapeHtml(d.fecha || "")}</div>
+      <div class="cell wrap" data-label="Cliente">${escapeHtml(d.cliente || "—")}</div>
+      <div class="cell right" data-label="Total">${escapeHtml(formatMoney(d.total || 0, d.moneda || "Q"))}</div>
+      <div class="cell" data-label="">
+        <div class="seller-card-actions">
+          <button class="btn small row-action" type="button" data-seller-open="${escapeHtml(d.id)}">Abrir</button>
+          <button class="btn small row-action" type="button" data-seller-pdf="${escapeHtml(d.id)}">PDF</button>
+          <button class="btn small row-action" type="button" data-seller-png="${escapeHtml(d.id)}">IMG</button>
+          <button class="btn small row-action" type="button" data-seller-xls="${escapeHtml(d.id)}">XLS</button>
+          <button class="btn small row-action danger" type="button" data-seller-del="${escapeHtml(d.id)}">🗑</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(row);
+  }
+}
+
+function sellerLoadDocById(id){
+  const docs = readJSON(K.SALES, []);
+  return docs.find(d => d.id === id) || null;
+}
+
+function sellerOpenDoc(id){
+  const doc = sellerLoadDocById(id);
+  if(!doc){
+    toast("No se encontró el documento");
+    return;
+  }
+
+  sellerDocId = doc.id;
+  sellerDocType = doc.tipo || "FACTURA";
+  sellerItems = (doc.items || []).map(it => ({
+    codigo: String(it.codigo||"").trim().toUpperCase(),
+    cantidad: Number(it.cantidad||0) || 0,
+    precioUnit: Number(it.precioUnit||0) || 0,
+    autoPrice: false
+  }));
+  sellerManualUnit = false;
+
+  $("sellerFecha") && ($("sellerFecha").value = doc.fecha || todayISO());
+  $("sellerCliente") && ($("sellerCliente").value = doc.cliente || "");
+  $("sellerTelefono") && ($("sellerTelefono").value = doc.telefono || "");
+  $("sellerDocNo") && ($("sellerDocNo").value = doc.docNo || "");
+  $("sellerPrecioTipo") && ($("sellerPrecioTipo").value = doc.precioTipo || "precio");
+  $("sellerMoneda") && ($("sellerMoneda").value = doc.moneda || "Q");
+
+  $("sellerCodigo") && ($("sellerCodigo").value = "");
+  $("sellerProducto") && ($("sellerProducto").value = "");
+  $("sellerCantidad") && ($("sellerCantidad").value = "");
+  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
+
+  sellerSetDocType(sellerDocType);
+  showScreen("sellerDocScreen");
+  sellerRenderAll();
+}
+
+async function sellerDeleteDoc(id){
+  const ok = await uiConfirm("¿Eliminar este documento del historial?");
+  if(!ok) return;
+
+  const docs = readJSON(K.SALES, []);
+  const next = docs.filter(d => d.id !== id);
+  writeJSON(K.SALES, next);
+  refreshSellerHome();
+  renderSellerHistory();
+  toast("🗑 Eliminado");
+}
+
+// ==========================
 // INIT
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
@@ -2087,17 +2995,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
   baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+  preciosCache = readJSON(K.PRICES, {});
+
+  // Mostrar login siempre al abrir
+  activeRole = null;
+  updateRoleUI();
+  showScreen("loginScreen");
 
   setNetworkState(navigator.onLine);
   updateBodegaUI();
   updateFilterChips();
 
   refreshHome();
-  showScreen("homeScreen");
+  refreshSellerHome();
 
+  // Fechas default operador
   $("entradaFecha") && ($("entradaFecha").value = todayISO());
   $("salidaFecha") && ($("salidaFecha").value = todayISO());
   $("transferFecha") && ($("transferFecha").value = todayISO());
+
+  // Fecha default vendedor
+  $("sellerFecha") && ($("sellerFecha").value = todayISO());
 
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"), { allowText:false });
@@ -2107,14 +3025,39 @@ document.addEventListener("DOMContentLoaded", () => {
   attachCodigoMask($("catalogSearch"), { allowText:true });
   attachCodigoMask($("histSearch"), { allowText:true });
 
-  $("btnBodegaPrincipal")?.addEventListener("click", () => setActiveBodega(BODEGA.PRINCIPAL));
-  $("btnBodegaAnexo")?.addEventListener("click", () => setActiveBodega(BODEGA.ANEXO));
+  attachCodigoMask($("sellerCodigo"), { allowText:true });
 
-  $("btnSync")?.addEventListener("click", () => syncBase(true));
-  $("btnExport")?.addEventListener("click", exportExcel);
+  // LOGIN
+  $("btnLoginOperador")?.addEventListener("click", () => loginAs(ROLE.OPERADOR));
+  $("btnLoginVendedor")?.addEventListener("click", () => loginAs(ROLE.VENDEDOR));
+
+  $("btnLogout")?.addEventListener("click", logout);
+
+  // OPERADOR: bodega
+  $("btnBodegaPrincipal")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    setActiveBodega(BODEGA.PRINCIPAL);
+  });
+  $("btnBodegaAnexo")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    setActiveBodega(BODEGA.ANEXO);
+  });
+
+  $("btnSync")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    syncBase(true);
+  });
+
+  $("btnExport")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    exportExcel();
+  });
 
   // Filters modal
-  $("btnOpenFilters")?.addEventListener("click", openFilterModal);
+  $("btnOpenFilters")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    openFilterModal();
+  });
   $("btnCloseFilters")?.addEventListener("click", closeFilterModal);
   $("btnModalDone")?.addEventListener("click", closeFilterModal);
 
@@ -2133,8 +3076,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if(e.target === overlay) closeFilterModal();
   });
 
-  // Home nav
+  // Home nav (operador)
   $("btnCatalogo")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2144,6 +3088,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("btnEntrada")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2157,6 +3102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("btnSalida")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2171,6 +3117,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("btnTransferencia")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2187,26 +3134,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if(info) info.textContent = `Origen: ${activeBodega} ➜ Destino: ${otherBodega(activeBodega)}`;
   });
 
-  // ✅ FIX: historial ahora sí renderiza
   $("btnHistorial")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     showScreen("historialScreen");
     $("histSearch").value = "";
     setHistTab("mov");
   });
 
-  // Back buttons
-  $("btnBackCatalog")?.addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackEntrada")?.addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackSalida")?.addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackTransfer")?.addEventListener("click", () => showScreen("homeScreen"));
-  $("btnBackHistorial")?.addEventListener("click", () => showScreen("homeScreen"));
-
-  $("btnBackSearch")?.addEventListener("click", () => {
-    if(currentSearchContext === "entrada") showScreen("entradaScreen");
-    else if(currentSearchContext === "salida") showScreen("salidaScreen");
-    else if(currentSearchContext === "transfer") showScreen("transferScreen");
-    else showScreen("homeScreen");
-  });
+  // Back buttons operador
+  $("btnBackCatalog")?.addEventListener("click", goHome);
+  $("btnBackEntrada")?.addEventListener("click", goHome);
+  $("btnBackSalida")?.addEventListener("click", goHome);
+  $("btnBackTransfer")?.addEventListener("click", goHome);
+  $("btnBackHistorial")?.addEventListener("click", goHome);
 
   // Catalog
   $("catalogSearch")?.addEventListener("input", (e) => renderCatalog(e.target.value));
@@ -2239,7 +3179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rerenderCatalogIfOpen();
   });
 
-  // Auto-fill + autocomplete
+  // Auto-fill + autocomplete operador
   $("entradaCodigo")?.addEventListener("input", () => { fillProductoFromCode("entrada"); renderCodigoAutoList("entrada"); });
   $("salidaCodigo")?.addEventListener("input", () => { fillProductoFromCode("salida"); renderCodigoAutoList("salida"); });
   $("transferCodigo")?.addEventListener("input", () => { fillProductoFromCode("transfer"); renderCodigoAutoList("transfer"); });
@@ -2267,9 +3207,27 @@ document.addEventListener("DOMContentLoaded", () => {
     $("searchInput").value = "";
     renderSearch("");
   });
+
+  // Search vendedor: botón en pantalla vendedor
+  $("btnBuscarSeller")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    currentSearchContext = "seller";
+    showScreen("searchScreen");
+    $("searchInput").value = "";
+    renderSearch("");
+  });
+
+  $("btnBackSearch")?.addEventListener("click", () => {
+    if(currentSearchContext === "entrada") showScreen("entradaScreen");
+    else if(currentSearchContext === "salida") showScreen("salidaScreen");
+    else if(currentSearchContext === "transfer") showScreen("transferScreen");
+    else if(currentSearchContext === "seller") showScreen("sellerDocScreen");
+    else goHome();
+  });
+
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // Draft buttons
+  // Draft buttons operador
   $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
   $("btnClearEntradaItems")?.addEventListener("click", () => { clearEntradaDraft(); toast("Factura vaciada"); });
   $("btnGuardarEntrada")?.addEventListener("click", saveFacturaEntrada);
@@ -2282,7 +3240,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnClearTransferItems")?.addEventListener("click", () => { clearTransferDraft(); toast("Transferencia vaciada"); });
   $("btnGuardarTransferencia")?.addEventListener("click", saveTransferencia);
 
-  // Hist tabs + search
+  // Hist tabs + search operador
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
   $("tabTrf")?.addEventListener("click", () => setHistTab("trf"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
@@ -2367,11 +3325,180 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHistorial();
   });
 
-  // sync silencioso al iniciar
+  // ==========================
+  // VENDEDOR EVENTS
+  // ==========================
+  $("btnSellerNewFactura")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerStartNew("FACTURA");
+  });
+  $("btnSellerNewCotizacion")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerStartNew("COTIZACION");
+  });
+  $("btnSellerHist")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    showScreen("sellerHistScreen");
+    $("sellerHistSearch") && ($("sellerHistSearch").value = "");
+    renderSellerHistory();
+  });
+
+  $("btnBackSellerDoc")?.addEventListener("click", goHome);
+  $("btnBackSellerHist")?.addEventListener("click", () => {
+    showScreen("sellerHomeScreen");
+    refreshSellerHome();
+  });
+
+  $("sellerTypeFactura")?.addEventListener("click", () => sellerSetDocType("FACTURA"));
+  $("sellerTypeCotizacion")?.addEventListener("click", () => sellerSetDocType("COTIZACION"));
+
+  $("sellerPrecioTipo")?.addEventListener("change", () => {
+    // actualizar precio del código actual si es automático
+    sellerUpdatePriceForCurrentCode();
+
+    // actualizar items autoPrice
+    const tier = $("sellerPrecioTipo")?.value || "precio";
+    for(const it of sellerItems){
+      if(it.autoPrice){
+        it.precioUnit = sellerPriceForCode(it.codigo, tier);
+      }
+    }
+    sellerRenderAll();
+  });
+
+  $("sellerMoneda")?.addEventListener("change", () => {
+    sellerUpdatePriceForCurrentCode();
+    sellerRenderAll();
+  });
+
+  $("sellerCodigo")?.addEventListener("input", () => {
+    fillProductoFromCode("seller");
+    renderCodigoAutoList("seller");
+    sellerManualUnit = false;
+  });
+  $("sellerCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("sellerAutoList"), 220));
+
+  $("sellerPrecioUnit")?.addEventListener("input", () => {
+    sellerManualUnit = true;
+  });
+
+  $("btnAddSellerItem")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerAddItem();
+  });
+
+  $("btnClearSellerItems")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerClearDraft();
+  });
+
+  $("btnSellerSave")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerSaveToHistory();
+  });
+
+  $("btnSellerExportPng")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerExportPng();
+  });
+  $("btnSellerExportPdf")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerExportPdf();
+  });
+  $("btnSellerExportExcel")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerExportExcel();
+  });
+
+  // editor cambios qty/precio
+  $("sellerItemsEditor")?.addEventListener("change", (e) => {
+    const qty = e.target.closest("input.seller-qty");
+    if(qty){
+      const code = String(qty.dataset.codigo || "").trim().toUpperCase();
+      const val = Number(qty.value);
+      const it = sellerItems.find(x => x.codigo === code);
+      if(it){
+        if(!Number.isFinite(val) || val <= 0){
+          toast("Cantidad inválida");
+          qty.value = String(it.cantidad);
+          return;
+        }
+        it.cantidad = val;
+        sellerRenderAll();
+      }
+      return;
+    }
+
+    const pr = e.target.closest("input.seller-price");
+    if(pr){
+      const code = String(pr.dataset.codigo || "").trim().toUpperCase();
+      const val = Number(pr.value);
+      const it = sellerItems.find(x => x.codigo === code);
+      if(it){
+        if(!Number.isFinite(val) || val < 0){
+          toast("Precio inválido");
+          pr.value = String(it.precioUnit);
+          return;
+        }
+        it.precioUnit = val;
+        it.autoPrice = false;
+        sellerRenderAll();
+      }
+      return;
+    }
+  });
+
+  $("sellerItemsEditor")?.addEventListener("click", (e) => {
+    const del = e.target.closest("button[data-seller-del]");
+    if(!del) return;
+    const code = String(del.dataset.sellerDel || "").trim().toUpperCase();
+    sellerItems = sellerItems.filter(x => x.codigo !== code);
+    sellerRenderAll();
+  });
+
+  $("sellerHistSearch")?.addEventListener("input", renderSellerHistory);
+
+  $("sellerHistList")?.addEventListener("click", async (e) => {
+    const openBtn = e.target.closest("button[data-seller-open]");
+    if(openBtn){
+      sellerOpenDoc(openBtn.dataset.sellerOpen);
+      return;
+    }
+
+    const delBtn = e.target.closest("button[data-seller-del]");
+    if(delBtn){
+      await sellerDeleteDoc(delBtn.dataset.sellerDel);
+      return;
+    }
+
+    const pdfBtn = e.target.closest("button[data-seller-pdf]");
+    if(pdfBtn){
+      const doc = sellerLoadDocById(pdfBtn.dataset.sellerPdf);
+      if(doc) sellerExportPdf(doc);
+      return;
+    }
+
+    const pngBtn = e.target.closest("button[data-seller-png]");
+    if(pngBtn){
+      const doc = sellerLoadDocById(pngBtn.dataset.sellerPng);
+      if(doc) sellerExportPng(doc);
+      return;
+    }
+
+    const xlsBtn = e.target.closest("button[data-seller-xls]");
+    if(xlsBtn){
+      const doc = sellerLoadDocById(xlsBtn.dataset.sellerXls);
+      if(doc) sellerExportExcel(doc);
+      return;
+    }
+  });
+
+  // sync silencioso al iniciar (carga inventarios + precios si hay internet)
   syncBase(false);
 
   // render inicial drafts
   renderEntradaItems();
   renderSalidaItems();
   renderTransferItems();
+  sellerRenderAll();
 });
