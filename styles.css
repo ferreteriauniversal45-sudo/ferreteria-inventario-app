@@ -47,18 +47,28 @@ body{
 }
 
 .header-top{
-  display:grid;
-  grid-template-columns: 1fr auto 1fr;
+  display:flex;
   align-items:center;
+  justify-content:space-between;
+  gap:12px;
 }
 
-.header-spacer{ height:1px; }
-.brand-center{
+.header-spacer{ display:none; }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+  flex:1;
+}
+
+.brand-text{
   display:flex;
   flex-direction:column;
-  align-items:center;
-  gap:4px;
+  gap:2px;
+  min-width:0;
 }
+
 .brand-mark{
   width:44px;
   height:44px;
@@ -72,23 +82,30 @@ body{
 }
 
 .brand-logo{
-  width:44px;
-  height:44px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.08);
+  height:56px;
+  width:auto;
+  max-width:130px;
   object-fit:contain;
-  padding:6px;
+  border:0;
+  background:transparent;
+  padding:0;
+  border-radius:0;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
 }
 .brand-title{
-  font-weight:900;
-  letter-spacing:.3px;
-  font-size:15px;
+  font-weight:1000;
+  letter-spacing:.4px;
+  font-size:16px;
+  line-height:1.05;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 .brand-sub{
   font-size:11px;
   color:var(--muted);
   letter-spacing:.4px;
+  line-height:1.05;
 }
 
 .net-icon{
@@ -111,6 +128,7 @@ body{
 .header-right{
   justify-self:end;
   display:flex;
+  flex-shrink:0;
   align-items:center;
   gap:10px;
 }
@@ -158,7 +176,9 @@ body{
   border-radius:22px;
   padding:14px;
   box-shadow:0 14px 36px rgba(0,0,0,.35);
+  margin-bottom:14px;
 }
+
 
 .hero{
   padding:16px;
@@ -213,7 +233,7 @@ body{
 .grid{
   display:grid;
   grid-template-columns:1fr;
-  gap:10px;
+  gap:12px;
 }
 
 .tile{
@@ -840,13 +860,14 @@ body{
 }
 
 .sale-logo{
-  width:74px;
-  height:74px;
+  width:auto;
+  height:76px;
+  max-width:140px;
   object-fit:contain;
-  border-radius:14px;
-  background:#fff;
-  border:1px solid rgba(17,24,39,.12);
-  padding:6px;
+  border-radius:0;
+  background:transparent;
+  border:0;
+  padding:0;
 }
 
 .sale-brand-text{ min-width:0; }
@@ -1407,4 +1428,61 @@ body{
 @media (max-width: 520px){
   .seller-item-grid{ grid-template-columns: 1fr 1fr; }
   .seller-mini.total{ grid-column: 1 / -1; }
+}
+
+
+@media(min-width:900px){
+  .brand-logo{ height:72px; max-width:190px; }
+  .brand-title{ font-size:18px; }
+}
+
+
+
+/* Bodega: botones tipo "segmented" con estado activo visible */
+.bodega-row{
+  margin-top:10px;
+}
+
+#btnBodegaPrincipal, #btnBodegaAnexo{
+  position:relative;
+  flex:1;
+  height:46px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+  font-weight:1000;
+  letter-spacing:.4px;
+}
+
+#btnBodegaPrincipal.active{
+  border:none;
+  background:linear-gradient(135deg, var(--blue2), var(--blue));
+  box-shadow:0 14px 28px rgba(0,0,0,.28);
+}
+
+#btnBodegaAnexo.active{
+  border:none;
+  background:linear-gradient(135deg, var(--orange), #ffb15a);
+  color:#111;
+  box-shadow:0 14px 28px rgba(0,0,0,.22);
+}
+
+#btnBodegaPrincipal.active::after,
+#btnBodegaAnexo.active::after{
+  content:"ACTIVA";
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.8px;
+  padding:2px 8px;
+  border-radius:999px;
+  background:rgba(0,0,0,.80);
+  color:#fff;
+}
+
+@media(max-width:360px){
+  #btnBodegaPrincipal, #btnBodegaAnexo{ height:44px; }
 }
