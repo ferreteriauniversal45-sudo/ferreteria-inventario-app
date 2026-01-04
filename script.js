@@ -292,6 +292,22 @@ function showScreen(id){
     const el = $(s);
     if(el) el.classList.toggle("hidden", s !== id);
   }
+
+  // Asegura que la pantalla objetivo quede visible (por si no estuviera listada arriba)
+  const target = $(id);
+  if(target) target.classList.remove("hidden");
+
+  // ✅ iOS/Android fix:
+  // Al cambiar de pantalla, el contenedor mantiene el scroll anterior.
+  // Si la nueva pantalla es más corta, puede verse “en blanco”.
+  const c = document.querySelector(".container");
+  if(c){
+    c.scrollTop = 0;
+    // forzar en el siguiente frame también (Safari a veces no clampa)
+    requestAnimationFrame(() => { c.scrollTop = 0; });
+  }
+  window.scrollTo(0,0);
+
   hideCodigoAutoList("entradaAutoList");
   hideCodigoAutoList("salidaAutoList");
   hideCodigoAutoList("transferAutoList");
