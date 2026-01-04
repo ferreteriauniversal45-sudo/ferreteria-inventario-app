@@ -352,6 +352,22 @@ body{
   box-shadow:0 0 0 3px rgba(247,147,30,.20);
 }
 
+/* Select con estilo de input (mejor en iOS/Android) */
+select.input{
+  -webkit-appearance: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.75) 50%),
+    linear-gradient(135deg, rgba(255,255,255,.75) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 2px),
+    calc(100% - 12px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 38px;
+}
+
+
 .input-row{
   display:flex;
   gap:10px;
@@ -1486,3 +1502,8 @@ body{
 @media(max-width:360px){
   #btnBodegaPrincipal, #btnBodegaAnexo{ height:44px; }
 }
+
+
+/* Inputs bloqueados */
+.is-locked{opacity:.85;}
+.input[readonly], .mini-input[readonly]{background: rgba(255,255,255,.06);}
