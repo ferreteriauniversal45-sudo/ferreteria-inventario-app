@@ -3459,6 +3459,102 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnClearTransferItems")?.addEventListener("click", () => { clearTransferDraft(); toast("Transferencia vaciada"); });
   $("btnGuardarTransferencia")?.addEventListener("click", saveTransferencia);
 
+
+  // ✅ Acciones dentro del BORRADOR (Entrada/Salida/Transfer):
+  // Editar cantidad (✏️) y eliminar producto (🗑) desde la vista de factura.
+  document.addEventListener("click", async (e) => {
+    const delBtn = e.target.closest("button[data-del-draft]");
+    if(delBtn){
+      e.preventDefault();
+      const codigo = String(delBtn.getAttribute("data-del-draft") || "").trim().toUpperCase();
+      const ctx = String(delBtn.getAttribute("data-context") || "").trim();
+      if(!codigo || !ctx) return;
+
+      const ok = await uiConfirm("¿Eliminar este producto del borrador?");
+      if(!ok) return;
+
+      if(ctx === "entrada") entradaItems = entradaItems.filter(x => x.codigo !== codigo);
+      else if(ctx === "salida") salidaItems = salidaItems.filter(x => x.codigo !== codigo);
+      else if(ctx === "transfer") transferItems = transferItems.filter(x => x.codigo !== codigo);
+
+      if(ctx === "entrada") renderEntradaItems();
+      if(ctx === "salida"){ renderSalidaItems(); updateSalidaStockHint(); }
+      if(ctx === "transfer"){ renderTransferItems(); updateTransferStockHint(); }
+
+      toast("🗑 Producto eliminado");
+      return;
+    }
+
+    const editBtn = e.target.closest("button[data-edit-draft]");
+    if(editBtn){
+      e.preventDefault();
+      const row = editBtn.closest(".it-row");
+      const inp = row?.querySelector("input.draft-cantidad");
+      if(inp){
+        inp.focus();
+        inp.select?.();
+      }
+    }
+  });
+
+  // Guardar cambio de cantidad en BORRADOR
+  document.addEventListener("change", (e) => {
+    const inp = e.target.closest("input.draft-cantidad");
+    if(!inp) return;
+
+    const ctx = String(inp.getAttribute("data-context") || "").trim();
+    const codigo = String(inp.getAttribute("data-codigo") || "").trim().toUpperCase();
+    const nueva = Number(inp.value);
+
+    if(!ctx || !codigo) return;
+
+    if(!Number.isFinite(nueva) || nueva <= 0){
+      toast("Cantidad inválida");
+      // re-render para restaurar
+      if(ctx === "entrada") renderEntradaItems();
+      if(ctx === "salida") renderSalidaItems();
+      if(ctx === "transfer") renderTransferItems();
+      return;
+    }
+
+    const items = (ctx === "entrada") ? entradaItems : (ctx === "salida") ? salidaItems : transferItems;
+    const it = items.find(x => String(x.codigo||"").toUpperCase() === codigo);
+    if(!it) return;
+
+    // Validación stock en Salida / Transfer
+    if(ctx === "salida"){
+      const stockReal = getStock(codigo, activeBodega);
+      const reservadoOtros = sumItems(salidaItems, codigo) - Number(it.cantidad || 0);
+      const disponible = stockReal - reservadoOtros;
+      if(nueva > disponible){
+        toast(`Stock insuficiente. Disponible: ${disponible}`);
+        inp.value = String(it.cantidad || 1);
+        return;
+      }
+    }
+
+    if(ctx === "transfer"){
+      const origen = activeBodega;
+      const stockReal = getStock(codigo, origen);
+      const reservadoOtros = sumItems(transferItems, codigo) - Number(it.cantidad || 0);
+      const disponible = stockReal - reservadoOtros;
+      if(nueva > disponible){
+        toast(`Stock insuficiente en ${origen}. Disponible: ${disponible}`);
+        inp.value = String(it.cantidad || 1);
+        return;
+      }
+    }
+
+    it.cantidad = nueva;
+
+    if(ctx === "entrada") renderEntradaItems();
+    if(ctx === "salida"){ renderSalidaItems(); updateSalidaStockHint(); }
+    if(ctx === "transfer"){ renderTransferItems(); updateTransferStockHint(); }
+
+    toast("✅ Cantidad actualizada");
+  });
+
+
   // Hist tabs + search operador
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
   $("tabTrf")?.addEventListener("click", () => setHistTab("trf"));
