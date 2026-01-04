@@ -12,10 +12,24 @@ const VERSION_URL = `${BASE_URL}/inventario_version.json`;
 const PRECIOS_URL = `${BASE_URL}/precios.json`;
 
 // ==========================
+// ROLES (LOGIN)
+// ==========================
+const ROLE = {
+  OPERADOR: "OPERADOR",
+  VENDEDOR: "VENDEDOR"
+};
+
+const ROLE_PIN = {
+  [ROLE.OPERADOR]: "20251983",
+  [ROLE.VENDEDOR]: "20261983"
+};
+
+const SELLER_WATERMARK_TEXT = "ESTA NO ES UNA FACTURA ORIGINAL";
+
+// ==========================
 // STORAGE KEYS
 // ==========================
 const K = {
-  // Inventario operador
   BASE: "fu_base_inv",
   VER: "fu_base_ver",
   MOV: "fu_movimientos",
@@ -24,52 +38,34 @@ const K = {
   PINOK_P: "fu_pinok_principal",
   PINOK_A: "fu_pinok_anexo",
 
-  // Login roles (por dispositivo)
-  ROLE: "fu_role",
-  ROLE_OK_O: "fu_role_ok_operador",
-  ROLE_OK_V: "fu_role_ok_vendedor",
-
-  // Precios vendedor (cache local)
-  PRECIOS: "fu_precios_cache",
-  PRECIOS_TS: "fu_precios_ts"
+  PRICES: "fu_prices",
+  SALES: "fu_sales_docs",
+  ROLE_LAST: "fu_role_last",
+  ROLEOK_O: "fu_pinok_role_operador",
+  ROLEOK_V: "fu_pinok_role_vendedor"
 };
+function roleOkKey(role){
+  return role === ROLE.VENDEDOR ? K.ROLEOK_V : K.ROLEOK_O;
+}
 
-const ROLE = {
-  OPERADOR: "OPERADOR",
-  VENDEDOR: "VENDEDOR"
-};
-
-// PIN de login (solo se pide una vez por rol y por dispositivo)
-const ROLE_PIN = {
-  [ROLE.OPERADOR]: "20251983",
-  [ROLE.VENDEDOR]: "20261983"
-};
 
 const BODEGA = {
   PRINCIPAL: "PRINCIPAL",
   ANEXO: "ANEXO"
 };
 
-// PIN por bodega (para operador) - también se guarda por dispositivo
-const BODEGA_PIN = {
+const PIN = {
   [BODEGA.PRINCIPAL]: "2025",
   [BODEGA.ANEXO]: "2026"
 };
-
-const PRICE_TYPES = [
-  { key:"precio", label:"Normal" },
-  { key:"precioA", label:"A" },
-  { key:"precioB", label:"B" },
-  { key:"precioC", label:"C" },
-  { key:"mayoreo", label:"Mayoreo" }
-];
 
 const $ = (id) => document.getElementById(id);
 
 // ==========================
 // STATE
 // ==========================
-let activeRole = localStorage.getItem(K.ROLE) || "";
+let activeRole = null; // ROLE.OPERADOR | ROLE.VENDEDOR | null
+
 let activeBodega = localStorage.getItem(K.BOD) || BODEGA.PRINCIPAL;
 
 let currentSearchContext = null; // "entrada" | "salida" | "transfer" | "seller"
@@ -79,6 +75,8 @@ let baseCache = {
   [BODEGA.PRINCIPAL]: {},
   [BODEGA.ANEXO]: {}
 };
+
+let preciosCache = {};
 
 let deltaDirty = true;
 let deltaCache = { entP:{}, salP:{}, entA:{}, salA:{} };
@@ -91,16 +89,16 @@ let filtroStock = false;
 const CATALOG_INITIAL_LIMIT = 80;
 const CATALOG_MAX_RENDER = 250;
 
-// drafts (operador)
+// drafts operador
 let entradaItems = [];
 let salidaItems = [];
 let transferItems = [];
 
-// vendedor
-let preciosCache = {};
-let sellerDocType = "FACTURA";    // "FACTURA" | "COTIZACION"
-let sellerItems = [];             // {codigo, cantidad, tipoPrecio, precio}
-let sellerDocId = "";
+// drafts vendedor
+let sellerDocId = null;
+let sellerDocType = "FACTURA"; // "FACTURA" | "COTIZACION"
+let sellerItems = [];
+let sellerManualUnit = false;
 
 // ==========================
 // HELPERS
@@ -149,11 +147,22 @@ function makeId(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 
-function moneyL(n){
-  const v = Number(n || 0);
-  if(!Number.isFinite(v)) return "L 0.00";
-  return "L " + v.toFixed(2);
+function sanitizeFileName(name){
+  return String(name || "documento")
+    .replaceAll(/[\\/:*?"<>|]/g, "-")
+    .replaceAll(/\s+/g, " ")
+    .trim()
+    .slice(0, 90);
 }
+
+function formatMoney(n, symbol){
+  const num = Number(n);
+  const v = Number.isFinite(num) ? num : 0;
+  const sym = symbol || "L";
+  const formatted = v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return `${sym} ${formatted}`;
+}
+
 
 let toastTimer = null;
 function toast(msg){
@@ -162,7 +171,7 @@ function toast(msg){
   t.textContent = msg;
   t.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 1700);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 1600);
 }
 
 // ✅ Descarga compatible con Android WebView
@@ -178,7 +187,7 @@ function downloadBlob(blob, filename){
     setTimeout(() => {
       URL.revokeObjectURL(url);
       a.remove();
-    }, 450);
+    }, 400);
     return true;
   }catch(e){
     console.warn("downloadBlob error", e);
@@ -186,21 +195,79 @@ function downloadBlob(blob, filename){
   }
 }
 
-function blobToBase64(blob){
-  return new Promise((resolve, reject) => {
+function b64ToBlob(base64, mime){
+  const bytes = atob(base64);
+  const len = bytes.length;
+  const buf = new Uint8Array(len);
+  for(let i=0;i<len;i++) buf[i] = bytes.charCodeAt(i);
+  return new Blob([buf], { type: mime });
+}
+
+function saveBase64File(base64, filename, mime){
+  let saved = false;
+
+  if(window.Android && typeof Android.saveFile === "function"){
     try{
-      const reader = new FileReader();
-      reader.onload = () => {
-        const res = String(reader.result || "");
-        const b64 = res.includes(",") ? res.split(",")[1] : res;
-        resolve(b64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    }catch(err){
-      reject(err);
+      Android.saveFile(base64, filename);
+      saved = true;
+    }catch(e){
+      console.warn("Android.saveFile falló", e);
     }
-  });
+  }
+
+  if(!saved){
+    try{
+      const blob = b64ToBlob(base64, mime);
+      saved = downloadBlob(blob, filename);
+    }catch(e){
+      console.warn("saveBase64File blob falló", e);
+    }
+  }
+
+  if(!saved){
+    toast("❌ No se pudo guardar");
+    return false;
+  }
+
+  toast("📥 Archivo guardado");
+  return true;
+}
+
+// Espera a que las imágenes dentro de un contenedor carguen (para exportar con html2canvas)
+function waitForImages(root, timeoutMs = 1600){
+  try{
+    if(!root || typeof root.querySelectorAll !== "function") return Promise.resolve();
+
+    const imgs = Array.from(root.querySelectorAll("img"));
+    const pending = imgs.filter(img => !(img.complete && img.naturalWidth > 0));
+
+    if(pending.length === 0) return Promise.resolve();
+
+    return new Promise(resolve => {
+      let done = false;
+      const finish = () => {
+        if(done) return;
+        done = true;
+        clearTimeout(t);
+        resolve();
+      };
+
+      let left = pending.length;
+      const one = () => {
+        left--;
+        if(left <= 0) finish();
+      };
+
+      const t = setTimeout(finish, timeoutMs);
+
+      for(const img of pending){
+        img.addEventListener("load", one, { once:true });
+        img.addEventListener("error", one, { once:true });
+      }
+    });
+  }catch{
+    return Promise.resolve();
+  }
 }
 
 // ==========================
@@ -210,11 +277,12 @@ const screens = [
   "loginScreen",
   "homeScreen",
   "sellerHomeScreen",
+  "sellerDocScreen",
+  "sellerHistScreen",
   "catalogScreen",
   "entradaScreen",
   "salidaScreen",
   "transferScreen",
-  "sellerDocScreen",
   "searchScreen",
   "historialScreen"
 ];
@@ -228,6 +296,64 @@ function showScreen(id){
   hideCodigoAutoList("salidaAutoList");
   hideCodigoAutoList("transferAutoList");
   hideCodigoAutoList("sellerAutoList");
+}
+
+function goHome(){
+  if(activeRole === ROLE.VENDEDOR){
+    showScreen("sellerHomeScreen");
+    refreshSellerHome();
+    return;
+  }
+  if(activeRole === ROLE.OPERADOR){
+    showScreen("homeScreen");
+    refreshHome();
+    return;
+  }
+  showScreen("loginScreen");
+}
+
+// ==========================
+// HEADER ROLE UI
+// ==========================
+function updateRoleUI(){
+  const badge = $("roleBadge");
+  const btn = $("btnLogout");
+  if(badge){
+    if(activeRole){
+      badge.textContent = activeRole;
+      badge.classList.remove("hidden");
+    }else{
+      badge.textContent = "";
+      badge.classList.add("hidden");
+    }
+  }
+  if(btn){
+    btn.classList.toggle("hidden", !activeRole);
+  }
+}
+
+async function loginAs(role){
+  const ok = await uiPinOverlayPrompt({
+    message: `Ingresa el PIN para entrar como ${role}`,
+    expectedPin: ROLE_PIN[role],
+    rememberKey: roleOkKey(role)
+  });
+  if(!ok) return;
+
+  activeRole = role;
+  localStorage.setItem(K.ROLE_LAST, role);
+  updateRoleUI();
+  goHome();
+}
+
+async function logout(){
+  const ok = await uiConfirm("¿Cerrar sesión?");
+  if(!ok) return;
+
+  activeRole = null;
+  currentSearchContext = null;
+  updateRoleUI();
+  showScreen("loginScreen");
 }
 
 // ==========================
@@ -247,139 +373,12 @@ function setNetworkState(isOnline){
   const sEstado = $("sellerEstado");
   if(sEstado) sEstado.textContent = isOnline ? "ON" : "OFF";
 }
+
 window.addEventListener("online", () => setNetworkState(true));
 window.addEventListener("offline", () => setNetworkState(false));
 
 // ==========================
-// ROLE UI
-// ==========================
-function updateRoleBadge(){
-  const badge = $("roleBadge");
-  if(!badge) return;
-  if(!activeRole){
-    badge.classList.add("hidden");
-    badge.textContent = "";
-    return;
-  }
-  badge.classList.remove("hidden");
-  badge.textContent = activeRole === ROLE.VENDEDOR ? "🧾 VENDEDOR" : "👷 OPERADOR";
-}
-
-function roleOkKey(role){
-  return role === ROLE.VENDEDOR ? K.ROLE_OK_V : K.ROLE_OK_O;
-}
-function isRoleVerified(role){
-  return localStorage.getItem(roleOkKey(role)) === "1";
-}
-function setRoleVerified(role){
-  localStorage.setItem(roleOkKey(role), "1");
-}
-
-function showLogin(){
-  updateRoleBadge();
-  showScreen("loginScreen");
-  const note = $("loginNote");
-  if(note){
-    note.textContent = navigator.onLine
-      ? "Con internet puedes actualizar inventario y precios automáticamente."
-      : "Estás sin internet: se usará la información guardada en el dispositivo.";
-  }
-}
-
-function enterApp(){
-  updateRoleBadge();
-  if(activeRole === ROLE.OPERADOR){
-    showScreen("homeScreen");
-    refreshHome();
-    return;
-  }
-  if(activeRole === ROLE.VENDEDOR){
-    showScreen("sellerHomeScreen");
-    refreshSellerHome();
-    return;
-  }
-  showLogin();
-}
-
-async function uiPinPromptGeneric({ message, expectedPin, onSuccess }){
-  return new Promise(resolve => {
-    const overlay = $("pinOverlay");
-    const msg = $("pinMessage");
-    const inp = $("pinInput");
-    const btnOk = $("pinOk");
-    const btnCancel = $("pinCancel");
-
-    if(!overlay || !msg || !inp || !btnOk || !btnCancel){
-      const entered = prompt(message);
-      const ok = String(entered || "").trim() === String(expectedPin || "");
-      if(ok) onSuccess?.();
-      resolve(ok);
-      return;
-    }
-
-    msg.textContent = message;
-    inp.value = "";
-
-    overlay.classList.remove("hidden");
-
-    const cleanup = (result) => {
-      overlay.classList.add("hidden");
-      btnOk.onclick = null;
-      btnCancel.onclick = null;
-      overlay.onclick = null;
-      inp.onkeydown = null;
-      resolve(result);
-    };
-
-    const check = () => {
-      const val = String(inp.value || "").trim();
-      if(val === String(expectedPin || "")){
-        onSuccess?.();
-        cleanup(true);
-      }else{
-        toast("❌ PIN incorrecto");
-        inp.value = "";
-        inp.focus();
-      }
-    };
-
-    btnOk.onclick = check;
-    btnCancel.onclick = () => cleanup(false);
-
-    overlay.onclick = (e) => {
-      if(e.target === overlay) cleanup(false);
-    };
-
-    inp.onkeydown = (e) => {
-      if(e.key === "Enter") check();
-    };
-
-    setTimeout(() => inp.focus(), 50);
-  });
-}
-
-async function loginAs(role){
-  if(isRoleVerified(role)){
-    activeRole = role;
-    localStorage.setItem(K.ROLE, role);
-    enterApp();
-    return;
-  }
-
-  const ok = await uiPinPromptGeneric({
-    message: `Ingresa el PIN para entrar como ${role}`,
-    expectedPin: ROLE_PIN[role],
-    onSuccess: () => setRoleVerified(role)
-  });
-
-  if(!ok) return;
-  activeRole = role;
-  localStorage.setItem(K.ROLE, role);
-  enterApp();
-}
-
-// ==========================
-// INVENTORY NORMALIZATION
+// INVENTORY + PRICES NORMALIZATION
 // ==========================
 function normalizeBase(inv){
   const out = {};
@@ -407,6 +406,31 @@ function normalizeBase(inv){
   return out;
 }
 
+function normalizePrices(p){
+  const out = {};
+  if(!p || typeof p !== "object") return out;
+
+  const fix = (x) => {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  for(const rawCode of Object.keys(p)){
+    const code = String(rawCode).trim().toUpperCase();
+    const val = p[rawCode];
+    if(!val || typeof val !== "object") continue;
+
+    out[code] = {
+      precio: fix(val.precio),
+      precioA: fix(val.precioA),
+      precioB: fix(val.precioB),
+      precioC: fix(val.precioC),
+      mayoreo: fix(val.mayoreo)
+    };
+  }
+  return out;
+}
+
 function baseKeyFor(bodega){
   return `${K.BASE}_${bodega}`;
 }
@@ -415,8 +439,18 @@ function getBase(bodega = activeBodega){
   return baseCache[bodega] || {};
 }
 
+function getUnionBase(){
+  // Preferimos datos de PRINCIPAL si existe el mismo código
+  return { ...(baseCache[BODEGA.ANEXO] || {}), ...(baseCache[BODEGA.PRINCIPAL] || {}) };
+}
+
+function getAnyData(code){
+  const c = String(code||"").trim().toUpperCase();
+  return baseCache[BODEGA.PRINCIPAL]?.[c] || baseCache[BODEGA.ANEXO]?.[c] || null;
+}
+
 // ==========================
-// PIN (BODEGA) - OPERADOR
+// PIN (overlay reutilizable)
 // ==========================
 function pinOkKey(bodega){
   return bodega === BODEGA.ANEXO ? K.PINOK_A : K.PINOK_P;
@@ -428,20 +462,81 @@ function setPinVerified(bodega){
   localStorage.setItem(pinOkKey(bodega), "1");
 }
 
-async function uiPinPromptBodega(bodega){
-  return await uiPinPromptGeneric({
-    message: `Ingresa el PIN para entrar a ${bodega}`,
-    expectedPin: BODEGA_PIN[bodega],
-    onSuccess: () => {
-      setPinVerified(bodega);
-      updateBodegaUI();
+function uiPinOverlayPrompt({ message, expectedPin, rememberKey=null, onSuccess=null }){
+  return new Promise(resolve => {
+    if(rememberKey && localStorage.getItem(rememberKey) === "1"){
+      resolve(true);
+      return;
     }
+
+    const overlay = $("pinOverlay");
+    const msg = $("pinMessage");
+    const inp = $("pinInput");
+    const btnOk = $("pinOk");
+    const btnCancel = $("pinCancel");
+
+    if(!overlay || !msg || !inp || !btnOk || !btnCancel){
+      const entered = prompt(message);
+      const ok = String(entered || "") === String(expectedPin);
+      if(ok && rememberKey) localStorage.setItem(rememberKey, "1");
+      if(ok && typeof onSuccess === "function") onSuccess();
+      resolve(ok);
+      return;
+    }
+
+    msg.textContent = message;
+    inp.value = "";
+    overlay.classList.remove("hidden");
+
+    const cleanup = (result) => {
+      overlay.classList.add("hidden");
+      btnOk.onclick = null;
+      btnCancel.onclick = null;
+      overlay.onclick = null;
+      inp.onkeydown = null;
+      resolve(result);
+    };
+
+    const check = () => {
+      const val = String(inp.value || "").trim();
+      if(val === String(expectedPin)){
+        if(rememberKey) localStorage.setItem(rememberKey, "1");
+        if(typeof onSuccess === "function") onSuccess();
+        cleanup(true);
+      }else{
+        toast("❌ PIN incorrecto");
+        inp.value = "";
+        inp.focus();
+      }
+    };
+
+    btnOk.onclick = check;
+    btnCancel.onclick = () => cleanup(false);
+
+    overlay.onclick = (e) => {
+      if(e.target === overlay) cleanup(false);
+    };
+
+    inp.onkeydown = (e) => {
+      if(e.key === "Enter") check();
+    };
+
+    setTimeout(() => inp.focus(), 50);
   });
 }
 
 async function ensurePinForBodega(bodega){
   if(isPinVerified(bodega)) return true;
-  return await uiPinPromptBodega(bodega);
+  const ok = await uiPinOverlayPrompt({
+    message: `Ingresa el PIN para entrar a ${bodega}`,
+    expectedPin: PIN[bodega],
+    rememberKey: pinOkKey(bodega),
+    onSuccess: () => {
+      setPinVerified(bodega);
+      updateBodegaUI();
+    }
+  });
+  return ok;
 }
 
 // ==========================
@@ -471,9 +566,6 @@ function updateBodegaUI(){
       : "🔒 acceso protegido";
     note.textContent = `Bodega activa: ${activeBodega} · ${ver}`;
   }
-
-  // vendedor (solo indicador)
-  $("sellerBodega") && ($("sellerBodega").textContent = activeBodega);
 }
 
 function setActiveBodega(bodega){
@@ -491,7 +583,6 @@ function setActiveBodega(bodega){
   updateBodegaUI();
   updateFilterChips();
   refreshHome();
-  refreshSellerHome();
 
   rerenderCatalogIfOpen();
   rerenderSearchIfOpen();
@@ -585,7 +676,10 @@ async function syncBase(showMsg){
       !localStorage.getItem(baseKeyFor(BODEGA.PRINCIPAL)) ||
       !localStorage.getItem(baseKeyFor(BODEGA.ANEXO));
 
-    if(localVer !== remoteVer || missingLocal){
+    const missingPrices = !localStorage.getItem(K.PRICES);
+
+    if(localVer !== remoteVer || missingLocal || missingPrices){
+      // Inventarios
       for(const bod of [BODEGA.PRINCIPAL, BODEGA.ANEXO]){
         const url = INVENTARIO_URLS[bod];
         const invRes = await fetch(url, { cache: "no-store" });
@@ -595,11 +689,28 @@ async function syncBase(showMsg){
         writeJSON(baseKeyFor(bod), normalized);
         baseCache[bod] = normalized;
       }
+
+      // Precios
+      try{
+        const pRes = await fetch(PRECIOS_URL, { cache: "no-store" });
+        if(pRes.ok){
+          const pJson = await pRes.json();
+          const pNorm = normalizePrices(pJson);
+          writeJSON(K.PRICES, pNorm);
+          preciosCache = pNorm;
+        }else{
+          preciosCache = readJSON(K.PRICES, {});
+        }
+      }catch{
+        preciosCache = readJSON(K.PRICES, {});
+      }
+
       localStorage.setItem(K.VER, remoteVer);
       if(showMsg) toast("✅ Inventarios actualizados");
     }else{
       baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
       baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+      preciosCache = readJSON(K.PRICES, {});
       if(showMsg) toast("✅ Ya estabas actualizado");
     }
 
@@ -612,10 +723,13 @@ async function syncBase(showMsg){
     refreshSellerHome();
     rerenderCatalogIfOpen();
     rerenderSearchIfOpen();
+    sellerRerenderIfOpen();
 
   }catch(err){
     baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
     baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+    preciosCache = readJSON(K.PRICES, {});
+
     setNetworkState(navigator.onLine);
 
     filterIndex = null;
@@ -626,8 +740,9 @@ async function syncBase(showMsg){
     refreshSellerHome();
     rerenderCatalogIfOpen();
     rerenderSearchIfOpen();
+    sellerRerenderIfOpen();
 
-    if(showMsg) toast("⚠️ Sin internet: usando inventario local");
+    if(showMsg) toast("⚠️ Sin internet: usando datos locales");
     console.warn(err);
   }
 
@@ -637,52 +752,6 @@ async function syncBase(showMsg){
   }
   if(icon) icon.classList.remove("spin");
   syncing = false;
-}
-
-// ==========================
-// PRECIOS (VENDEDOR)
-// ==========================
-function loadPreciosFromLocal(){
-  preciosCache = readJSON(K.PRECIOS, {});
-}
-
-async function syncPrecios(showMsg){
-  loadPreciosFromLocal();
-
-  try{
-    const res = await fetch(PRECIOS_URL, { cache:"no-store" });
-    if(!res.ok) throw new Error("No se pudo leer precios.json");
-    const json = await res.json();
-    if(!json || typeof json !== "object") throw new Error("Precios inválidos");
-
-    preciosCache = json;
-    writeJSON(K.PRECIOS, json);
-    localStorage.setItem(K.PRECIOS_TS, nowISO());
-    if(showMsg) toast("✅ Precios actualizados");
-  }catch(err){
-    if(showMsg){
-      if(Object.keys(preciosCache || {}).length > 0) toast("⚠️ Sin internet: usando precios guardados");
-      else toast("⚠️ Sin internet: no hay precios guardados");
-    }
-    console.warn(err);
-  }
-
-  refreshSellerHome();
-}
-
-function getPrecioFor(codigo, tipoPrecio){
-  const c = String(codigo||"").trim().toUpperCase();
-  const t = String(tipoPrecio || "precio");
-  const obj = preciosCache?.[c];
-  if(!obj || typeof obj !== "object") return 0;
-  const v = Number(obj[t] ?? obj.precio ?? 0);
-  return Number.isFinite(v) ? v : 0;
-}
-
-function precioLabel(tipoPrecio){
-  const k = String(tipoPrecio||"");
-  const found = PRICE_TYPES.find(x => x.key === k);
-  return found ? found.label : k || "—";
 }
 
 // ==========================
@@ -711,25 +780,16 @@ function refreshHome(){
 // HOME (VENDEDOR)
 // ==========================
 function refreshSellerHome(){
-  const totalProd = Object.keys(getBase() || {}).length;
-  $("sellerProductos") && ($("sellerProductos").textContent = String(totalProd));
+  const baseTotal = Object.keys(getUnionBase() || {}).length;
+  const priceTotal = Object.keys(preciosCache || {}).length;
 
-  const totalPrecios = Object.keys(preciosCache || {}).length;
-  $("sellerPrecios") && ($("sellerPrecios").textContent = String(totalPrecios));
+  const docs = readJSON(K.SALES, []);
+  const h = todayISO();
+  const docsHoy = docs.filter(d => String(d.fecha||"").slice(0,10) === h).length;
 
-  $("sellerBodega") && ($("sellerBodega").textContent = activeBodega);
-
-  const note = $("sellerPricesNote");
-  if(note){
-    const ts = localStorage.getItem(K.PRECIOS_TS) || "";
-    if(totalPrecios === 0){
-      note.textContent = navigator.onLine
-        ? "No se cargaron precios aún. Revisa tu archivo precios.json."
-        : "Sin internet y no hay precios guardados. Conéctate para descargar precios.";
-    }else{
-      note.textContent = ts ? `Precios guardados/actualizados: ${ts}` : "Precios cargados.";
-    }
-  }
+  $("sellerProductos") && ($("sellerProductos").textContent = String(baseTotal));
+  $("sellerPrecios") && ($("sellerPrecios").textContent = String(priceTotal));
+  $("sellerDocsHoy") && ($("sellerDocsHoy").textContent = String(docsHoy));
 }
 
 // ==========================
@@ -753,10 +813,8 @@ function attachCodigoMask(input, { allowText=false } = {}){
   input.addEventListener("input", () => {
     const raw = input.value ?? "";
 
-    // Si tiene letras, no lo tocamos (para códigos alfanuméricos tipo 08-0049-GL)
-    if(hasLetters(raw)) return;
-
     if(allowText){
+      if(hasLetters(raw)) return;
       const t = String(raw).trim();
       if(t && !/^\d/.test(t)) return;
     }
@@ -1085,9 +1143,15 @@ function rerenderSearchIfOpen(){
     renderSearch($("searchInput")?.value || "");
   }
 }
+function sellerRerenderIfOpen(){
+  const s = $("sellerDocScreen");
+  if(s && !s.classList.contains("hidden")){
+    sellerRenderAll();
+  }
+}
 
 // ==========================
-// CATALOGO
+// CATALOGO (operador)
 // ==========================
 function renderCatalog(query){
   const list = $("catalogList");
@@ -1177,7 +1241,7 @@ function renderCatalog(query){
 // SEARCH (pantalla lupa)
 // ==========================
 function selectProduct(code){
-  const data = getBase()[code];
+  const data = (currentSearchContext === "seller") ? getAnyData(code) : getBase()[code];
   if(!data) return;
 
   if(currentSearchContext === "entrada"){
@@ -1203,6 +1267,8 @@ function selectProduct(code){
   if(currentSearchContext === "seller"){
     $("sellerCodigo").value = code;
     $("sellerProducto").value = data.producto || "";
+    sellerManualUnit = false;
+    sellerUpdatePriceForCurrentCode();
     showScreen("sellerDocScreen");
     return;
   }
@@ -1216,7 +1282,9 @@ function renderSearch(query){
   list.innerHTML = "";
 
   const q = (query || "").toLowerCase().trim();
-  const entries = Object.entries(getBase() || {});
+
+  const baseForSearch = (currentSearchContext === "seller") ? getUnionBase() : getBase();
+  const entries = Object.entries(baseForSearch || {});
   const total = entries.length;
 
   if(total > 500 && q.length < 2){
@@ -1237,7 +1305,7 @@ function renderSearch(query){
   const show = filtered.slice(0, 250);
   info.textContent = filtered.length > show.length
     ? `Mostrando ${show.length} de ${filtered.length}. Sigue escribiendo para filtrar más.`
-    : `Resultados: ${filtered.length} · Bodega: ${activeBodega}`;
+    : `Resultados: ${filtered.length}`;
 
   for(const [code, data] of show){
     const stock = getStock(code, activeBodega);
@@ -1290,13 +1358,14 @@ function renderCodigoAutoList(context){
 
   const q = String(input.value || "").trim().toUpperCase();
   const digits = q.replace(/\D/g, "");
-  if(digits.length < 2){
+  if(digits.length < 2 && q.length < 2){
     hideCodigoAutoList(cfg.listId);
     return;
   }
 
-  const codes = Object.keys(getBase() || {});
-  const matches = codes.filter(c => c.startsWith(q)).slice(0,8);
+  const base = (context === "seller") ? getUnionBase() : getBase();
+  const codes = Object.keys(base || {});
+  const matches = codes.filter(c => String(c).startsWith(q)).slice(0,8);
 
   if(matches.length === 0){
     hideCodigoAutoList(cfg.listId);
@@ -1305,7 +1374,7 @@ function renderCodigoAutoList(context){
 
   list.innerHTML = "";
   for(const code of matches){
-    const data = getBase()[code] || {};
+    const data = base[code] || {};
     const stock = getStock(code, activeBodega);
 
     const item = document.createElement("div");
@@ -1322,6 +1391,10 @@ function renderCodigoAutoList(context){
       $(cfg.prodId).value = data.producto || "";
       if(context === "salida") updateSalidaStockHint();
       if(context === "transfer") updateTransferStockHint();
+      if(context === "seller"){
+        sellerManualUnit = false;
+        sellerUpdatePriceForCurrentCode();
+      }
       $(cfg.focusId)?.focus();
       hideCodigoAutoList(cfg.listId);
     };
@@ -1354,7 +1427,8 @@ function fillProductoFromCode(context){
   }
   if(context === "seller"){
     const code = String($("sellerCodigo").value||"").trim().toUpperCase();
-    $("sellerProducto").value = getBase()[code]?.producto || "";
+    $("sellerProducto").value = getAnyData(code)?.producto || "";
+    sellerUpdatePriceForCurrentCode();
   }
 }
 
@@ -1718,7 +1792,7 @@ function saveFacturaEntrada(){
   toast("✅ Factura de entrada guardada");
   refreshHome();
   clearEntradaDraft();
-  showScreen("homeScreen");
+  goHome();
 }
 
 function saveFacturaSalida(){
@@ -1773,7 +1847,7 @@ function saveFacturaSalida(){
   toast("✅ Factura de salida guardada");
   refreshHome();
   clearSalidaDraft();
-  showScreen("homeScreen");
+  goHome();
 }
 
 function saveTransferencia(){
@@ -1862,11 +1936,11 @@ function saveTransferencia(){
   toast("🔁 Transferencia guardada");
   refreshHome();
   clearTransferDraft();
-  showScreen("homeScreen");
+  goHome();
 }
 
 // ==========================
-// HISTORIAL (FACTURAS / TRF / DEL)
+// HISTORIAL (operador)
 // ==========================
 function movGroupKey(m){
   return String(m?.grupoId || m?.factura || m?.transferenciaId || m?.id || "").trim();
@@ -2246,7 +2320,7 @@ async function deleteFactura(grupoId){
 }
 
 // ==========================
-// EXPORT EXCEL (operador, con transferencias)
+// EXPORT EXCEL (operador - con transferencias)
 // ==========================
 function exportExcel(){
   if(typeof XLSX === "undefined"){
@@ -2331,329 +2405,633 @@ function exportExcel(){
 }
 
 // ==========================
-// VENDEDOR - DOCUMENTO (FACTURA/COTIZACIÓN)
+// VENDEDOR: FACTURAS / COTIZACIONES
 // ==========================
-function newSellerDocId(prefix){
-  const d = new Date();
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${prefix}-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
-}
-
-function setSellerDocType(type){
-  sellerDocType = (type === "COTIZACION") ? "COTIZACION" : "FACTURA";
-  const title = $("sellerDocTitle");
-  if(title) title.textContent = sellerDocType === "FACTURA" ? "Factura" : "Cotización";
-}
-
-function clearSellerDoc(){
-  sellerItems = [];
-  $("sellerCodigo") && ($("sellerCodigo").value = "");
-  $("sellerProducto") && ($("sellerProducto").value = "");
-  $("sellerCantidad") && ($("sellerCantidad").value = "");
-  $("sellerTipoPrecio") && ($("sellerTipoPrecio").value = "precio");
-  hideCodigoAutoList("sellerAutoList");
-  renderSellerDoc();
-}
-
-function sellerTotals(){
-  const subtotal = sellerItems.reduce((acc, it) => acc + (Number(it.cantidad||0) * Number(it.precio||0)), 0);
-  return {
-    subtotal: Number.isFinite(subtotal) ? subtotal : 0,
-    total: Number.isFinite(subtotal) ? subtotal : 0
+function priceTierLabel(key){
+  const map = {
+    precio: "Precio",
+    precioA: "Precio A",
+    precioB: "Precio B",
+    precioC: "Precio C",
+    mayoreo: "Mayoreo"
   };
+  return map[key] || "Precio";
 }
 
-function renderSellerItemsEditor(){
-  const box = $("sellerItemsEditor");
-  const info = $("sellerItemsInfo");
-  if(!box || !info) return;
-
-  box.innerHTML = "";
-
-  if(sellerItems.length === 0){
-    info.textContent = "Documento vacío.";
-    return;
-  }
-
-  const totalPiezas = sellerItems.reduce((a,it)=> a + Number(it.cantidad||0), 0);
-  const { total } = sellerTotals();
-  info.textContent = `Productos: ${sellerItems.length} · Piezas: ${totalPiezas} · Total: ${moneyL(total)}`;
-
-  for(const it of sellerItems){
-    const data = getBase()[it.codigo] || {};
-    const nombre = data.producto || "(sin nombre)";
-    const linea = Number(it.cantidad||0) * Number(it.precio||0);
-
-    const card = document.createElement("div");
-    card.className = "invoice-card";
-    card.innerHTML = `
-      <div>
-        <div class="invoice-card-title">${escapeHtml(nombre)}</div>
-        <div class="invoice-card-code">${escapeHtml(it.codigo)}</div>
-
-        <div class="invoice-mini">
-          <input class="input seller-qty" type="number" min="1" value="${escapeHtml(String(it.cantidad))}" aria-label="Cantidad">
-          <select class="input seller-priceType" aria-label="Tipo de precio">
-            ${PRICE_TYPES.map(p => `<option value="${escapeHtml(p.key)}">${escapeHtml(p.label)}</option>`).join("")}
-          </select>
-        </div>
-
-        <div class="invoice-card-meta">
-          <span class="invoice-chip">Unit: <b>${moneyL(it.precio)}</b></span>
-          <span class="invoice-chip">Total: <b>${moneyL(linea)}</b></span>
-          <span class="invoice-chip">Tipo: <b>${escapeHtml(precioLabel(it.tipoPrecio))}</b></span>
-        </div>
-      </div>
-
-      <div class="seller-card-actions">
-        <button type="button" class="seller-del" title="Eliminar">🗑</button>
-      </div>
-    `;
-
-    const qtyInp = card.querySelector("input.seller-qty");
-    const sel = card.querySelector("select.seller-priceType");
-    const delBtn = card.querySelector("button.seller-del");
-
-    sel.value = it.tipoPrecio || "precio";
-
-    qtyInp.addEventListener("change", () => {
-      const v = Number(qtyInp.value);
-      if(!Number.isFinite(v) || v <= 0){
-        toast("Cantidad inválida");
-        qtyInp.value = String(it.cantidad || 1);
-        return;
-      }
-      it.cantidad = v;
-      renderSellerDoc();
-    });
-
-    sel.addEventListener("change", () => {
-      const newType = String(sel.value || "precio");
-      it.tipoPrecio = newType;
-      it.precio = getPrecioFor(it.codigo, newType);
-
-      // Merge si existe misma línea (código + tipo) distinta a este item
-      const idx = sellerItems.indexOf(it);
-      const dupIdx = sellerItems.findIndex((x, i) => i !== idx && x.codigo === it.codigo && x.tipoPrecio === it.tipoPrecio);
-      if(dupIdx >= 0){
-        sellerItems[dupIdx].cantidad = Number(sellerItems[dupIdx].cantidad||0) + Number(it.cantidad||0);
-        sellerItems.splice(idx, 1);
-      }
-
-      renderSellerDoc();
-    });
-
-    delBtn.addEventListener("click", async () => {
-      const ok = await uiConfirm("¿Eliminar este producto del documento?");
-      if(!ok) return;
-      const idx = sellerItems.indexOf(it);
-      if(idx >= 0) sellerItems.splice(idx, 1);
-      renderSellerDoc();
-    });
-
-    box.appendChild(card);
-  }
+function sellerGenerateDocNo(type){
+  const d = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  const ts = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  const prefix = (type === "COTIZACION") ? "COT" : "FAC";
+  return `${prefix}-${ts}`;
 }
 
-function buildSellerInvoiceHTML({ mode = "ui" } = {}){
-  const cliente = String($("sellerCliente")?.value || "").trim() || "Consumidor final";
-  const fecha = String($("sellerFecha")?.value || "").trim() || todayISO();
-  const docId = String($("sellerDocId")?.value || sellerDocId || "").trim() || "—";
-  const bodega = activeBodega;
+function sellerSetDocType(type){
+  sellerDocType = type === "COTIZACION" ? "COTIZACION" : "FACTURA";
+  $("sellerTypeFactura")?.classList.toggle("active", sellerDocType === "FACTURA");
+  $("sellerTypeCotizacion")?.classList.toggle("active", sellerDocType === "COTIZACION");
+  $("sellerDocTitle") && ($("sellerDocTitle").textContent = sellerDocType === "COTIZACION" ? "Cotización" : "Factura");
 
-  const { subtotal, total } = sellerTotals();
-
-  const rows = sellerItems.map(it => {
-    const data = getBase()[it.codigo] || {};
-    const nombre = data.producto || "(sin nombre)";
-    const cant = Number(it.cantidad||0);
-    const unit = Number(it.precio||0);
-    const line = cant * unit;
-
-    // En modo export, usamos tabla (6 columnas). En UI, se ve bien en móvil gracias al CSS.
-    return `
-      <div class="seller-item">
-        <div class="pcode">${escapeHtml(it.codigo)}</div>
-        <div class="pname">
-          ${escapeHtml(nombre)}
-          <div class="pmeta">
-            <span>Tipo: <b>${escapeHtml(precioLabel(it.tipoPrecio))}</b></span>
-            <span>Cant: <b>${escapeHtml(String(cant))}</b></span>
-            <span>Unit: <b>${escapeHtml(moneyL(unit))}</b></span>
-            <span>Total: <b>${escapeHtml(moneyL(line))}</b></span>
-          </div>
-        </div>
-        <div class="ptype">${escapeHtml(precioLabel(it.tipoPrecio))}</div>
-        <div class="cell-right">${escapeHtml(String(cant))}</div>
-        <div class="cell-right">${escapeHtml(moneyL(unit))}</div>
-        <div class="cell-right">${escapeHtml(moneyL(line))}</div>
-      </div>
-    `;
-  }).join("");
-
-  const typeLabel = sellerDocType === "COTIZACION" ? "COTIZACIÓN" : "FACTURA";
-
-  const inner = `
-    <div class="seller-invoice-inner ${mode === "export" ? "export-mode" : ""}">
-      <div class="seller-head">
-        <div>
-          <div class="seller-company">FERRETERÍA UNIVERSAL</div>
-          <div class="seller-sub">Documento de ventas (no fiscal)</div>
-        </div>
-        <div class="seller-docbox">
-          <div class="seller-doc-type">${escapeHtml(typeLabel)}</div>
-          <div class="seller-doc-id">${escapeHtml(docId)}</div>
-        </div>
-      </div>
-
-      <div class="seller-info">
-        <div class="srow">
-          <span class="slabel">CLIENTE</span>
-          <span class="sval">${escapeHtml(cliente)}</span>
-        </div>
-        <div class="srow">
-          <span class="slabel">FECHA</span>
-          <span class="sval">${escapeHtml(fecha)}</span>
-        </div>
-        <div class="srow">
-          <span class="slabel">BODEGA</span>
-          <span class="sval">${escapeHtml(bodega)}</span>
-        </div>
-      </div>
-
-      <div class="seller-items-head">
-        <div>CÓDIGO</div>
-        <div>PRODUCTO</div>
-        <div>TIPO</div>
-        <div class="right">CANT</div>
-        <div class="right">UNIT</div>
-        <div class="right">TOTAL</div>
-      </div>
-
-      <div class="seller-items">
-        ${rows || `<div class="seller-item"><div class="pname">Documento vacío</div></div>`}
-      </div>
-
-      <div class="seller-totals">
-        <div class="seller-total-box">
-          <div class="seller-total-row"><span>SUBTOTAL</span><span>${escapeHtml(moneyL(subtotal))}</span></div>
-          <div class="seller-total-row total"><span>TOTAL</span><span>${escapeHtml(moneyL(total))}</span></div>
-        </div>
-      </div>
-
-      <div class="seller-footnote">
-        Este documento es una <b>${escapeHtml(typeLabel.toLowerCase())}</b> generada desde la app.
-        Incluye una marca de agua y <b>NO es una factura original/fiscal</b>.
-      </div>
-    </div>
-  `;
-
-  return inner;
+  const docNoEl = $("sellerDocNo");
+  if(docNoEl && !String(docNoEl.value || "").trim()){
+    docNoEl.value = sellerGenerateDocNo(sellerDocType);
+  }
+  sellerRenderAll();
 }
 
-function renderSellerPreview(){
-  const preview = $("sellerInvoicePreview");
-  if(!preview) return;
-  preview.innerHTML = buildSellerInvoiceHTML({ mode: "ui" });
-}
+function sellerStartNew(type){
+  sellerDocId = makeId();
+  sellerItems = [];
+  sellerManualUnit = false;
 
-function renderSellerDoc(){
-  renderSellerItemsEditor();
-  renderSellerPreview();
-}
+  sellerSetDocType(type);
 
-function addSellerItem(){
-  const codigo = String($("sellerCodigo")?.value || "").trim().toUpperCase();
-  const cantidad = Number($("sellerCantidad")?.value);
-  const tipoPrecio = String($("sellerTipoPrecio")?.value || "precio");
+  $("sellerFecha") && ($("sellerFecha").value = todayISO());
+  $("sellerDocNo") && ($("sellerDocNo").value = sellerGenerateDocNo(sellerDocType));
 
-  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0){
-    toast("Código y cantidad válidos.");
-    return;
-  }
-  if(!getBase()[codigo]){
-    toast(`Código no existe en ${activeBodega}.`);
-    return;
-  }
+  $("sellerClienteNo") && ($("sellerClienteNo").value = "");
+  $("sellerCliente") && ($("sellerCliente").value = "");
+  $("sellerClienteRTN") && ($("sellerClienteRTN").value = "");
+  $("sellerClienteDireccion") && ($("sellerClienteDireccion").value = "");
+  $("sellerTelefono") && ($("sellerTelefono").value = "");
 
-  const precio = getPrecioFor(codigo, tipoPrecio);
-  if(precio === 0 && (!preciosCache || !preciosCache[codigo])){
-    toast("⚠️ Ese producto no tiene precio asignado (quedará en L 0.00)");
-  }
-
-  // Merge SOLO si coincide el mismo código + tipo de precio
-  const idx = sellerItems.findIndex(x => x.codigo === codigo && x.tipoPrecio === tipoPrecio);
-  if(idx >= 0){
-    sellerItems[idx].cantidad = Number(sellerItems[idx].cantidad||0) + cantidad;
-    sellerItems[idx].precio = getPrecioFor(codigo, tipoPrecio);
-  }else{
-    sellerItems.push({ codigo, cantidad, tipoPrecio, precio });
-  }
+  $("sellerPrecioTipo") && ($("sellerPrecioTipo").value = "precio");
+  $("sellerMoneda") && ($("sellerMoneda").value = "L");
 
   $("sellerCodigo") && ($("sellerCodigo").value = "");
   $("sellerProducto") && ($("sellerProducto").value = "");
   $("sellerCantidad") && ($("sellerCantidad").value = "");
+  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
+
   hideCodigoAutoList("sellerAutoList");
 
-  renderSellerDoc();
-  toast("➕ Agregado al documento");
+  showScreen("sellerDocScreen");
+  sellerRenderAll();
 }
 
-async function exportSellerExcel(){
-  if(typeof XLSX === "undefined"){
-    toast("No cargó Excel (revisa XLSX)");
-    return;
-  }
 
-  if(sellerItems.length === 0){
-    toast("Documento vacío");
-    return;
-  }
+function sellerBuildDocObject(){
+  const tipo = sellerDocType;
+  const fecha = $("sellerFecha")?.value || todayISO();
 
-  const cliente = String($("sellerCliente")?.value || "").trim() || "Consumidor final";
-  const fecha = String($("sellerFecha")?.value || "").trim() || todayISO();
-  const docId = String($("sellerDocId")?.value || sellerDocId || "").trim() || "DOC";
+  const clienteNo = String($("sellerClienteNo")?.value || "").trim();
+  const cliente = String($("sellerCliente")?.value || "").trim();
+  const clienteRTN = String($("sellerClienteRTN")?.value || "").trim();
+  const clienteDireccion = String($("sellerClienteDireccion")?.value || "").trim();
+  const telefono = String($("sellerTelefono")?.value || "").trim();
 
-  const rows = sellerItems.map(it => {
-    const prod = getBase()[it.codigo]?.producto || "";
-    const cant = Number(it.cantidad||0);
-    const unit = Number(it.precio||0);
-    const totalLinea = cant * unit;
+  const docNo = String($("sellerDocNo")?.value || "").trim() || sellerGenerateDocNo(tipo);
+  const precioTipo = $("sellerPrecioTipo")?.value || "precio";
+  const moneda = $("sellerMoneda")?.value || "L";
+
+  const round2 = (x) => Math.round((Number(x) || 0) * 100) / 100;
+
+  const items = sellerItems.map(it => {
+    const data = getAnyData(it.codigo);
+    const producto = data?.producto || "(sin nombre)";
+    const cantidad = round2(Number(it.cantidad || 0) || 0);
+    const precioUnit = round2(Number(it.precioUnit || 0) || 0);
+    const totalLinea = round2(cantidad * precioUnit);
 
     return {
-      documento: docId,
-      tipo: sellerDocType,
-      cliente,
-      fecha,
-      bodega: activeBodega,
       codigo: it.codigo,
-      producto: prod,
-      tipoPrecio: precioLabel(it.tipoPrecio),
-      cantidad: cant,
-      precioUnitario: unit,
-      totalLinea
+      producto,
+      cantidad,
+      precioUnit,
+      totalLinea,
+      precioTipo: it.precioTipo || precioTipo,
+      precioTipoLabel: priceTierLabel(it.precioTipo || precioTipo)
     };
   });
 
-  const { subtotal, total } = sellerTotals();
+  const subtotal = round2(items.reduce((a,i)=> a + (Number(i.totalLinea||0) || 0), 0));
+  const total = subtotal;
+
+  return {
+    id: sellerDocId || makeId(),
+    tipo,
+    docNo,
+    fecha,
+
+    clienteNo,
+    cliente,
+    clienteRTN,
+    clienteDireccion,
+    telefono,
+
+    precioTipo,
+    precioTipoLabel: priceTierLabel(precioTipo),
+    moneda,
+
+    items,
+    subtotal,
+    total,
+    timestamp: Date.now()
+  };
+}
+
+
+function sellerSaveToHistory({ showToast=true } = {}){
+  const doc = sellerBuildDocObject();
+  if(doc.items.length === 0){
+    toast("Agrega al menos 1 producto");
+    return null;
+  }
+
+  const docs = readJSON(K.SALES, []);
+  const idx = docs.findIndex(d => d.id === doc.id);
+  if(idx >= 0) docs[idx] = doc;
+  else docs.unshift(doc);
+
+  while(docs.length > 300) docs.pop();
+
+  writeJSON(K.SALES, docs);
+  refreshSellerHome();
+  if(showToast) toast("💾 Documento guardado");
+  return doc;
+}
+
+function sellerPriceForCode(code, tier){
+  const c = String(code||"").trim().toUpperCase();
+  const p = preciosCache?.[c];
+  const prefer = tier || "precio";
+  const val = Number(p?.[prefer] ?? p?.precio ?? 0);
+  return Number.isFinite(val) ? val : 0;
+}
+
+function sellerUpdatePrecioHint(code){
+  const hint = $("sellerPrecioHint");
+  if(!hint) return;
+
+  const c = String(code||"").trim().toUpperCase();
+  const p = preciosCache?.[c];
+  const sym = $("sellerMoneda")?.value || "L";
+
+  if(!p){
+    hint.textContent = "⚠️ Sin precio en precios.json";
+    return;
+  }
+
+  hint.textContent =
+    `Precio: ${formatMoney(p.precio, sym)} · A: ${formatMoney(p.precioA, sym)} · ` +
+    `B: ${formatMoney(p.precioB, sym)} · C: ${formatMoney(p.precioC, sym)} · ` +
+    `Mayoreo: ${formatMoney(p.mayoreo, sym)}`;
+}
+
+function sellerUpdatePriceForCurrentCode(){
+  const code = String($("sellerCodigo")?.value || "").trim().toUpperCase();
+  const inp = $("sellerPrecioUnit");
+  if(!inp) return;
+
+  sellerUpdatePrecioHint(code);
+
+  if(!code){
+    if(!sellerManualUnit) inp.value = "";
+    return;
+  }
+
+  const tier = $("sellerPrecioTipo")?.value || "precio";
+  const auto = sellerPriceForCode(code, tier);
+  if(!sellerManualUnit){
+    inp.value = String(auto);
+  }
+}
+
+function sellerAddItem(){
+  const codigo = String($("sellerCodigo")?.value || "").trim().toUpperCase();
+  const cantidad = Number($("sellerCantidad")?.value);
+  const precioUnit = Number($("sellerPrecioUnit")?.value);
+
+  if(!codigo){
+    toast("Ingresa un código.");
+    return;
+  }
+  const data = getAnyData(codigo);
+  if(!data){
+    toast("Código no existe en inventario.");
+    return;
+  }
+  if(!Number.isFinite(cantidad) || cantidad <= 0){
+    toast("Cantidad válida.");
+    return;
+  }
+  if(!Number.isFinite(precioUnit) || precioUnit < 0){
+    toast("Precio válido.");
+    return;
+  }
+
+  const idx = sellerItems.findIndex(x => x.codigo === codigo);
+  if(idx >= 0){
+    sellerItems[idx].cantidad += cantidad;
+    if(!sellerManualUnit && sellerItems[idx].autoPrice){
+      sellerItems[idx].precioUnit = precioUnit;
+    }
+  }else{
+    sellerItems.push({ codigo, cantidad, precioUnit, precioTipo: ($("sellerPrecioTipo")?.value || "precio"), autoPrice: !sellerManualUnit });
+  }
+
+  $("sellerCodigo") && ($("sellerCodigo").value = "");
+  $("sellerProducto") && ($("sellerProducto").value = "");
+  $("sellerCantidad") && ($("sellerCantidad").value = "");
+  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
+  sellerManualUnit = false;
+
+  hideCodigoAutoList("sellerAutoList");
+  sellerRenderAll();
+  toast("➕ Agregado");
+}
+
+function sellerClearDraft(){
+  sellerItems = [];
+  sellerManualUnit = false;
+  sellerRenderAll();
+  toast("🧹 Documento vaciado");
+}
+
+function sellerRenderItemsEditor(){
+  const cont = $("sellerItemsEditor");
+  const info = $("sellerItemsInfo");
+  if(!cont || !info) return;
+
+  cont.innerHTML = "";
+
+  if(sellerItems.length === 0){
+    info.textContent = "Sin productos en el documento.";
+    cont.innerHTML = `<div class="empty">Agrega productos con el buscador.</div>`;
+    return;
+  }
+
+  const totalPiezas = sellerItems.reduce((a,it)=> a + (Number(it.cantidad||0) || 0), 0);
+  info.textContent = `Productos: ${sellerItems.length} · Piezas: ${totalPiezas}`;
+
+  for(const it of sellerItems){
+    const base = getBase(activeBodega);
+    const prod = String(base?.[it.codigo]?.producto || it.producto || "");
+    const qty = Number(it.cantidad || 0);
+    const pu  = Number(it.precioUnit || 0);
+    const line = qty * pu;
+
+    const card = document.createElement("div");
+    card.className = "seller-item-card";
+    card.innerHTML = `
+      <div class="seller-item-top">
+        <div class="seller-item-code mono">${escapeHtml(it.codigo)}</div>
+        <button class="seller-item-del" type="button" data-seller-del="${escapeHtml(it.codigo)}" aria-label="Eliminar">🗑</button>
+      </div>
+
+      <div class="seller-item-name">${escapeHtml(prod || "(sin nombre)")}</div>
+
+      <div class="seller-item-sub">
+        ${it.precioTipoLabel ? `<span class="seller-tier">${escapeHtml(it.precioTipoLabel)}</span>` : ``}
+      </div>
+
+      <div class="seller-item-grid">
+        <label class="seller-mini">
+          <span>Cant.</span>
+          <input class="mini-input seller-qty mono" type="number" min="1"
+            value="${escapeHtml(String(qty))}" data-codigo="${escapeHtml(it.codigo)}">
+        </label>
+
+        <label class="seller-mini">
+          <span>P. Unit</span>
+          <input class="mini-input seller-price mono" type="number" min="0" step="0.01"
+            value="${escapeHtml(String(pu))}" data-codigo="${escapeHtml(it.codigo)}">
+        </label>
+
+        <div class="seller-mini total">
+          <span>Total</span>
+          <div class="seller-line-total mono">${escapeHtml(formatMoney(line, "L"))}</div>
+        </div>
+      </div>
+    `;
+    cont.appendChild(card);
+  }
+}
+
+function sellerBuildInvoiceElement(doc){
+  const el = document.createElement("div");
+  el.className = "sale-doc watermarked";
+  el.dataset.docno = String(doc.docNo || "");
+
+  // Totales
+  const totalProductos = Number(doc.totalProductos || 0);
+  const totalPiezas = Number(doc.totalPiezas || 0);
+  const subtotal = Number(doc.subtotal || 0);
+  const total = Number(doc.total || subtotal || 0);
+
+  // Cliente
+  const clienteNo = String(doc.clienteNo || "—").trim() || "—";
+  const clienteNombre = String(doc.clienteNombre || "—").trim() || "—";
+  const clienteRTN = String(doc.clienteRTN || "—").trim() || "—";
+  const clienteTel = String(doc.clienteTel || "—").trim() || "—";
+  const clienteDir = String(doc.clienteDir || "—").trim() || "—";
+
+  const tipo = String(doc.tipo || "FACTURA");
+  const docNo = String(doc.docNo || "—");
+  const fecha = String(doc.fecha || todayISO());
+  const moneda = String(doc.moneda || "HNL");
+  const sym = String(doc.monedaSimbolo || "L");
+  const precioTipoLabel = String(doc.precioTipoLabel || "—");
+
+  const items = Array.isArray(doc.items) ? doc.items : [];
+
+  el.innerHTML = `
+    <div class="sale-doc-inner">
+      <div class="sale-header">
+        <div class="sale-brand">
+          <img src="logo.png" class="sale-logo" alt="Ferretería Universal" onerror="this.style.display='none'">
+          <div class="sale-brand-text">
+            <div class="sale-company">FERRETERÍA UNIVERSAL</div>
+            <div class="sale-caption">Documento interno · Precios en Lempiras (HNL)</div>
+            <div class="sale-note">Este documento se genera desde la app. No tiene validez fiscal.</div>
+          </div>
+        </div>
+
+        <div class="sale-meta">
+          <div class="sale-badge">${escapeHtml(tipo)}</div>
+          <div class="sale-docno">${escapeHtml(docNo)}</div>
+          <div class="sale-date">Fecha: ${escapeHtml(fecha)}</div>
+        </div>
+      </div>
+
+      <div class="sale-grid-2">
+        <div class="sale-section">
+          <div class="sale-section-title">DATOS DEL CLIENTE</div>
+          <div class="sale-kv">
+            <div class="k">Cliente No.</div><div class="v">${escapeHtml(clienteNo)}</div>
+            <div class="k">Nombre</div><div class="v">${escapeHtml(clienteNombre)}</div>
+            <div class="k">RTN</div><div class="v">${escapeHtml(clienteRTN)}</div>
+            <div class="k">Teléfono</div><div class="v">${escapeHtml(clienteTel)}</div>
+            <div class="k">Dirección</div><div class="v">${escapeHtml(clienteDir)}</div>
+          </div>
+        </div>
+
+        <div class="sale-section">
+          <div class="sale-section-title">RESUMEN</div>
+          <div class="sale-kv">
+            <div class="k">Productos</div><div class="v right mono">${escapeHtml(String(totalProductos))}</div>
+            <div class="k">Piezas</div><div class="v right mono">${escapeHtml(String(totalPiezas))}</div>
+            <div class="k">Tipo precio</div><div class="v">${escapeHtml(precioTipoLabel)}</div>
+            <div class="k">Moneda</div><div class="v">${escapeHtml(moneda)} · ${escapeHtml(sym)}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sale-table-wrap">
+        <table class="sale-table">
+          <thead>
+            <tr>
+              <th style="width:96px;">CÓDIGO</th>
+              <th>DESCRIPCIÓN</th>
+              <th class="right" style="width:76px;">CANT</th>
+              <th class="right" style="width:120px;">P. UNIT</th>
+              <th class="right" style="width:130px;">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(it => {
+              const prod = String(it.producto || "");
+              const qty = Number(it.cantidad || 0);
+              const pu  = Number(it.precioUnit || 0);
+              const line = qty * pu;
+              const tier = String(it.precioTipoLabel || "");
+              return `
+                <tr>
+                  <td class="mono nowrap">${escapeHtml(it.codigo)}</td>
+                  <td class="wrap">
+                    <div class="sale-prod">${escapeHtml(prod)}</div>
+                    ${tier ? `<div class="sale-subline">${escapeHtml(tier)}</div>` : ``}
+                  </td>
+                  <td class="right mono nowrap">${escapeHtml(String(qty))}</td>
+                  <td class="right mono nowrap">${escapeHtml(formatMoney(pu, sym))}</td>
+                  <td class="right mono nowrap">${escapeHtml(formatMoney(line, sym))}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sale-totals">
+        <div class="sale-totals-box">
+          <div class="row"><span>Subtotal</span><span class="mono">${escapeHtml(formatMoney(subtotal, sym))}</span></div>
+          <div class="row total"><span>Total</span><span class="mono">${escapeHtml(formatMoney(total, sym))}</span></div>
+        </div>
+      </div>
+
+      <div class="sale-footer">
+        <div class="sale-footer-title">ESTA NO ES UNA FACTURA ORIGINAL.</div>
+        <div class="sale-footer-sub">Documento generado por la aplicación interna. No es una factura fiscal.</div>
+      </div>
+    </div>
+  `;
+  return el;
+}
+
+
+function sellerRenderPreview(){
+  const preview = $("sellerDocPreview");
+  if(!preview) return;
+
+  preview.innerHTML = "";
+  if(sellerItems.length === 0) return;
+
+  const doc = sellerBuildDocObject();
+  const inv = sellerBuildInvoiceElement(doc);
+  inv.id = "sellerInvoice";
+  preview.appendChild(inv);
+}
+
+function sellerRenderAll(){
+  sellerRenderItemsEditor();
+  sellerRenderPreview();
+}
+
+function sellerCreateTempInvoice(doc){
+  const holder = document.createElement("div");
+  holder.className = "export-holder";
+  holder.style.position = "fixed";
+  holder.style.left = "-12000px";
+  holder.style.top = "0";
+  // ✅ fijo para exportar igual en todos los dispositivos
+  holder.style.width = "980px";
+  holder.style.background = "#ffffff";
+  holder.style.padding = "0";
+  holder.style.zIndex = "-1";
+  holder.style.pointerEvents = "none";
+
+  const inv = sellerBuildInvoiceElement(doc);
+  inv.id = "tmpSellerInvoice";
+  inv.classList.add("export-mode");
+  holder.appendChild(inv);
+
+  document.body.appendChild(holder);
+
+  return {
+    el: inv,
+    cleanup: () => {
+      try{ holder.remove(); }catch{}
+    }
+  };
+}
+
+async function sellerExportPng(doc=null){
+  if(typeof html2canvas !== "function"){
+    toast("No cargó html2canvas");
+    return;
+  }
+
+  const d = doc || sellerSaveToHistory({ showToast:false });
+  if(!d) return;
+
+  // ✅ SIEMPRE exportar desde un layout fijo (misma factura en móvil y PC)
+  const tmp = sellerCreateTempInvoice(d);
+  const target = tmp?.el;
+
+  if(!target){
+    toast("No hay vista previa");
+    tmp?.cleanup?.();
+    return;
+  }
+
+  try{
+    await waitForImages(target, 1800);
+
+    const scale = Math.min(3, Math.max(2, (window.devicePixelRatio || 2)));
+
+    const canvas = await html2canvas(target, {
+      scale,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      logging: false
+    });
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const base64 = (dataUrl.split(",")[1] || "");
+
+    const filename = `${String(d.tipo||"DOC").toLowerCase()}_${String(d.docNo||todayISO()).replaceAll(" ","_")}.png`;
+    saveBase64File(base64, filename, "image/png");
+    toast("🖼️ Imagen exportada");
+  }catch(e){
+    console.warn(e);
+    toast("❌ No se pudo exportar imagen");
+  }finally{
+    tmp?.cleanup?.();
+  }
+}
+
+async function sellerExportPdf(doc=null){
+  if(!window.jspdf || !window.jspdf.jsPDF){
+    toast("No cargó jsPDF");
+    return;
+  }
+  if(typeof html2canvas !== "function"){
+    toast("No cargó html2canvas");
+    return;
+  }
+
+  const d = doc || sellerSaveToHistory({ showToast:false });
+  if(!d) return;
+
+  // ✅ SIEMPRE exportar desde un layout fijo (misma factura en móvil y PC)
+  const tmp = sellerCreateTempInvoice(d);
+  const target = tmp?.el;
+
+  if(!target){
+    toast("No hay vista previa");
+    tmp?.cleanup?.();
+    return;
+  }
+
+  try{
+    await waitForImages(target, 2000);
+
+    const scale = Math.min(3, Math.max(2, (window.devicePixelRatio || 2)));
+
+    const canvas = await html2canvas(target, {
+      scale,
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      logging: false
+    });
+
+    const imgData = canvas.toDataURL("image/jpeg", 0.98);
+
+    const pdf = new window.jspdf.jsPDF({ orientation:"p", unit:"pt", format:"a4" });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+
+    const imgW = pageW;
+    const imgH = canvas.height * (imgW / canvas.width);
+
+    let heightLeft = imgH;
+    let position = 0;
+
+    pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
+    heightLeft -= pageH;
+
+    while(heightLeft > 0){
+      position = heightLeft - imgH;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, imgW, imgH);
+      heightLeft -= pageH;
+    }
+
+    const pdfBase64 = (pdf.output("datauristring").split(",")[1] || "");
+    const filename = `${String(d.tipo||"DOC").toLowerCase()}_${String(d.docNo||todayISO()).replaceAll(" ","_")}.pdf`;
+
+    saveBase64File(pdfBase64, filename, "application/pdf");
+    toast("📄 PDF exportado");
+  }catch(e){
+    console.warn(e);
+    toast("❌ No se pudo exportar PDF");
+  }finally{
+    tmp?.cleanup?.();
+  }
+}
+
+function sellerExportExcel(doc=null){
+  if(typeof XLSX === "undefined"){
+    toast("No cargó Excel (XLSX)");
+    return;
+  }
+
+  const d = doc || sellerSaveToHistory({ showToast:false });
+  if(!d) return;
 
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(wb, ws, sellerDocType === "COTIZACION" ? "COTIZACION" : "FACTURA");
 
-  // Hoja resumen
-  const resumen = [
-    { campo:"DOCUMENTO", valor: docId },
-    { campo:"TIPO", valor: sellerDocType },
-    { campo:"CLIENTE", valor: cliente },
-    { campo:"FECHA", valor: fecha },
-    { campo:"BODEGA", valor: activeBodega },
-    { campo:"SUBTOTAL", valor: subtotal },
-    { campo:"TOTAL", valor: total }
+  const head = [
+    { campo:"Tipo", valor: d.tipo },
+    { campo:"Documento", valor: d.docNo },
+    { campo:"Fecha", valor: d.fecha },
+
+    { campo:"Cliente No.", valor: d.clienteNo || "" },
+    { campo:"Cliente", valor: d.cliente || "" },
+    { campo:"RTN", valor: d.clienteRTN || "" },
+    { campo:"Teléfono", valor: d.telefono || "" },
+    { campo:"Dirección", valor: d.clienteDireccion || "" },
+
+    { campo:"Tipo de precio (default)", valor: d.precioTipoLabel || "" },
+    { campo:"Moneda", valor: d.moneda || "L" },
+
+    { campo:"Subtotal", valor: d.subtotal },
+    { campo:"Total", valor: d.total }
   ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(resumen), "RESUMEN");
 
-  const filename = `venta_${sellerDocType.toLowerCase()}_${docId}_${todayISO()}.xlsx`;
+  const items = d.items.map(it => ({
+    codigo: it.codigo,
+    producto: it.producto,
+    cantidad: it.cantidad,
+    precioUnit: it.precioUnit,
+    totalLinea: it.totalLinea
+  }));
+
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(head), "DOCUMENTO");
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(items), "ITEMS");
+
+  const filename = `${d.tipo}_${sanitizeFileName(d.docNo)}_${d.fecha}.xlsx`;
+
   let saved = false;
 
   if(window.Android && typeof Android.saveFile === "function"){
@@ -2661,9 +3039,9 @@ async function exportSellerExcel(){
       const wb64 = XLSX.write(wb, { bookType:"xlsx", type:"base64" });
       Android.saveFile(wb64, filename);
       saved = true;
-      toast("📥 Excel guardado en Descargas");
+      toast("📥 Archivo guardado en Descargas");
     }catch(e){
-      console.warn("Android.saveFile falló (excel vendedor)", e);
+      console.warn("Android.saveFile falló", e);
     }
   }
 
@@ -2672,144 +3050,144 @@ async function exportSellerExcel(){
       const wbarr = XLSX.write(wb, { bookType:"xlsx", type:"array" });
       const blob = new Blob([wbarr], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
       saved = downloadBlob(blob, filename);
-      if(saved) toast("📥 Descarga Excel iniciada");
+      if(saved) toast("📥 Descarga iniciada");
     }catch(e){
-      console.warn("Export vendedor blob falló", e);
+      console.warn("Export blob falló", e);
     }
   }
 
-  if(!saved) toast("❌ No se pudo exportar Excel");
-}
-
-async function buildExportElement(){
-  const wrap = document.createElement("div");
-  wrap.className = "seller-invoice";
-  wrap.style.position = "fixed";
-  wrap.style.left = "-99999px";
-  wrap.style.top = "0";
-  wrap.style.width = "860px";
-  wrap.innerHTML = buildSellerInvoiceHTML({ mode:"export" });
-  document.body.appendChild(wrap);
-  return wrap;
-}
-
-async function exportSellerImage(){
-  if(sellerItems.length === 0){
-    toast("Documento vacío");
-    return;
-  }
-  if(typeof html2canvas === "undefined"){
-    toast("No cargó html2canvas");
-    return;
-  }
-
-  const docId = String($("sellerDocId")?.value || sellerDocId || "").trim() || "DOC";
-  const filename = `venta_${sellerDocType.toLowerCase()}_${docId}_${todayISO()}.png`;
-
-  let exportEl = null;
-  try{
-    exportEl = await buildExportElement();
-    const canvas = await html2canvas(exportEl, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png", 1.0));
-
-    if(!blob){
-      toast("❌ No se pudo generar imagen");
-      return;
-    }
-
-    let saved = false;
-
-    if(window.Android && typeof Android.saveFile === "function"){
-      try{
-        const b64 = await blobToBase64(blob);
-        Android.saveFile(b64, filename);
-        saved = true;
-        toast("📥 Imagen guardada en Descargas");
-      }catch(e){
-        console.warn("Android.saveFile falló (imagen)", e);
-      }
-    }
-
-    if(!saved){
-      saved = downloadBlob(blob, filename);
-      if(saved) toast("📥 Descarga de imagen iniciada");
-    }
-
-    if(!saved) toast("❌ No se pudo guardar imagen");
-  }finally{
-    exportEl?.remove?.();
+  if(!saved){
+    toast("❌ No se pudo exportar");
   }
 }
 
-async function exportSellerPDF(){
-  if(sellerItems.length === 0){
-    toast("Documento vacío");
+function renderSellerHistory(){
+  const list = $("sellerHistList");
+  const q = ($("sellerHistSearch")?.value || "").toLowerCase().trim();
+  if(!list) return;
+
+  list.innerHTML = "";
+
+  const docs = readJSON(K.SALES, []).slice().sort((a,b)=> (b.timestamp||0)-(a.timestamp||0));
+
+  const filtered = docs.filter(d => {
+    if(!q) return true;
+
+    const tipo = String(d.tipo||"").toLowerCase();
+    const docNo = String(d.docNo||"").toLowerCase();
+    const cli = String(d.cliente||"").toLowerCase();
+    const cliNo = String(d.clienteNo||"").toLowerCase();
+    const rtn = String(d.clienteRTN||"").toLowerCase();
+    const tel = String(d.telefono||"").toLowerCase();
+    const dir = String(d.clienteDireccion||"").toLowerCase();
+    const fecha = String(d.fecha||"").toLowerCase();
+
+    if(
+      tipo.includes(q) ||
+      docNo.includes(q) ||
+      cli.includes(q) ||
+      cliNo.includes(q) ||
+      rtn.includes(q) ||
+      tel.includes(q) ||
+      dir.includes(q) ||
+      fecha.includes(q)
+    ) return true;
+
+    return (d.items||[]).some(it => {
+      const c = String(it.codigo||"").toLowerCase();
+      const p = String(it.producto||"").toLowerCase();
+      return c.includes(q) || p.includes(q);
+    });
+  });
+
+  if(filtered.length === 0){
+    list.innerHTML = `<div class="trow"><div class="cell" data-label="">Sin documentos.</div></div>`;
     return;
   }
-  if(typeof html2canvas === "undefined"){
-    toast("No cargó html2canvas");
+
+  for(const d of filtered){
+    const row = document.createElement("div");
+    row.className = "trow selectable";
+    row.innerHTML = `
+      <div class="cell" data-label="Tipo">${escapeHtml(d.tipo || "")}</div>
+      <div class="cell" data-label="Documento">${escapeHtml(d.docNo || "")}</div>
+      <div class="cell" data-label="Fecha">${escapeHtml(d.fecha || "")}</div>
+      <div class="cell wrap" data-label="Cliente">
+        ${escapeHtml(d.cliente || "—")}
+        ${d.clienteNo ? `<div class="mini-muted">Cliente No.: ${escapeHtml(d.clienteNo)}</div>` : ``}
+      </div>
+      <div class="cell right" data-label="Total">${escapeHtml(formatMoney(d.total || 0, d.moneda || "L"))}</div>
+      <div class="cell" data-label="">
+        <div class="seller-card-actions">
+          <button class="btn small row-action" type="button" data-seller-open="${escapeHtml(d.id)}">Abrir</button>
+          <button class="btn small row-action" type="button" data-seller-pdf="${escapeHtml(d.id)}">PDF</button>
+          <button class="btn small row-action" type="button" data-seller-png="${escapeHtml(d.id)}">IMG</button>
+          <button class="btn small row-action" type="button" data-seller-xls="${escapeHtml(d.id)}">XLS</button>
+          <button class="btn small row-action danger" type="button" data-seller-del="${escapeHtml(d.id)}">🗑</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(row);
+  }
+}
+
+
+function sellerLoadDocById(id){
+  const docs = readJSON(K.SALES, []);
+  return docs.find(d => d.id === id) || null;
+}
+
+function sellerOpenDoc(id){
+  const doc = sellerLoadDocById(id);
+  if(!doc){
+    toast("No se encontró el documento");
     return;
   }
-  if(!window.jspdf || !window.jspdf.jsPDF){
-    toast("No cargó jsPDF");
-    return;
-  }
 
-  const { jsPDF } = window.jspdf;
+  sellerDocId = doc.id;
+  sellerDocType = doc.tipo || "FACTURA";
+  sellerItems = (doc.items || []).map(it => ({
+    codigo: String(it.codigo||"").trim().toUpperCase(),
+    cantidad: Number(it.cantidad||0) || 0,
+    precioUnit: Number(it.precioUnit||0) || 0,
+    precioTipo: it.precioTipo || doc.precioTipo || "precio",
+    autoPrice: false
+  }));
+  sellerManualUnit = false;
 
-  const docId = String($("sellerDocId")?.value || sellerDocId || "").trim() || "DOC";
-  const filename = `venta_${sellerDocType.toLowerCase()}_${docId}_${todayISO()}.pdf`;
+  $("sellerFecha") && ($("sellerFecha").value = doc.fecha || todayISO());
+  $("sellerDocNo") && ($("sellerDocNo").value = doc.docNo || "");
 
-  let exportEl = null;
-  try{
-    exportEl = await buildExportElement();
-    const canvas = await html2canvas(exportEl, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
-    const imgData = canvas.toDataURL("image/png");
+  $("sellerClienteNo") && ($("sellerClienteNo").value = doc.clienteNo || "");
+  $("sellerCliente") && ($("sellerCliente").value = doc.cliente || "");
+  $("sellerClienteRTN") && ($("sellerClienteRTN").value = doc.clienteRTN || "");
+  $("sellerClienteDireccion") && ($("sellerClienteDireccion").value = doc.clienteDireccion || "");
+  $("sellerTelefono") && ($("sellerTelefono").value = doc.telefono || "");
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
+  $("sellerPrecioTipo") && ($("sellerPrecioTipo").value = doc.precioTipo || "precio");
+  $("sellerMoneda") && ($("sellerMoneda").value = doc.moneda || "L");
 
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pageWidth;
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  $("sellerCodigo") && ($("sellerCodigo").value = "");
+  $("sellerProducto") && ($("sellerProducto").value = "");
+  $("sellerCantidad") && ($("sellerCantidad").value = "");
+  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
 
-    let heightLeft = pdfHeight;
-    let position = 0;
+  sellerSetDocType(sellerDocType);
+  showScreen("sellerDocScreen");
+  sellerRenderAll();
+}
 
-    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-    heightLeft -= pageHeight;
 
-    while(heightLeft > 0){
-      position = heightLeft - pdfHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-      heightLeft -= pageHeight;
-    }
+async function sellerDeleteDoc(id){
+  const ok = await uiConfirm("¿Eliminar este documento del historial?");
+  if(!ok) return;
 
-    const blob = pdf.output("blob");
-
-    let saved = false;
-    if(window.Android && typeof Android.saveFile === "function"){
-      try{
-        const b64 = await blobToBase64(blob);
-        Android.saveFile(b64, filename);
-        saved = true;
-        toast("📥 PDF guardado en Descargas");
-      }catch(e){
-        console.warn("Android.saveFile falló (pdf)", e);
-      }
-    }
-
-    if(!saved){
-      saved = downloadBlob(blob, filename);
-      if(saved) toast("📥 Descarga de PDF iniciada");
-    }
-
-    if(!saved) toast("❌ No se pudo guardar PDF");
-  }finally{
-    exportEl?.remove?.();
-  }
+  const docs = readJSON(K.SALES, []);
+  const next = docs.filter(d => d.id !== id);
+  writeJSON(K.SALES, next);
+  refreshSellerHome();
+  renderSellerHistory();
+  toast("🗑 Eliminado");
 }
 
 // ==========================
@@ -2820,45 +3198,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
   baseCache[BODEGA.PRINCIPAL] = readJSON(baseKeyFor(BODEGA.PRINCIPAL), {});
   baseCache[BODEGA.ANEXO] = readJSON(baseKeyFor(BODEGA.ANEXO), {});
+  preciosCache = readJSON(K.PRICES, {});
 
-  // precios vendedor
-  loadPreciosFromLocal();
+  // Mostrar login siempre al abrir
+  activeRole = null;
+  updateRoleUI();
+  showScreen("loginScreen");
 
   setNetworkState(navigator.onLine);
   updateBodegaUI();
   updateFilterChips();
-  updateRoleBadge();
 
-  // fechas por defecto
+  refreshHome();
+  refreshSellerHome();
+
+  // Fechas default operador
   $("entradaFecha") && ($("entradaFecha").value = todayISO());
   $("salidaFecha") && ($("salidaFecha").value = todayISO());
   $("transferFecha") && ($("transferFecha").value = todayISO());
+
+  // Fecha default vendedor
   $("sellerFecha") && ($("sellerFecha").value = todayISO());
 
-  // masks
   attachCodigoMask($("entradaCodigo"), { allowText:false });
   attachCodigoMask($("salidaCodigo"), { allowText:false });
   attachCodigoMask($("transferCodigo"), { allowText:false });
-  attachCodigoMask($("sellerCodigo"), { allowText:true });
 
   attachCodigoMask($("searchInput"), { allowText:true });
   attachCodigoMask($("catalogSearch"), { allowText:true });
   attachCodigoMask($("histSearch"), { allowText:true });
 
-  // login buttons
+  attachCodigoMask($("sellerCodigo"), { allowText:true });
+
+  // LOGIN
   $("btnLoginOperador")?.addEventListener("click", () => loginAs(ROLE.OPERADOR));
   $("btnLoginVendedor")?.addEventListener("click", () => loginAs(ROLE.VENDEDOR));
 
-  // operador bodega switch
-  $("btnBodegaPrincipal")?.addEventListener("click", () => setActiveBodega(BODEGA.PRINCIPAL));
-  $("btnBodegaAnexo")?.addEventListener("click", () => setActiveBodega(BODEGA.ANEXO));
+  $("btnLogout")?.addEventListener("click", logout);
 
-  // sync
-  $("btnSync")?.addEventListener("click", () => syncBase(true));
-  $("btnExport")?.addEventListener("click", exportExcel);
+  // OPERADOR: bodega
+  $("btnBodegaPrincipal")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    setActiveBodega(BODEGA.PRINCIPAL);
+  });
+  $("btnBodegaAnexo")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    setActiveBodega(BODEGA.ANEXO);
+  });
+
+  $("btnSync")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    syncBase(true);
+  });
+
+  $("btnExport")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    exportExcel();
+  });
 
   // Filters modal
-  $("btnOpenFilters")?.addEventListener("click", openFilterModal);
+  $("btnOpenFilters")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
+    openFilterModal();
+  });
   $("btnCloseFilters")?.addEventListener("click", closeFilterModal);
   $("btnModalDone")?.addEventListener("click", closeFilterModal);
 
@@ -2877,8 +3279,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if(e.target === overlay) closeFilterModal();
   });
 
-  // Home nav (operador) - protegido por PIN de bodega
+  // Home nav (operador)
   $("btnCatalogo")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2888,6 +3291,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("btnEntrada")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2901,6 +3305,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("btnSalida")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2915,6 +3320,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   $("btnTransferencia")?.addEventListener("click", async () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     const ok = await ensurePinForBodega(activeBodega);
     if(!ok) return;
 
@@ -2931,57 +3337,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if(info) info.textContent = `Origen: ${activeBodega} ➜ Destino: ${otherBodega(activeBodega)}`;
   });
 
-  // ✅ FIX: historial ahora sí renderiza
-  $("btnHistorial")?.addEventListener("click", async () => {
-    const ok = await ensurePinForBodega(activeBodega);
-    if(!ok) return;
-
+  $("btnHistorial")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.OPERADOR) return;
     showScreen("historialScreen");
     $("histSearch").value = "";
     setHistTab("mov");
   });
 
-  // Vendedor: home -> doc
-  $("btnNuevaFactura")?.addEventListener("click", async () => {
-    setSellerDocType("FACTURA");
-    sellerDocId = newSellerDocId("FAC");
-    $("sellerDocId") && ($("sellerDocId").value = sellerDocId);
-    $("sellerFecha") && ($("sellerFecha").value = todayISO());
-    $("sellerCliente") && ($("sellerCliente").value = "");
-    clearSellerDoc();
-    showScreen("sellerDocScreen");
-
-    // intentamos refrescar precios (sin bloquear)
-    syncPrecios(false);
-  });
-
-  $("btnNuevaCotizacion")?.addEventListener("click", async () => {
-    setSellerDocType("COTIZACION");
-    sellerDocId = newSellerDocId("COT");
-    $("sellerDocId") && ($("sellerDocId").value = sellerDocId);
-    $("sellerFecha") && ($("sellerFecha").value = todayISO());
-    $("sellerCliente") && ($("sellerCliente").value = "");
-    clearSellerDoc();
-    showScreen("sellerDocScreen");
-
-    syncPrecios(false);
-  });
-
-  // Back buttons
-  $("btnBackCatalog")?.addEventListener("click", () => enterApp());
-  $("btnBackEntrada")?.addEventListener("click", () => enterApp());
-  $("btnBackSalida")?.addEventListener("click", () => enterApp());
-  $("btnBackTransfer")?.addEventListener("click", () => enterApp());
-  $("btnBackHistorial")?.addEventListener("click", () => enterApp());
-  $("btnBackSellerDoc")?.addEventListener("click", () => showScreen("sellerHomeScreen"));
-
-  $("btnBackSearch")?.addEventListener("click", () => {
-    if(currentSearchContext === "entrada") showScreen("entradaScreen");
-    else if(currentSearchContext === "salida") showScreen("salidaScreen");
-    else if(currentSearchContext === "transfer") showScreen("transferScreen");
-    else if(currentSearchContext === "seller") showScreen("sellerDocScreen");
-    else enterApp();
-  });
+  // Back buttons operador
+  $("btnBackCatalog")?.addEventListener("click", goHome);
+  $("btnBackEntrada")?.addEventListener("click", goHome);
+  $("btnBackSalida")?.addEventListener("click", goHome);
+  $("btnBackTransfer")?.addEventListener("click", goHome);
+  $("btnBackHistorial")?.addEventListener("click", goHome);
 
   // Catalog
   $("catalogSearch")?.addEventListener("input", (e) => renderCatalog(e.target.value));
@@ -3014,16 +3382,14 @@ document.addEventListener("DOMContentLoaded", () => {
     rerenderCatalogIfOpen();
   });
 
-  // Auto-fill + autocomplete
+  // Auto-fill + autocomplete operador
   $("entradaCodigo")?.addEventListener("input", () => { fillProductoFromCode("entrada"); renderCodigoAutoList("entrada"); });
   $("salidaCodigo")?.addEventListener("input", () => { fillProductoFromCode("salida"); renderCodigoAutoList("salida"); });
   $("transferCodigo")?.addEventListener("input", () => { fillProductoFromCode("transfer"); renderCodigoAutoList("transfer"); });
-  $("sellerCodigo")?.addEventListener("input", () => { fillProductoFromCode("seller"); renderCodigoAutoList("seller"); });
 
   $("entradaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("entradaAutoList"), 220));
   $("salidaCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("salidaAutoList"), 220));
   $("transferCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("transferAutoList"), 220));
-  $("sellerCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("sellerAutoList"), 220));
 
   // Search screen
   $("btnBuscarEntrada")?.addEventListener("click", () => {
@@ -3044,15 +3410,27 @@ document.addEventListener("DOMContentLoaded", () => {
     $("searchInput").value = "";
     renderSearch("");
   });
+
+  // Search vendedor: botón en pantalla vendedor
   $("btnBuscarSeller")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
     currentSearchContext = "seller";
     showScreen("searchScreen");
     $("searchInput").value = "";
     renderSearch("");
   });
+
+  $("btnBackSearch")?.addEventListener("click", () => {
+    if(currentSearchContext === "entrada") showScreen("entradaScreen");
+    else if(currentSearchContext === "salida") showScreen("salidaScreen");
+    else if(currentSearchContext === "transfer") showScreen("transferScreen");
+    else if(currentSearchContext === "seller") showScreen("sellerDocScreen");
+    else goHome();
+  });
+
   $("searchInput")?.addEventListener("input", (e) => renderSearch(e.target.value));
 
-  // Draft buttons (operador)
+  // Draft buttons operador
   $("btnAddEntradaItem")?.addEventListener("click", addEntradaItem);
   $("btnClearEntradaItems")?.addEventListener("click", () => { clearEntradaDraft(); toast("Factura vaciada"); });
   $("btnGuardarEntrada")?.addEventListener("click", saveFacturaEntrada);
@@ -3065,108 +3443,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnClearTransferItems")?.addEventListener("click", () => { clearTransferDraft(); toast("Transferencia vaciada"); });
   $("btnGuardarTransferencia")?.addEventListener("click", saveTransferencia);
 
-  // Vendedor doc actions
-  $("btnAddSellerItem")?.addEventListener("click", addSellerItem);
-  $("btnClearSellerDoc")?.addEventListener("click", async () => {
-    const ok = await uiConfirm("¿Vaciar el documento completo?");
-    if(!ok) return;
-    clearSellerDoc();
-    toast("Documento vaciado");
-  });
-  $("btnExportSellerExcel")?.addEventListener("click", exportSellerExcel);
-  $("btnExportSellerImg")?.addEventListener("click", exportSellerImage);
-  $("btnExportSellerPdf")?.addEventListener("click", exportSellerPDF);
-
-
-  // Draft actions (borradores): editar cantidad y eliminar
-  document.addEventListener("click", async (e) => {
-    const del = e.target.closest("button[data-del-draft]");
-    if(del){
-      const codigo = String(del.dataset.delDraft || "").trim().toUpperCase();
-      const ctx = String(del.dataset.context || "");
-      if(!codigo || !ctx) return;
-
-      const ok = await uiConfirm("¿Eliminar este producto del borrador?");
-      if(!ok) return;
-
-      if(ctx === "entrada") entradaItems = entradaItems.filter(x => x.codigo !== codigo);
-      else if(ctx === "salida") salidaItems = salidaItems.filter(x => x.codigo !== codigo);
-      else if(ctx === "transfer") transferItems = transferItems.filter(x => x.codigo !== codigo);
-
-      if(ctx === "entrada") renderEntradaItems();
-      if(ctx === "salida"){ renderSalidaItems(); updateSalidaStockHint(); }
-      if(ctx === "transfer"){ renderTransferItems(); updateTransferStockHint(); }
-
-      toast("🗑 Producto eliminado del borrador");
-      return;
-    }
-
-    const edit = e.target.closest("button[data-edit-draft]");
-    if(edit){
-      const row = edit.closest(".it-row");
-      const inp = row?.querySelector("input.draft-cantidad");
-      if(inp){
-        inp.focus();
-        inp.select?.();
-      }
-    }
-  });
-
-  document.addEventListener("change", (e) => {
-    const inp = e.target.closest("input.draft-cantidad");
-    if(!inp) return;
-
-    const ctx = String(inp.dataset.context || "");
-    const codigo = String(inp.dataset.codigo || "").trim().toUpperCase();
-    const nueva = Number(inp.value);
-
-    if(!ctx || !codigo) return;
-
-    if(!Number.isFinite(nueva) || nueva <= 0){
-      toast("Cantidad inválida");
-      if(ctx === "entrada") renderEntradaItems();
-      if(ctx === "salida") renderSalidaItems();
-      if(ctx === "transfer") renderTransferItems();
-      return;
-    }
-
-    const items = (ctx==="entrada") ? entradaItems : (ctx==="salida") ? salidaItems : transferItems;
-    const it = items.find(x => x.codigo === codigo);
-    if(!it) return;
-
-    // Validaciones de stock para borradores
-    if(ctx === "salida"){
-      const stockReal = getStock(codigo, activeBodega);
-      const reservadoOtros = sumItems(salidaItems, codigo) - Number(it.cantidad||0);
-      const disponible = stockReal - reservadoOtros;
-      if(nueva > disponible){
-        toast(`Stock insuficiente. Disponible: ${disponible}`);
-        inp.value = String(it.cantidad||1);
-        return;
-      }
-    }
-
-    if(ctx === "transfer"){
-      const origen = activeBodega;
-      const stockReal = getStock(codigo, origen);
-      const reservadoOtros = sumItems(transferItems, codigo) - Number(it.cantidad||0);
-      const disponible = stockReal - reservadoOtros;
-      if(nueva > disponible){
-        toast(`Stock insuficiente en ${origen}. Disponible: ${disponible}`);
-        inp.value = String(it.cantidad||1);
-        return;
-      }
-    }
-
-    it.cantidad = nueva;
-
-    if(ctx === "entrada") renderEntradaItems();
-    if(ctx === "salida"){ renderSalidaItems(); updateSalidaStockHint(); }
-    if(ctx === "transfer"){ renderTransferItems(); updateTransferStockHint(); }
-
-    toast("✅ Cantidad actualizada");
-  });
-  // Hist tabs + search
+  // Hist tabs + search operador
   $("tabMov")?.addEventListener("click", () => setHistTab("mov"));
   $("tabTrf")?.addEventListener("click", () => setHistTab("trf"));
   $("tabDel")?.addEventListener("click", () => setHistTab("del"));
@@ -3251,21 +3528,180 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHistorial();
   });
 
-  // sync silencioso al iniciar
-  syncBase(false);
-  syncPrecios(false);
+  // ==========================
+  // VENDEDOR EVENTS
+  // ==========================
+  $("btnSellerNewFactura")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerStartNew("FACTURA");
+  });
+  $("btnSellerNewCotizacion")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerStartNew("COTIZACION");
+  });
+  $("btnSellerHist")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    showScreen("sellerHistScreen");
+    $("sellerHistSearch") && ($("sellerHistSearch").value = "");
+    renderSellerHistory();
+  });
 
-  // render inicial drafts / vendedor
+  $("btnBackSellerDoc")?.addEventListener("click", goHome);
+  $("btnBackSellerHist")?.addEventListener("click", () => {
+    showScreen("sellerHomeScreen");
+    refreshSellerHome();
+  });
+
+  $("sellerTypeFactura")?.addEventListener("click", () => sellerSetDocType("FACTURA"));
+  $("sellerTypeCotizacion")?.addEventListener("click", () => sellerSetDocType("COTIZACION"));
+
+  $("sellerPrecioTipo")?.addEventListener("change", () => {
+    // actualizar precio del código actual si es automático
+    sellerUpdatePriceForCurrentCode();
+
+    // actualizar items autoPrice
+    const tier = $("sellerPrecioTipo")?.value || "precio";
+    for(const it of sellerItems){
+      if(it.autoPrice){
+        it.precioUnit = sellerPriceForCode(it.codigo, tier);
+      }
+    }
+    sellerRenderAll();
+  });
+
+  $("sellerMoneda")?.addEventListener("change", () => {
+    sellerUpdatePriceForCurrentCode();
+    sellerRenderAll();
+  });
+
+  $("sellerCodigo")?.addEventListener("input", () => {
+    fillProductoFromCode("seller");
+    renderCodigoAutoList("seller");
+    sellerManualUnit = false;
+  });
+  $("sellerCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("sellerAutoList"), 220));
+
+  $("sellerPrecioUnit")?.addEventListener("input", () => {
+    sellerManualUnit = true;
+  });
+
+  $("btnAddSellerItem")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerAddItem();
+  });
+
+  $("btnClearSellerItems")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerClearDraft();
+  });
+
+  $("btnSellerSave")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerSaveToHistory();
+  });
+
+  $("btnSellerExportPng")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerExportPng();
+  });
+  $("btnSellerExportPdf")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerExportPdf();
+  });
+  $("btnSellerExportExcel")?.addEventListener("click", () => {
+    if(activeRole !== ROLE.VENDEDOR) return;
+    sellerExportExcel();
+  });
+
+  // editor cambios qty/precio
+  $("sellerItemsEditor")?.addEventListener("change", (e) => {
+    const qty = e.target.closest("input.seller-qty");
+    if(qty){
+      const code = String(qty.dataset.codigo || "").trim().toUpperCase();
+      const val = Number(qty.value);
+      const it = sellerItems.find(x => x.codigo === code);
+      if(it){
+        if(!Number.isFinite(val) || val <= 0){
+          toast("Cantidad inválida");
+          qty.value = String(it.cantidad);
+          return;
+        }
+        it.cantidad = val;
+        sellerRenderAll();
+      }
+      return;
+    }
+
+    const pr = e.target.closest("input.seller-price");
+    if(pr){
+      const code = String(pr.dataset.codigo || "").trim().toUpperCase();
+      const val = Number(pr.value);
+      const it = sellerItems.find(x => x.codigo === code);
+      if(it){
+        if(!Number.isFinite(val) || val < 0){
+          toast("Precio inválido");
+          pr.value = String(it.precioUnit);
+          return;
+        }
+        it.precioUnit = val;
+        it.autoPrice = false;
+        sellerRenderAll();
+      }
+      return;
+    }
+  });
+
+  $("sellerItemsEditor")?.addEventListener("click", (e) => {
+    const del = e.target.closest("button[data-seller-del]");
+    if(!del) return;
+    const code = String(del.dataset.sellerDel || "").trim().toUpperCase();
+    sellerItems = sellerItems.filter(x => x.codigo !== code);
+    sellerRenderAll();
+  });
+
+  $("sellerHistSearch")?.addEventListener("input", renderSellerHistory);
+
+  $("sellerHistList")?.addEventListener("click", async (e) => {
+    const openBtn = e.target.closest("button[data-seller-open]");
+    if(openBtn){
+      sellerOpenDoc(openBtn.dataset.sellerOpen);
+      return;
+    }
+
+    const delBtn = e.target.closest("button[data-seller-del]");
+    if(delBtn){
+      await sellerDeleteDoc(delBtn.dataset.sellerDel);
+      return;
+    }
+
+    const pdfBtn = e.target.closest("button[data-seller-pdf]");
+    if(pdfBtn){
+      const doc = sellerLoadDocById(pdfBtn.dataset.sellerPdf);
+      if(doc) sellerExportPdf(doc);
+      return;
+    }
+
+    const pngBtn = e.target.closest("button[data-seller-png]");
+    if(pngBtn){
+      const doc = sellerLoadDocById(pngBtn.dataset.sellerPng);
+      if(doc) sellerExportPng(doc);
+      return;
+    }
+
+    const xlsBtn = e.target.closest("button[data-seller-xls]");
+    if(xlsBtn){
+      const doc = sellerLoadDocById(xlsBtn.dataset.sellerXls);
+      if(doc) sellerExportExcel(doc);
+      return;
+    }
+  });
+
+  // sync silencioso al iniciar (carga inventarios + precios si hay internet)
+  syncBase(false);
+
+  // render inicial drafts
   renderEntradaItems();
   renderSalidaItems();
   renderTransferItems();
-  renderSellerDoc();
-
-  // Auto-entrar si ya se verificó el rol en este dispositivo
-  if(activeRole && isRoleVerified(activeRole)){
-    enterApp();
-  }else{
-    activeRole = "";
-    showLogin();
-  }
+  sellerRenderAll();
 });
