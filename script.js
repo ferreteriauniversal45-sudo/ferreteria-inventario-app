@@ -455,6 +455,22 @@ function getBase(bodega = activeBodega){
   return baseCache[bodega] || {};
 }
 
+// Devuelve el producto buscando primero en la bodega activa y luego en la otra.
+// Útil para VENDEDOR si el código existe en cualquiera de las dos bases.
+function getAnyProduct(code){
+  const c = String(code || "").trim().toUpperCase();
+  if(!c) return null;
+
+  const b1 = getBase(activeBodega);
+  if(b1 && b1[c]) return b1[c];
+
+  const b2 = getBase(otherBodega(activeBodega));
+  if(b2 && b2[c]) return b2[c];
+
+  return null;
+}
+
+
 function getUnionBase(){
   // Preferimos datos de PRINCIPAL si existe el mismo código
   return { ...(baseCache[BODEGA.ANEXO] || {}), ...(baseCache[BODEGA.PRINCIPAL] || {}) };
@@ -2429,7 +2445,8 @@ function priceTierLabel(key){
     precioA: "Precio A",
     precioB: "Precio B",
     precioC: "Precio C",
-    mayoreo: "Mayoreo"
+    mayoreo: "Mayoreo",
+    vendedor: "Precio vendedor"
   };
   return map[key] || "Precio";
 }
@@ -2497,8 +2514,11 @@ function sellerBuildDocObject(){
   const telefono = String($("sellerTelefono")?.value || "").trim();
 
   const docNo = String($("sellerDocNo")?.value || "").trim() || sellerGenerateDocNo(tipo);
-  const precioTipo = $("sellerPrecioTipo")?.value || "precio";
   const moneda = $("sellerMoneda")?.value || "L";
+
+  const tiposSet = new Set((sellerItems || []).map(it => String(it.precioTipo || "precio")));
+  const precioTipo = (tiposSet.size === 1) ? Array.from(tiposSet)[0] : "mixto";
+  const precioTipoLabel = (precioTipo === "mixto") ? "Mixto" : priceTierLabel(precioTipo);
 
   const round2 = (x) => Math.round((Number(x) || 0) * 100) / 100;
 
@@ -2536,7 +2556,7 @@ function sellerBuildDocObject(){
     telefono,
 
     precioTipo,
-    precioTipoLabel: priceTierLabel(precioTipo),
+    precioTipoLabel,
     moneda,
 
     items,
@@ -2575,6 +2595,12 @@ function sellerPriceForCode(code, tier){
   return Number.isFinite(val) ? val : 0;
 }
 
+
+// Alias usado en varias partes del módulo vendedor
+function getPrecio(code, tier){
+  return sellerPriceForCode(code, tier);
+}
+
 function sellerUpdatePrecioHint(code){
   const hint = $("sellerPrecioHint");
   if(!hint) return;
@@ -2596,64 +2622,90 @@ function sellerUpdatePrecioHint(code){
 
 function sellerUpdatePriceForCurrentCode(){
   const code = String($("sellerCodigo")?.value || "").trim().toUpperCase();
-  const inp = $("sellerPrecioUnit");
-  if(!inp) return;
+  const tier = $("sellerPrecioTipo")?.value || "precio";
+  const unitInp = $("sellerPrecioUnit");
+  if(!unitInp) return;
 
-  sellerUpdatePrecioHint(code);
+  const isManual = (tier === "vendedor");
+  unitInp.readOnly = !isManual;
+  unitInp.classList.toggle("is-locked", !isManual);
 
   if(!code){
-    if(!sellerManualUnit) inp.value = "";
+    if(!isManual) unitInp.value = "0";
     return;
   }
 
-  const tier = $("sellerPrecioTipo")?.value || "precio";
-  const auto = sellerPriceForCode(code, tier);
+  if(!isManual){
+    sellerManualUnit = false;
+    const p = getPrecio(code, tier);
+    unitInp.value = String(Number.isFinite(p) ? p : 0);
+    return;
+  }
+
   if(!sellerManualUnit){
-    inp.value = String(auto);
+    const p0 = getPrecio(code, "precio");
+    unitInp.value = String(Number.isFinite(p0) ? p0 : 0);
   }
 }
 
 function sellerAddItem(){
   const codigo = String($("sellerCodigo")?.value || "").trim().toUpperCase();
   const cantidad = Number($("sellerCantidad")?.value);
-  const precioUnit = Number($("sellerPrecioUnit")?.value);
 
-  if(!codigo){
-    toast("Ingresa un código.");
+  if(!codigo || !Number.isFinite(cantidad) || cantidad <= 0){
+    toast("Código y cantidad válidos.");
     return;
   }
-  const data = getAnyData(codigo);
-  if(!data){
+
+  const prod = getAnyProduct(codigo);
+  if(!prod){
     toast("Código no existe en inventario.");
     return;
   }
-  if(!Number.isFinite(cantidad) || cantidad <= 0){
-    toast("Cantidad válida.");
-    return;
-  }
-  if(!Number.isFinite(precioUnit) || precioUnit < 0){
-    toast("Precio válido.");
-    return;
-  }
 
-  const idx = sellerItems.findIndex(x => x.codigo === codigo);
-  if(idx >= 0){
-    sellerItems[idx].cantidad += cantidad;
-    if(!sellerManualUnit && sellerItems[idx].autoPrice){
-      sellerItems[idx].precioUnit = precioUnit;
+  const tier = $("sellerPrecioTipo")?.value || "precio";
+  const isManual = (tier === "vendedor");
+
+  let precioUnit = 0;
+  if(isManual){
+    precioUnit = Number($("sellerPrecioUnit")?.value);
+    if(!Number.isFinite(precioUnit) || precioUnit < 0){
+      toast("Precio inválido.");
+      return;
     }
   }else{
-    sellerItems.push({ codigo, cantidad, precioUnit, precioTipo: ($("sellerPrecioTipo")?.value || "precio"), autoPrice: !sellerManualUnit });
+    const p = getPrecio(codigo, tier);
+    precioUnit = Number.isFinite(p) ? p : 0;
   }
 
-  $("sellerCodigo") && ($("sellerCodigo").value = "");
-  $("sellerProducto") && ($("sellerProducto").value = "");
-  $("sellerCantidad") && ($("sellerCantidad").value = "");
-  $("sellerPrecioUnit") && ($("sellerPrecioUnit").value = "");
+  const idx = sellerItems.findIndex(x =>
+    x.codigo === codigo &&
+    x.precioTipo === tier &&
+    (!isManual || Number(x.precioUnit) === Number(precioUnit))
+  );
+
+  if(idx >= 0){
+    sellerItems[idx].cantidad = Number(sellerItems[idx].cantidad || 0) + cantidad;
+  }else{
+    sellerItems.push({
+      codigo,
+      cantidad,
+      precioTipo: tier,
+      precioTipoLabel: isManual ? "Precio vendedor" : priceTierLabel(tier),
+      precioUnit,
+      autoPrice: !isManual,
+      itemId: makeId()
+    });
+  }
+
+  $("sellerCodigo").value = "";
+  $("sellerProducto").value = "";
+  $("sellerCantidad").value = "";
+  $("sellerPrecioUnit").value = "";
   sellerManualUnit = false;
 
-  hideCodigoAutoList("sellerAutoList");
-  sellerRenderAll();
+  sellerRenderItemsEditor();
+  sellerRenderPreview();
   toast("➕ Agregado");
 }
 
@@ -2670,53 +2722,59 @@ function sellerRenderItemsEditor(){
   if(!cont || !info) return;
 
   cont.innerHTML = "";
-
   if(sellerItems.length === 0){
-    info.textContent = "Sin productos en el documento.";
-    cont.innerHTML = `<div class="empty">Agrega productos con el buscador.</div>`;
+    info.textContent = "Documento vacío.";
+    cont.innerHTML = `<div class="empty">Agrega productos para verlos aquí.</div>`;
     return;
   }
 
-  const totalPiezas = sellerItems.reduce((a,it)=> a + (Number(it.cantidad||0) || 0), 0);
-  info.textContent = `Productos: ${sellerItems.length} · Piezas: ${totalPiezas}`;
+  const totalPzas = sellerItems.reduce((a,it)=> a + Number(it.cantidad||0), 0);
+  info.textContent = `Productos: ${sellerItems.length} · Piezas: ${totalPzas}`;
 
-  for(const it of sellerItems){
-    const base = getBase(activeBodega);
-    const prod = String(base?.[it.codigo]?.producto || it.producto || "");
-    const qty = Number(it.cantidad || 0);
-    const pu  = Number(it.precioUnit || 0);
-    const line = qty * pu;
+  const base = getBase(activeBodega);
+  const base2 = getBase(otherBodega(activeBodega));
+
+  for(let i=0; i<sellerItems.length; i++){
+    const it = sellerItems[i];
+    const data = base?.[it.codigo] || base2?.[it.codigo] || {};
+    const tier = String(it.precioTipo || "precio");
+    const tierLabel = sellerTierLabel(tier);
+
+    const locked = tier !== "vendedor";
+    const precioUnit = Number(it.precioUnit || 0);
 
     const card = document.createElement("div");
     card.className = "seller-item-card";
     card.innerHTML = `
-      <div class="seller-item-top">
-        <div class="seller-item-code mono">${escapeHtml(it.codigo)}</div>
-        <button class="seller-item-del" type="button" data-seller-del="${escapeHtml(it.codigo)}" aria-label="Eliminar">🗑</button>
+      <div class="sic-top">
+        <div class="sic-code">${escapeHtml(it.codigo)}</div>
+        <button class="icon-btn danger" type="button" data-seller-del-idx="${i}" aria-label="Eliminar">🗑</button>
       </div>
 
-      <div class="seller-item-name">${escapeHtml(prod || "(sin nombre)")}</div>
-
-      <div class="seller-item-sub">
-        ${it.precioTipoLabel ? `<span class="seller-tier">${escapeHtml(it.precioTipoLabel)}</span>` : ``}
+      <div class="sic-name">${escapeHtml(data.producto || it.producto || "(sin nombre)")}</div>
+      <div class="sic-meta">
+        <span class="badge">${escapeHtml(tierLabel)}</span>
+        <span class="muted">${escapeHtml(data.departamento || it.departamento || "")}</span>
       </div>
 
-      <div class="seller-item-grid">
-        <label class="seller-mini">
+      <div class="sic-grid">
+        <label class="sic-field">
           <span>Cant.</span>
-          <input class="mini-input seller-qty mono" type="number" min="1"
-            value="${escapeHtml(String(qty))}" data-codigo="${escapeHtml(it.codigo)}">
+          <input class="seller-qty" type="number" min="1" value="${escapeHtml(String(it.cantidad))}" data-idx="${i}">
         </label>
 
-        <label class="seller-mini">
-          <span>P. Unit</span>
-          <input class="mini-input seller-price mono" type="number" min="0" step="0.01"
-            value="${escapeHtml(String(pu))}" data-codigo="${escapeHtml(it.codigo)}">
+        <label class="sic-field">
+          <span>P. Unit (L)</span>
+          <input class="seller-price" type="number" min="0" step="0.01"
+            value="${escapeHtml(String(precioUnit))}"
+            data-idx="${i}"
+            data-locked="${locked ? "1" : "0"}"
+            ${locked ? "readonly" : ""}>
         </label>
 
-        <div class="seller-mini total">
+        <div class="sic-field sic-total">
           <span>Total</span>
-          <div class="seller-line-total mono">${escapeHtml(formatMoney(line, "L"))}</div>
+          <div class="sic-total-val">L ${escapeHtml(fmtMoney(precioUnit * Number(it.cantidad||0)))}</div>
         </div>
       </div>
     `;
@@ -2844,6 +2902,8 @@ function sellerBuildInvoiceElement(doc){
   return el;
 }
 
+
+function sellerRenderDocPreview(){ sellerRenderPreview(); }
 
 function sellerRenderPreview(){
   const preview = $("sellerDocPreview");
@@ -3668,18 +3728,11 @@ document.addEventListener("DOMContentLoaded", () => {
   $("sellerTypeCotizacion")?.addEventListener("click", () => sellerSetDocType("COTIZACION"));
 
   $("sellerPrecioTipo")?.addEventListener("change", () => {
-    // actualizar precio del código actual si es automático
+    // Tipo de precio SOLO para el producto actual (no modifica items ya agregados)
+    sellerManualUnit = false;
     sellerUpdatePriceForCurrentCode();
-
-    // actualizar items autoPrice
-    const tier = $("sellerPrecioTipo")?.value || "precio";
-    for(const it of sellerItems){
-      if(it.autoPrice){
-        it.precioUnit = sellerPriceForCode(it.codigo, tier);
-      }
-    }
-    sellerRenderAll();
   });
+
 
   $("sellerMoneda")?.addEventListener("change", () => {
     sellerUpdatePriceForCurrentCode();
@@ -3694,8 +3747,15 @@ document.addEventListener("DOMContentLoaded", () => {
   $("sellerCodigo")?.addEventListener("blur", () => setTimeout(() => hideCodigoAutoList("sellerAutoList"), 220));
 
   $("sellerPrecioUnit")?.addEventListener("input", () => {
-    sellerManualUnit = true;
-  });
+  const tier = $("sellerPrecioTipo")?.value || "precio";
+  if(tier !== "vendedor"){
+    toast("🔒 Precio fijo: elige un tipo de precio");
+    sellerManualUnit = false;
+    sellerUpdatePriceForCurrentCode();
+    return;
+  }
+  sellerManualUnit = true;
+});
 
   $("btnAddSellerItem")?.addEventListener("click", () => {
     if(activeRole !== ROLE.VENDEDOR) return;
@@ -3727,47 +3787,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // editor cambios qty/precio
   $("sellerItemsEditor")?.addEventListener("change", (e) => {
-    const qty = e.target.closest("input.seller-qty");
-    if(qty){
-      const code = String(qty.dataset.codigo || "").trim().toUpperCase();
-      const val = Number(qty.value);
-      const it = sellerItems.find(x => x.codigo === code);
-      if(it){
-        if(!Number.isFinite(val) || val <= 0){
-          toast("Cantidad inválida");
-          qty.value = String(it.cantidad);
-          return;
-        }
-        it.cantidad = val;
-        sellerRenderAll();
-      }
+  const qty = e.target.closest("input.seller-qty");
+  if(qty){
+    const idx = Number(qty.dataset.idx);
+    const val = Number(qty.value);
+    if(!Number.isFinite(idx) || idx<0 || idx>=sellerItems.length) return;
+    if(!Number.isFinite(val) || val<=0){
+      toast("Cantidad inválida");
+      qty.value = String(sellerItems[idx].cantidad);
+      return;
+    }
+    sellerItems[idx].cantidad = val;
+    sellerRenderPreview();
+    return;
+  }
+
+  const p = e.target.closest("input.seller-price");
+  if(p){
+    const idx = Number(p.dataset.idx);
+    const val = Number(p.value);
+    if(!Number.isFinite(idx) || idx<0 || idx>=sellerItems.length) return;
+
+    const it = sellerItems[idx] || {};
+    const locked = String(it.precioTipo || "") !== "vendedor" || p.dataset.locked === "1";
+    if(locked){
+      toast("🔒 Precio fijo");
+      const tier = String(it.precioTipo || "precio");
+      const code = String(it.codigo || "").toUpperCase();
+      const pp = getPrecio(code, tier);
+      it.precioUnit = Number.isFinite(pp) ? pp : (Number(it.precioUnit)||0);
+      p.value = String(it.precioUnit);
+      it.autoPrice = true;
+      sellerRenderPreview();
       return;
     }
 
-    const pr = e.target.closest("input.seller-price");
-    if(pr){
-      const code = String(pr.dataset.codigo || "").trim().toUpperCase();
-      const val = Number(pr.value);
-      const it = sellerItems.find(x => x.codigo === code);
-      if(it){
-        if(!Number.isFinite(val) || val < 0){
-          toast("Precio inválido");
-          pr.value = String(it.precioUnit);
-          return;
-        }
-        it.precioUnit = val;
-        it.autoPrice = false;
-        sellerRenderAll();
-      }
+    if(!Number.isFinite(val) || val<0){
+      toast("Precio inválido");
+      p.value = String(it.precioUnit);
       return;
     }
-  });
+
+    it.precioUnit = val;
+    it.autoPrice = false;
+    sellerRenderPreview();
+    return;
+  }
+});
 
   $("sellerItemsEditor")?.addEventListener("click", (e) => {
-    const del = e.target.closest("button[data-seller-del]");
+    const del = e.target.closest("button[data-seller-del-idx]");
     if(!del) return;
-    const code = String(del.dataset.sellerDel || "").trim().toUpperCase();
-    sellerItems = sellerItems.filter(x => x.codigo !== code);
+    const idx = Number(del.dataset.sellerDelIdx);
+    if(Number.isFinite(idx) && idx>=0 && idx<sellerItems.length){
+      sellerItems.splice(idx, 1);
+    }
     sellerRenderAll();
   });
 
