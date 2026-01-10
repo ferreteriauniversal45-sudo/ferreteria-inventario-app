@@ -257,7 +257,7 @@
   "01-0086": {
     "producto": "CANOA PVC 6M BEIGE P/AGUAS LLUVIA DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 8
+    "cantidad": 7
   },
   "01-0087": {
     "producto": "CINTA TEFLON DE 3/4X7MTS 12521",
@@ -477,7 +477,7 @@
   "01-0155-UND": {
     "producto": "TUBO PVC 1x6 METRO SDR 26 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 8
+    "cantidad": 6
   },
   "01-0156": {
     "producto": "TAPON PVC HECHIZO 3",
@@ -652,7 +652,7 @@
   "01-0209-UND": {
     "producto": "TUBO PVC 1-1/2 PRESION SDR26",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 35
+    "cantidad": 34
   },
   "01-0210": {
     "producto": "YE PVC INYECTADA 3x3",
@@ -982,12 +982,12 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 16
+    "cantidad": 15
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 9
+    "cantidad": 8
   },
   "01-0312": {
     "producto": "TANQUE CISTERNA TRICAPA 1100 LITROS",
@@ -1072,7 +1072,7 @@
   "01-0337": {
     "producto": "TUBO CONDUIT PVC 1/2x3 METROS CEDULA 20 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 78
+    "cantidad": 72
   },
   "01-0338": {
     "producto": "TUBO CONDUIT PVC 1 X 3 METROS CEDULA 20 DURMAN",
@@ -1097,7 +1097,7 @@
   "01-0342": {
     "producto": "TUBO CONDUIT PVC 3/4X3 METRO CEDULA 20 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 115
+    "cantidad": 85
   },
   "01-0343": {
     "producto": "LAVATRASTO DERECHO LENOX",
@@ -2172,7 +2172,7 @@
   "01-0626": {
     "producto": "CANOA PVC BLANCA 6 METROS PARA AGUA LLUVIA DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 4
+    "cantidad": 2
   },
   "01-0627": {
     "producto": "UNION PARA CANOA PVC BLANCA DURMAN",
@@ -3732,7 +3732,7 @@
   "02-0047": {
     "producto": "CABLE ACOMETIDA#6 POR METROS",
     "departamento": "ELECTRICIDAD-CABLE ELECTRICO-CABLE ELECTRICO",
-    "cantidad": 374
+    "cantidad": 352
   },
   "02-0048": {
     "producto": "ENCHUFE POLARIZADO 1707 EAGLE",
@@ -3822,12 +3822,12 @@
   "02-0071": {
     "producto": "POLIDUCTO DE 1\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 15
+    "cantidad": 13
   },
   "02-0073": {
     "producto": "POLIDUCTO DE 3/4\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 18
+    "cantidad": 12
   },
   "02-0074": {
     "producto": "CINTA AISLANTE 3/4X60 3M TEMPLEX 165 19MMX18.3 METROS",
@@ -3862,7 +3862,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 16
+    "cantidad": 13
   },
   "02-0081": {
     "producto": "BOMBA PM60 1 HP FORAS",
@@ -6812,7 +6812,7 @@
   "03-0303": {
     "producto": "LAMINA ESPANDIDA DE 1/2 DE 4X8",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 11
+    "cantidad": 9
   },
   "03-0304": {
     "producto": "RODO GALVANIZADO PARA PORTON 4\"",
@@ -7082,7 +7082,7 @@
   "03-0374": {
     "producto": "RIEL PARA PORTON DE 20 PIES",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 1
+    "cantidad": 0
   },
   "03-0375": {
     "producto": "LAMINA INDUSTRIAL TROQUE 1/16 LG(0.90MM)",
@@ -7957,7 +7957,7 @@
   "03-0553": {
     "producto": "TELA ZARANDA 1/4\"x42\" POR PIE RHINO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 537
+    "cantidad": 528
   },
   "03-0554": {
     "producto": "ANGULO DE 1/4x1-1/2",
@@ -9112,7 +9112,7 @@
   "04-0111": {
     "producto": "LAMINA DE ZINC 10FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 9
+    "cantidad": 4
   },
   "04-0115": {
     "producto": "CLAVO DE ACERO DE 4\"",
@@ -16132,12 +16132,12 @@
   "09-0002": {
     "producto": "SERPENTINA 18x9 MTS POR ROLLO",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 30
+    "cantidad": 25
   },
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 307
+    "cantidad": 300
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
@@ -16152,12 +16152,12 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 153
+    "cantidad": 127
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 34
+    "cantidad": 17
   },
   "09-0010": {
     "producto": "VARILLA ENTORCHADA 1/2 (11.4)",
@@ -16182,12 +16182,12 @@
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 34
+    "cantidad": 28
   },
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 28
+    "cantidad": 24
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -16972,7 +16972,7 @@
   "10-0198": {
     "producto": "PEGAMENTO P/CERAMICA PEGADURO 20KG",
     "departamento": "CERAMICAS",
-    "cantidad": 112
+    "cantidad": 99
   },
   "10-0200-CAJA": {
     "producto": "CERAMICA HISPACENSA CALPE#1 BLANCO 20X30.CM, 1 MTS, 17 PZS X CAJA",
@@ -18457,7 +18457,7 @@
   "10-0424-PIE": {
     "producto": "MALLA GALLINA 6x150x1-1/2 ACERADA POR PIE",
     "departamento": "CERAMICAS",
-    "cantidad": 138
+    "cantidad": 100
   },
   "10-0424-ROLLO": {
     "producto": "MALLA GALLINA 6x150x1-1/2 ACER",
@@ -21627,7 +21627,7 @@
   "12-0002": {
     "producto": "CAL 4 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 6
+    "cantidad": 4
   },
   "12-0008": {
     "producto": "ADMIX-600 X GALON",
@@ -21712,12 +21712,12 @@
   "12-0022": {
     "producto": "CEMENTO ARGOS USO GENERAL BOLSA 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 40
+    "cantidad": 26
   },
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 38
+    "cantidad": 36
   },
   "12-0023-LB": {
     "producto": "CEMENTO UNO X LIBRA",
@@ -21727,7 +21727,7 @@
   "12-0024": {
     "producto": "CEMENTO ECO ARGOS MULTIPROPOSITO 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 21
+    "cantidad": 8
   },
   "12-0026": {
     "producto": "ADMIX IM1GRIS X SACO",
@@ -21752,7 +21752,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 84
+    "cantidad": 46
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21887,7 +21887,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 287
+    "cantidad": 114
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
@@ -24937,7 +24937,7 @@
   "15-0911-YARDA": {
     "producto": "NAYLON NEGRO 72X6FT X YARDA",
     "departamento": "HERRAMIENTAS",
-    "cantidad": 172
+    "cantidad": 10
   },
   "15-0912": {
     "producto": "PULIDORA TRUPER ESMA 4-1/2-N MAS DISCO PARA PULIR METAL TRUPER 4-1/2\"",
@@ -27088,5 +27088,10 @@
     "producto": "TUBO EMT 3/4\" X 10 PIES (3MTS)",
     "departamento": "ELECTRICIDAD",
     "cantidad": 53
+  },
+  "12-0007-LB": {
+    "producto": "CEMENTO BLANCO X LIBRA AALBORG",
+    "departamento": "CEMENTICIOS-CONSTRUCCION",
+    "cantidad": 0
   }
 }
