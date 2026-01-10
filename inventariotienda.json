@@ -3677,7 +3677,7 @@
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1850
+    "cantidad": 0
   },
   "02-0082": {
     "producto": "ENCHUFE EAGLE ESTUF. 50A125/2",
@@ -4507,12 +4507,12 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 18578
+    "cantidad": 0
   },
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 3
+    "cantidad": 0
   },
   "04-0288": {
     "producto": "LAMI.PVC BLANCO BRILL 25CMX5.9",
@@ -4937,7 +4937,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 3484
+    "cantidad": 0
   },
   "07-0022": {
     "producto": "BROCA P/CONCRETO 1/2X6\" TRUPER",
@@ -5132,7 +5132,7 @@
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) G4",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 4675
+    "cantidad": 0
   },
   "15-1231": {
     "producto": "HILO CORTA GRAMA HTA-80 2x15 T",
@@ -7312,7 +7312,7 @@
   "09-0047": {
     "producto": "VARILLA CORRUGADA 3/4 GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 50
+    "cantidad": 0
   },
   "08-0716-1/4": {
     "producto": "TINTE COLOR CAOBA 1/4 GAL",
@@ -7387,17 +7387,17 @@
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1024
+    "cantidad": 0
   },
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)G40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 772
+    "cantidad": 0
   },
   "09-0049": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)G60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1439
+    "cantidad": 0
   },
   "02-0577": {
     "producto": "CAJA PVC OCTA MIXTA BLANCA",
