@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 15
+    "cantidad": 12
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -3862,7 +3862,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 13
+    "cantidad": 12
   },
   "02-0081": {
     "producto": "BOMBA PM60 1 HP FORAS",
@@ -6372,7 +6372,7 @@
   "03-0136": {
     "producto": "TUBO EMT 1/2 X 10 PIES",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 36
+    "cantidad": 35
   },
   "03-0137": {
     "producto": "RIEL P/GABETA DE 14",
@@ -16137,12 +16137,12 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 300
+    "cantidad": 299
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 38
+    "cantidad": 36
   },
   "09-0006": {
     "producto": "VARILLA CORRUGADA 1/2 (11.4)",
@@ -16152,7 +16152,7 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 127
+    "cantidad": 114
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
@@ -21742,7 +21742,7 @@
   "12-0028": {
     "producto": "CAL 5 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 3
+    "cantidad": 1
   },
   "12-0029": {
     "producto": "CEMENTO BASE COAT 20KG",
@@ -21752,7 +21752,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 46
+    "cantidad": 45
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21887,7 +21887,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 114
+    "cantidad": 89
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
