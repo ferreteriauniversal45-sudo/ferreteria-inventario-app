@@ -277,7 +277,7 @@
   "01-0091": {
     "producto": "TUBO PVC 3x6M SDR64 DRENAJE DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 17
+    "cantidad": 15
   },
   "01-0091-PIE": {
     "producto": "TUBO PVC 3 DRENAJE X PIE DURMAN",
@@ -297,7 +297,7 @@
   "01-0099": {
     "producto": "TUBO CPVC 1/2X6 METRO DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 6
+    "cantidad": 4
   },
   "01-0101": {
     "producto": "UNION CPVC LISA 1/2 DURMAN",
@@ -312,7 +312,7 @@
   "01-0107": {
     "producto": "TUBO PVC 4X6M DRENAJE DURMAN SDR64",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 10
+    "cantidad": 9
   },
   "01-0109": {
     "producto": "PEDESTAL ACUACER BONE 103",
@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 12
+    "cantidad": 15
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -3862,7 +3862,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 12
+    "cantidad": 13
   },
   "02-0081": {
     "producto": "BOMBA PM60 1 HP FORAS",
@@ -6182,7 +6182,7 @@
   "03-0094": {
     "producto": "RIEL PARA PORTON 10 PIES CASTOR",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 14
+    "cantidad": 12
   },
   "03-0095": {
     "producto": "FORJA LANZA 732/1",
@@ -6372,7 +6372,7 @@
   "03-0136": {
     "producto": "TUBO EMT 1/2 X 10 PIES",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 35
+    "cantidad": 36
   },
   "03-0137": {
     "producto": "RIEL P/GABETA DE 14",
@@ -8847,7 +8847,7 @@
   "04-0026": {
     "producto": "ALAMBRE GALVANIZADO CALIBRE 16 POR LIBRA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 208
+    "cantidad": 198
   },
   "04-0028": {
     "producto": "ANGULO TABLA YESO 1X1X10 FT",
@@ -16137,12 +16137,12 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 299
+    "cantidad": 270
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 36
+    "cantidad": 38
   },
   "09-0006": {
     "producto": "VARILLA CORRUGADA 1/2 (11.4)",
@@ -16152,7 +16152,7 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 114
+    "cantidad": 127
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
@@ -16972,7 +16972,7 @@
   "10-0198": {
     "producto": "PEGAMENTO P/CERAMICA PEGADURO 20KG",
     "departamento": "CERAMICAS",
-    "cantidad": 99
+    "cantidad": 98
   },
   "10-0200-CAJA": {
     "producto": "CERAMICA HISPACENSA CALPE#1 BLANCO 20X30.CM, 1 MTS, 17 PZS X CAJA",
@@ -21742,7 +21742,7 @@
   "12-0028": {
     "producto": "CAL 5 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 1
+    "cantidad": 3
   },
   "12-0029": {
     "producto": "CEMENTO BASE COAT 20KG",
@@ -21752,7 +21752,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 45
+    "cantidad": 36
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
