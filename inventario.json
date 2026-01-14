@@ -8942,7 +8942,7 @@
   "04-0043": {
     "producto": "CANALETA 2x4 GALVANIZADA 0.80 COMERCIAL",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": -70
+    "cantidad": 860
   },
   "04-0045": {
     "producto": "LAMINA PANELIT 4X8 MACHIMBRE 11",
@@ -10242,7 +10242,7 @@
   "04-0431": {
     "producto": "CANALETA GALV 2X4 COMERCIAL",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 813
+    "cantidad": 0
   },
   "04-0449": {
     "producto": "MOLDURA PVC BLANCA 5.80MTS",
@@ -16402,12 +16402,12 @@
   "10-0018": {
     "producto": "FRAGUADOR BLANCA S/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": -2
+    "cantidad": 35
   },
   "10-0021": {
     "producto": "FRAGUADOR TERRACOTA CON ARENA PEGASSU",
     "departamento": "FRAGUADORES",
-    "cantidad": 12
+    "cantidad": 59
   },
   "10-0022-CAJA": {
     "producto": "CERAMICA HISPACENSA LISBOA MARRON.LISA 25X33CM, 1 MTS, 12 PZS X CAJA",
@@ -16512,7 +16512,7 @@
   "10-0046": {
     "producto": "FRAGUADOR BEIGE OSC. S/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": 0
+    "cantidad": 54
   },
   "10-0049-CAJA": {
     "producto": "CERAMICA HISPACENSA ALTEA VISON1 20X30CM, 1 MTS, 17 PZS X CAJA",
@@ -16642,12 +16642,12 @@
   "10-0089": {
     "producto": "FRAGUADOR CAOBA C/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": -26
+    "cantidad": 2
   },
   "10-0092": {
     "producto": "FRAGUADOR NEGRO C/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": -8
+    "cantidad": 2
   },
   "10-0094": {
     "producto": "FRAGUADOR GRIS CLARO S/A PEGASSU",
@@ -16912,7 +16912,7 @@
   "10-0174": {
     "producto": "FRAGUADOR GRIS OSCURO C/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": 0
+    "cantidad": 2
   },
   "10-0175-CAJA": {
     "producto": "CERAMICA CELI DAKAR 45X45CM, 2.03 MTS, 10 PZS X CAJA",
@@ -16992,7 +16992,7 @@
   "10-0188": {
     "producto": "FRAGUADOR ROJO C/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": 20
+    "cantidad": 22
   },
   "10-0197-CAJA": {
     "producto": "CERAMICA HISPACENSA OPORTO BLANCO 25X33.04CM, 1 MTS, 12 PZS X CAJA",
@@ -20587,7 +20587,7 @@
   "10-0621": {
     "producto": "FRAGUADOR BLANCO S/A PEGASSU",
     "departamento": "FRAGUADORES",
-    "cantidad": 11
+    "cantidad": 0
   },
   "10-0622": {
     "producto": "FRAGUADOR BRONCE S/A PEGASSU",
@@ -20622,22 +20622,22 @@
   "10-0628": {
     "producto": "FRAGUADOR GRIS CLARO S/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": 0
+    "cantidad": 14
   },
   "10-0629": {
     "producto": "FRAGUADOR CREMA S/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": -1
+    "cantidad": 21
   },
   "10-0630": {
     "producto": "FRAGUADOR ARENA S/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": 12
+    "cantidad": 43
   },
   "10-0631": {
     "producto": "FRAGUADOR GRIS OSCURO S/A PEGADURO",
     "departamento": "FRAGUADORES",
-    "cantidad": 0
+    "cantidad": 1
   },
   "10-0632-CAJA": {
     "producto": "CERAMICA SL ADOQUIN BEIGE 45X45CM 2.08MTS 10PZS",
@@ -20992,7 +20992,7 @@
   "10-0666": {
     "producto": "FRAGUADOR ARENA CON ARENA PEGA DURO",
     "departamento": "FRAGUADORES",
-    "cantidad": -1
+    "cantidad": 0
   },
   "10-0667": {
     "producto": "FRADUADOR ADOBE SIN ARENA PEGASSU",
@@ -26462,7 +26462,7 @@
   "19-0004-CAJA": {
     "producto": "CERAMICA 23201 40x40CM 0.96M 6 PIEZAS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "19-0005-CAJA": {
     "producto": "CERAMICA 23211 40x40CM 0.96M 6 PIEZAS",
@@ -27177,11 +27177,16 @@
   "10-0705-CAJA": {
     "producto": "CERA.NATURAL MARINA HUESO",
     "departamento": "CERAMICAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-1053": {
     "producto": "TUBO PVC 3/4\" SDR21 RIEGO DURM",
     "departamento": "FONTANERIA -PVC",
     "cantidad": -10
+  },
+  "10-0665": {
+    "producto": "FRAGUADOR CREMA C/A PEGADURO",
+    "departamento": "FRAGUADORES",
+    "cantidad": 18
   }
 }
