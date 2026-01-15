@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 15
+    "cantidad": 14
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -1307,7 +1307,7 @@
   "01-0401": {
     "producto": "TUBO PVC 1/2 PRESION SDR 13.5 POR METRO DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 0
+    "cantidad": -1
   },
   "01-0402-MTS": {
     "producto": "TUBO PVC 4 SDR26 X METRO DURMAN",
@@ -2307,7 +2307,7 @@
   "01-0653": {
     "producto": "TUBO CONDUIT PVC 1/2 x3.05 METRO CEDULA 40 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 74
+    "cantidad": 50
   },
   "01-0654": {
     "producto": "VALVULA BALIN 3\" ITALY",
@@ -3732,7 +3732,7 @@
   "02-0047": {
     "producto": "CABLE ACOMETIDA#6 POR METROS",
     "departamento": "ELECTRICIDAD-CABLE ELECTRICO-CABLE ELECTRICO",
-    "cantidad": 352
+    "cantidad": 332
   },
   "02-0048": {
     "producto": "ENCHUFE POLARIZADO 1707 EAGLE",
@@ -5932,7 +5932,7 @@
   "03-0032": {
     "producto": "PLATINA DE 1/8X1",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 7
+    "cantidad": 6
   },
   "03-0033": {
     "producto": "PLATINA DE 1/8x3/4",
@@ -16137,7 +16137,7 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 270
+    "cantidad": 266
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
@@ -16187,7 +16187,7 @@
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 24
+    "cantidad": 20
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -16972,7 +16972,7 @@
   "10-0198": {
     "producto": "PEGAMENTO P/CERAMICA PEGADURO 20KG",
     "departamento": "CERAMICAS",
-    "cantidad": 98
+    "cantidad": 96
   },
   "10-0200-CAJA": {
     "producto": "CERAMICA HISPACENSA CALPE#1 BLANCO 20X30.CM, 1 MTS, 17 PZS X CAJA",
@@ -20567,7 +20567,7 @@
   "10-0625": {
     "producto": "PEGA PORCELANATO PSP PEGADURO 20Kg",
     "departamento": "CERAMICAS",
-    "cantidad": 72
+    "cantidad": 69
   },
   "10-0626": {
     "producto": "FRAGUADOR CHOCOLATE C/A PEGADURO",
@@ -21627,7 +21627,7 @@
   "12-0002": {
     "producto": "CAL 4 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 4
+    "cantidad": 3
   },
   "12-0008": {
     "producto": "ADMIX-600 X GALON",
@@ -21712,7 +21712,7 @@
   "12-0022": {
     "producto": "CEMENTO ARGOS USO GENERAL BOLSA 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 26
+    "cantidad": 21
   },
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
@@ -21727,7 +21727,7 @@
   "12-0024": {
     "producto": "CEMENTO ECO ARGOS MULTIPROPOSITO 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 8
+    "cantidad": -6
   },
   "12-0026": {
     "producto": "ADMIX IM1GRIS X SACO",
@@ -21752,7 +21752,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 36
+    "cantidad": 32
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21887,7 +21887,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 89
+    "cantidad": 67
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
