@@ -297,7 +297,7 @@
   "01-0099": {
     "producto": "TUBO CPVC 1/2X6 METRO DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": -3
+    "cantidad": 50
   },
   "01-0101": {
     "producto": "UNION CPVC LISA 1/2 DURMAN",
@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 122
+    "cantidad": 119
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -1642,7 +1642,7 @@
   "01-0492": {
     "producto": "TUBO PVC 3x6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 18
+    "cantidad": 17
   },
   "01-0493": {
     "producto": "TUBO CONDUIT PVC 1-1/2X3 METRO CEDULA 20 DURMAN",
@@ -1952,7 +1952,7 @@
   "01-0568": {
     "producto": "TUBO PVC 6X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 129
+    "cantidad": 124
   },
   "01-0569": {
     "producto": "REDUCCION PVC PRESION 4X3 DURMAN",
@@ -2197,7 +2197,7 @@
   "01-0631": {
     "producto": "ESQUINERO DURMAN EXTERNO BLANCO",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 0
+    "cantidad": 9
   },
   "01-0632": {
     "producto": "ESQUINERO DURMAN INTERNO BLANCO",
@@ -5862,7 +5862,7 @@
   "03-0011": {
     "producto": "LAMINA DE ZINC 12FT CALIBRE 28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 1720
+    "cantidad": 1714
   },
   "03-0012": {
     "producto": "LAMINA LISA DE 10P CAL 28MM",
@@ -5932,7 +5932,7 @@
   "03-0030": {
     "producto": "LAMINA INDUSTRIAL LISA 1/16MM .70",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 34
+    "cantidad": 52
   },
   "03-0031": {
     "producto": "TUBO INDUSTRIAL 1X1X1/8",
@@ -5957,7 +5957,7 @@
   "03-0035": {
     "producto": "LAMINA INDUSTRIAL TROQUE 1/16MM 0.70",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 44
+    "cantidad": 29
   },
   "03-0036": {
     "producto": "ANGULO DE 1/8x1-1/2",
@@ -6272,7 +6272,7 @@
   "03-0113": {
     "producto": "TUBO INGLES 2x2 CHAPA 14",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 51
+    "cantidad": 1
   },
   "03-0114": {
     "producto": "ESPANSOR METALICO 1/4",
@@ -6552,7 +6552,7 @@
   "03-0185": {
     "producto": "LAMINA INDUSTRIAL LISA 1/16 LG .90",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": -3
+    "cantidad": 31
   },
   "03-0187": {
     "producto": "ABRAZADERA EMT 1-1/4",
@@ -6822,7 +6822,7 @@
   "03-0303": {
     "producto": "LAMINA ESPANDIDA DE 1/2 DE 4X8",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": -1
+    "cantidad": 21
   },
   "03-0304": {
     "producto": "RODO GALVANIZADO PARA PORTON 4\"",
@@ -6862,12 +6862,12 @@
   "03-0318": {
     "producto": "TUBO GALVANIZADO 2x4 CHAPA 16 COMERCIAL 1.20",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 18
+    "cantidad": 0
   },
   "03-0319": {
     "producto": "TUBO GALVANIZADO 2x2 CHAPA 14",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 3
+    "cantidad": 55
   },
   "03-0320": {
     "producto": "EXPANSOR METALICO 1/2",
@@ -6897,7 +6897,7 @@
   "03-0331": {
     "producto": "MALLA ELECTROSOLDADA 6/6 6Mx2.35M CORRUGADA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 32
+    "cantidad": 24
   },
   "03-0332": {
     "producto": "TUBO HG 4 CHAPA 14 LEGITIMO",
@@ -7072,7 +7072,7 @@
   "03-0370": {
     "producto": "TUBO GALVANIZADO 2x2 CHAPA 18",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 81
+    "cantidad": 0
   },
   "03-0371": {
     "producto": "TE 2\" HG",
@@ -7097,7 +7097,7 @@
   "03-0375": {
     "producto": "LAMINA INDUSTRIAL TROQUE 1/16 LG(0.90MM)",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": -57
+    "cantidad": 38
   },
   "03-0376": {
     "producto": "DISCO ZIRCONICO 7x9/16x7/8 ZK60",
@@ -7162,7 +7162,7 @@
   "03-0389": {
     "producto": "TUBO GALVANIZADO REDONDO 1-1/2 X 6 MTS CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 85
+    "cantidad": 232
   },
   "03-0390": {
     "producto": "TUBO GALVANIZADO REDONDO 1x6 MTS CHAPA 16 1.30",
@@ -7172,7 +7172,7 @@
   "03-0391": {
     "producto": "TUBO GALVANIZADO REDONDO 2x6 MTS CHAPA 18 1.00MM",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 169
+    "cantidad": 0
   },
   "03-0392": {
     "producto": "TUBO INGLES 1x2 CHAPA 18",
@@ -7292,7 +7292,7 @@
   "03-0415": {
     "producto": "TUBO GALVANIZADO 3x3 CHAPA 16 1.50",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 73
+    "cantidad": 0
   },
   "03-0416": {
     "producto": "LAMINA INDUSTRIAL LISA 1/8 4X8 CALIBRE 11",
@@ -7382,12 +7382,12 @@
   "03-0434": {
     "producto": "TUBO GALVANIZADO 4x4 CHAPA16 COMERCIAL",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 84
+    "cantidad": 0
   },
   "03-0435": {
     "producto": "TUBO GALVANIZADO 4x4 CH16 LEGITIMO 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 80
+    "cantidad": 5
   },
   "03-0436": {
     "producto": "NIPLE HG 3X6",
@@ -7432,7 +7432,7 @@
   "03-0444": {
     "producto": "TUBO GALVANIZADO 1x2 CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 1
+    "cantidad": 0
   },
   "03-0445": {
     "producto": "DISCO CORTE METAL 7X0.062X7/8 FANDELI 74400",
@@ -7452,7 +7452,7 @@
   "03-0448": {
     "producto": "TUBO INGLES 1-1/2x1-1/2 CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 85
+    "cantidad": 2
   },
   "03-0450": {
     "producto": "TUBO INGLES 1x1 CHAPA 18 1.00",
@@ -7492,7 +7492,7 @@
   "03-0458": {
     "producto": "TUBO GALVANIZADO 4x4 CH14 COMERCIAL 1.50",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 230
+    "cantidad": 233
   },
   "03-0459-LB": {
     "producto": "GRAPA GALVANIZADA 1-1/4X9\" POR LIBRA",
@@ -7647,7 +7647,7 @@
   "03-0489": {
     "producto": "LAMINA INDUSTRIAL LISA 1/16MM 4X8 0.55",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 12
+    "cantidad": 13
   },
   "03-0490": {
     "producto": "LAMINA INDUSTRIAL LISA 1/16LG 4X8 1.00",
@@ -7657,7 +7657,7 @@
   "03-0491": {
     "producto": "LAMINA INDUSTRIAL LISA 1/16LG 1.20",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": -4
+    "cantidad": 7
   },
   "03-0492": {
     "producto": "PEGAMENTO DE CONTACTO EXPERT 125ML",
@@ -7722,7 +7722,7 @@
   "03-0504": {
     "producto": "TUBO GALVANIZADO 3x3 CHAPA 16 1.20 COMERCIAL",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 41
+    "cantidad": 0
   },
   "03-0505": {
     "producto": "DISCO ZIRCONIO 4-1/2\" GRANO 120 IMACASA",
@@ -7977,7 +7977,7 @@
   "03-0555": {
     "producto": "TUBO GALVANIZADO 2x2 CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 45
+    "cantidad": 0
   },
   "03-0556": {
     "producto": "TUBO 1-1/2\" HG CHAPA 16",
@@ -8012,7 +8012,7 @@
   "03-0562": {
     "producto": "TUBO GALVANIZADO 4x4 CHAPA 14 1.80 LEGITIMO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 34
+    "cantidad": 4
   },
   "03-0563": {
     "producto": "DISCO CORTE METAL 7\" OCONOR EXTRA FINO CM19219",
@@ -8562,7 +8562,7 @@
   "03-0672": {
     "producto": "TUBO GALVANIZADO 2x6 CHAPA 16 1.50",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": -63
+    "cantidad": 10
   },
   "03-0673": {
     "producto": "FORJA DECORATIVA ESFERA MES 0110 50MM",
@@ -8702,7 +8702,7 @@
   "03-0700": {
     "producto": "TUBO GALVANIZADO 2x4 CHAPA 16 LEGITIMO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 96
+    "cantidad": 200
   },
   "03-0701": {
     "producto": "MALLA CICLON C/FORRO VERDE 5FT 100FT 30M",
@@ -8722,12 +8722,12 @@
   "03-0705": {
     "producto": "TUBO GALVANIZADO REDONDO 1\" CHAPA 16 1.00",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 11
+    "cantidad": 0
   },
   "03-0706": {
     "producto": "TUBO GALVANIZADO REDONDO 2\" 1.20",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 3
+    "cantidad": 46
   },
   "03-0739": {
     "producto": "RIEL STRUT 1-3/16X1-5/8 10FT",
@@ -8752,7 +8752,7 @@
   "03-0779": {
     "producto": "LAMINA INDUSTRIAL TROQUELEADA 1/16 1.0",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 45
+    "cantidad": 50
   },
   "04-0001": {
     "producto": "TORNILLO PARA LAMINA FLAT PUNTA FINA 14x2",
@@ -8877,17 +8877,17 @@
   "04-0028": {
     "producto": "ANGULO TABLA YESO 1X1X10 FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -186
+    "cantidad": 140
   },
   "04-0029": {
     "producto": "CANAL FURRIN 12\" C28 SIN PESTAÑA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -41
+    "cantidad": 0
   },
   "04-0030": {
     "producto": "CANAL DE CARGA CRC 38MMX12MMX16FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 169
+    "cantidad": 184
   },
   "04-0031": {
     "producto": "TABLA YESO PARA INTERIOR 4X8X1/2\"",
@@ -8917,7 +8917,7 @@
   "04-0036-LB": {
     "producto": "CLAVO DE 2-1/2\" P/ZINC POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1826
+    "cantidad": 1818
   },
   "04-0037": {
     "producto": "TORNILLO PUNTA FINA 7/16",
@@ -8942,7 +8942,7 @@
   "04-0043": {
     "producto": "CANALETA 2x4 GALVANIZADA 0.80 COMERCIAL",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 860
+    "cantidad": 0
   },
   "04-0045": {
     "producto": "LAMINA PANELIT 4X8 MACHIMBRE 11",
@@ -8967,7 +8967,7 @@
   "04-0054": {
     "producto": "LAMI.ALUZINC NATURAL X PIE CAL. 28 8 CRESTAS GRADO .30",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": 1476
+    "cantidad": 1347
   },
   "04-0055": {
     "producto": "PUNTA DESTORN.2\" PLANO",
@@ -8987,22 +8987,22 @@
   "04-0059": {
     "producto": "SOLERA 10PIE TRACK 2-1/2\" CAL28 0.38MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 276
+    "cantidad": 122
   },
   "04-0060": {
     "producto": "SKYLINE ANGULO P/CIELO 10X15/16",
     "departamento": "CERAMICAS-SEPARADORES",
-    "cantidad": 486
+    "cantidad": 451
   },
   "04-0061": {
     "producto": "SKYLINE CROSS TEE 4X15/16 BLANCO",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 1275
+    "cantidad": 1210
   },
   "04-0062": {
     "producto": "SKYLINE MAIN TEE 12X15/16 BLANCO",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 475
+    "cantidad": 463
   },
   "04-0065": {
     "producto": "TAPAGOTERA CAMPEON 1/4 GALON",
@@ -9042,7 +9042,7 @@
   "04-0074-LB": {
     "producto": "CLAVO DE 3\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1136
+    "cantidad": 1086
   },
   "04-0077": {
     "producto": "CLAVO DE ACERO DE 2\"",
@@ -9137,7 +9137,7 @@
   "04-0111": {
     "producto": "LAMINA DE ZINC 10FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 286
+    "cantidad": 270
   },
   "04-0115": {
     "producto": "CLAVO DE ACERO DE 4\"",
@@ -9182,7 +9182,7 @@
   "04-0135-LB": {
     "producto": "CLAVO DE 2-1/2\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1433
+    "cantidad": 1383
   },
   "04-0137": {
     "producto": "MOLDURA P/TABLAYESO ITALSTYL 76",
@@ -9422,7 +9422,7 @@
   "04-0226": {
     "producto": "CANALETA 2X4 GALVANIZADA LEGITIMA 1.30",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 35
+    "cantidad": 18
   },
   "04-0228": {
     "producto": "TORNILLO K-LACH PB 8X1/2\"",
@@ -9532,7 +9532,7 @@
   "04-0257": {
     "producto": "CANALETA 2X4 GALVANIZADA LEGITIMA 1.20",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 342
+    "cantidad": 336
   },
   "04-0258": {
     "producto": "CLAVO DE ACERO DE 3-1/2\"",
@@ -9567,7 +9567,7 @@
   "04-0265": {
     "producto": "LAMINA PVC NOGAL 25CMX19PIES",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -20
+    "cantidad": 8
   },
   "04-0266": {
     "producto": "LAMINA PVC CAOBA 25CMX19PIES",
@@ -9667,7 +9667,7 @@
   "04-0285": {
     "producto": "POSTE 10FT STUD2-1/2C28 0.30MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 146
+    "cantidad": 132
   },
   "04-0286": {
     "producto": "DISCO LIJA #60",
@@ -9677,7 +9677,7 @@
   "04-0287": {
     "producto": "CORNISA DELGADA PVC BLANCA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -14
+    "cantidad": 0
   },
   "04-0288": {
     "producto": "LAMINA PVC BLANCO BRILLANTE 20CMX5.9MTS",
@@ -9697,7 +9697,7 @@
   "04-0291": {
     "producto": "UNION P/TABLILLA PVC BLANCA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 0
+    "cantidad": 9
   },
   "04-0292": {
     "producto": "LAMINA PVC MARMOL DIAGONAL 25CMX5.95MTS",
@@ -9707,7 +9707,7 @@
   "04-0293": {
     "producto": "CANALETA 2x4 GALVANIZADA LEGITIMA 1.10",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 0
+    "cantidad": 294
   },
   "04-0294": {
     "producto": "TORNILLO K-LACH PF 8x1",
@@ -9757,7 +9757,7 @@
   "04-0304": {
     "producto": "CANALETA 2X4 GALVANIZADA INTERMEDIA 1.0",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 1836
+    "cantidad": 1932
   },
   "04-0305": {
     "producto": "LAMINA ALUZINC NATURAL C26 GRADO .40 POR PIE",
@@ -9817,7 +9817,7 @@
   "04-0316": {
     "producto": "MASILLA PARA TABLA YESO SUR GALON 6 KG 41500-000-06",
     "departamento": "PINTURAS-MASILLAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "04-0317": {
     "producto": "LIJA ALUMINIO #60 EXPERT",
@@ -10222,12 +10222,12 @@
   "04-0391": {
     "producto": "LAMINA ALUZINC NATURAL CALIBRE 26 GRADO 0.38 POR PIE",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": -564
+    "cantidad": 0
   },
   "04-0392": {
     "producto": "CANALETA 2x4 1.50",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 412
+    "cantidad": 48
   },
   "04-0393": {
     "producto": "AISLANTE TERMOACUSTICO R11 1.22mX15.24m 18.62m2",
@@ -10242,12 +10242,12 @@
   "04-0431": {
     "producto": "CANALETA GALV 2X4 COMERCIAL",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 0
+    "cantidad": 756
   },
   "04-0449": {
     "producto": "MOLDURA PVC BLANCA 5.80MTS",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 3
+    "cantidad": 58
   },
   "04-0454": {
     "producto": "LAMI. ALUZINC LISA BLANCA 12FT",
@@ -11122,7 +11122,7 @@
   "07-0024": {
     "producto": "PUERTA BOSTANIAN 36x80x1-3/8",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 83
+    "cantidad": 77
   },
   "07-0025": {
     "producto": "PUERTA METALICA 36x80",
@@ -11202,7 +11202,7 @@
   "07-0042": {
     "producto": "CONTRAMARCO DE 2X7X7 CON MOCHETA",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 89
+    "cantidad": 86
   },
   "07-0043": {
     "producto": "LLAVIN SAPO DE CHAPA HERMEX 2 L",
@@ -16172,12 +16172,12 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 7143
+    "cantidad": 6593
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1744
+    "cantidad": 1394
   },
   "09-0006": {
     "producto": "VARILLA CORRUGADA 1/2 (11.4)",
@@ -16187,7 +16187,7 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 661
+    "cantidad": 343
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
@@ -16222,7 +16222,7 @@
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 3097
+    "cantidad": 2937
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -16267,7 +16267,7 @@
   "09-0036": {
     "producto": "VARILLA CORRUGADA 1/2 (11.0) 9MTS GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 560
+    "cantidad": 497
   },
   "09-0037": {
     "producto": "VARILLA CORRUGADA 3/8 INTERMEDIA 9MTS GRADO 40",
@@ -21112,7 +21112,7 @@
   "11-0030": {
     "producto": "LAMINA MASONITE 4x8",
     "departamento": "MADERAS",
-    "cantidad": 19
+    "cantidad": 23
   },
   "11-0031": {
     "producto": "TABLA DE 1X10X11 FT DE PINO",
@@ -21447,7 +21447,7 @@
   "11-0101": {
     "producto": "LAMINA FIBRAN DE 4x8x1/2-12MM",
     "departamento": "MADERAS",
-    "cantidad": 83
+    "cantidad": 36
   },
   "11-0102": {
     "producto": "LAMINA FIBRAN DE 4X8X3/4-18MM",
@@ -21677,7 +21677,7 @@
   "12-0002": {
     "producto": "CAL 4 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 434
+    "cantidad": 384
   },
   "12-0008": {
     "producto": "ADMIX-600 X GALON",
@@ -21802,7 +21802,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 5547
+    "cantidad": 5497
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21932,12 +21932,12 @@
   "12-0063": {
     "producto": "CEMENTO ULTRACEM UG 5200 PSI",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 175
+    "cantidad": 150
   },
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 370
+    "cantidad": 1350
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
@@ -26447,7 +26447,7 @@
   "19-0001-CAJA": {
     "producto": "PORCELANATO PLAIN IVORY 60x60CM 1.44M 4 PIEZAS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": 878
+    "cantidad": 1058
   },
   "19-0002-CAJA": {
     "producto": "PORCELANATO STRIPE 60x60CM 1.44M 4 PIEZAS",
@@ -27115,9 +27115,9 @@
     "cantidad": 0
   },
   "03-0758": {
-    "producto": "TUBO INGLES 2x4 CHAPA 16 1.40",
+    "producto": "TUBO INGLES 2x4 CH 16 1.40",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": -2
+    "cantidad": 105
   },
   "20-0153": {
     "producto": "POSTE DE CONCRETO 2.50M",
@@ -27172,7 +27172,7 @@
   "03-0756": {
     "producto": "TUBO INGLES 2x2 CH 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 38
+    "cantidad": 26
   },
   "10-0705-CAJA": {
     "producto": "CERA.NATURAL MARINA HUESO",
@@ -27188,5 +27188,10 @@
     "producto": "FRAGUADOR CREMA C/A PEGADURO",
     "departamento": "FRAGUADORES",
     "cantidad": 18
+  },
+  "03-0792": {
+    "producto": "TUBO GALV 4\"x4\" CHAPA 16 1.35",
+    "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
+    "cantidad": 72
   }
 }
