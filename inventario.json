@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 194
+    "cantidad": 190
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -1142,7 +1142,7 @@
   "01-0352": {
     "producto": "TUBO PVC 4X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 56
+    "cantidad": 52
   },
   "01-0353": {
     "producto": "TUBO PVC 2X6M SDR64 DRENAJE DURMAN",
@@ -1642,7 +1642,7 @@
   "01-0492": {
     "producto": "TUBO PVC 3x6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 13
+    "cantidad": 10
   },
   "01-0493": {
     "producto": "TUBO CONDUIT PVC 1-1/2X3 METRO CEDULA 20 DURMAN",
@@ -1677,7 +1677,7 @@
   "01-0500": {
     "producto": "TUBO PVC 2X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 99
+    "cantidad": 94
   },
   "01-0501": {
     "producto": "LLAVE LAVAMANO CORONA PERILLA D",
@@ -1952,7 +1952,7 @@
   "01-0568": {
     "producto": "TUBO PVC 6X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 98
+    "cantidad": 96
   },
   "01-0569": {
     "producto": "REDUCCION PVC PRESION 4X3 DURMAN",
@@ -5897,7 +5897,7 @@
   "03-0021": {
     "producto": "ANGULO DE 1/8x1",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 191
+    "cantidad": 190
   },
   "03-0022": {
     "producto": "FORJA FLOR INDIA 116/A/5 (REDON",
@@ -9042,7 +9042,7 @@
   "04-0074-LB": {
     "producto": "CLAVO DE 3\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1074
+    "cantidad": 1059
   },
   "04-0077": {
     "producto": "CLAVO DE ACERO DE 2\"",
@@ -9182,7 +9182,7 @@
   "04-0135-LB": {
     "producto": "CLAVO DE 2-1/2\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1381
+    "cantidad": 1378
   },
   "04-0137": {
     "producto": "MOLDURA P/TABLAYESO ITALSTYL 76",
@@ -11017,7 +11017,7 @@
   "06-0002": {
     "producto": "MUEBLE AEREO P/COCINA BLANCO",
     "departamento": "MUEBLES",
-    "cantidad": 6
+    "cantidad": 5
   },
   "06-0003": {
     "producto": "ARMARIO AEREO CD208 2 PTAS BLN",
@@ -16172,12 +16172,12 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 6397
+    "cantidad": 6391
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1394
+    "cantidad": 390
   },
   "09-0006": {
     "producto": "VARILLA CORRUGADA 1/2 (11.4)",
@@ -16187,12 +16187,12 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -677
+    "cantidad": -683
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1857
+    "cantidad": 1842
   },
   "09-0010": {
     "producto": "VARILLA ENTORCHADA 1/2 (11.4)",
@@ -16217,12 +16217,12 @@
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 578
+    "cantidad": 953
   },
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1792
+    "cantidad": 350
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -16267,7 +16267,7 @@
   "09-0036": {
     "producto": "VARILLA CORRUGADA 1/2 (11.0) 9MTS GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 492
+    "cantidad": 240
   },
   "09-0037": {
     "producto": "VARILLA CORRUGADA 3/8 INTERMEDIA 9MTS GRADO 40",
@@ -16287,7 +16287,7 @@
   "09-0040": {
     "producto": "VARILLA CORRUGADA LG 3/8\"(9.5) GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 95
+    "cantidad": 150
   },
   "09-0041": {
     "producto": "VARILLA CORRUGADA 1\" GRADO 60",
@@ -16322,7 +16322,7 @@
   "09-0047": {
     "producto": "VARILLA CORRUGADA 3/4\" GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 27
+    "cantidad": 10
   },
   "09-0048": {
     "producto": "VARILLA CORRUGADA 5/8\" LG GRADO 40",
@@ -16332,7 +16332,7 @@
   "09-0049": {
     "producto": "VARILLA CORRUGADA 1/2(12.5) LG GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 2486
+    "cantidad": 4
   },
   "09-0050": {
     "producto": "VARILLA LISA 5/8\"",
@@ -21762,7 +21762,7 @@
   "12-0022": {
     "producto": "CEMENTO ARGOS USO GENERAL BOLSA 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 128
+    "cantidad": 108
   },
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
@@ -21802,7 +21802,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 5286
+    "cantidad": 5266
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21932,12 +21932,12 @@
   "12-0063": {
     "producto": "CEMENTO ULTRACEM UG 5200 PSI",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 72
+    "cantidad": 80
   },
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 830
+    "cantidad": 758
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
