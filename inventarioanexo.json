@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 14
+    "cantidad": 12
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -1072,7 +1072,7 @@
   "01-0337": {
     "producto": "TUBO CONDUIT PVC 1/2x3 METROS CEDULA 20 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 72
+    "cantidad": 172
   },
   "01-0338": {
     "producto": "TUBO CONDUIT PVC 1 X 3 METROS CEDULA 20 DURMAN",
@@ -1142,7 +1142,7 @@
   "01-0352": {
     "producto": "TUBO PVC 4X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 5
+    "cantidad": 3
   },
   "01-0353": {
     "producto": "TUBO PVC 2X6M SDR64 DRENAJE DURMAN",
@@ -1677,7 +1677,7 @@
   "01-0500": {
     "producto": "TUBO PVC 2X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 8
+    "cantidad": 6
   },
   "01-0501": {
     "producto": "LLAVE LAVAMANO CORONA PERILLA D",
@@ -7957,7 +7957,7 @@
   "03-0553": {
     "producto": "TELA ZARANDA 1/4\"x42\" POR PIE RHINO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 528
+    "cantidad": 502
   },
   "03-0554": {
     "producto": "ANGULO DE 1/4x1-1/2",
@@ -8847,7 +8847,7 @@
   "04-0026": {
     "producto": "ALAMBRE GALVANIZADO CALIBRE 16 POR LIBRA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 198
+    "cantidad": 194
   },
   "04-0028": {
     "producto": "ANGULO TABLA YESO 1X1X10 FT",
@@ -10197,7 +10197,7 @@
   "04-0392": {
     "producto": "CANALETA 2x4 1.50",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 24
+    "cantidad": 12
   },
   "04-0393": {
     "producto": "AISLANTE TERMOACUSTICO R11 1.22mX15.24m 18.62m2",
@@ -16137,7 +16137,7 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 266
+    "cantidad": 226
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
@@ -16152,12 +16152,12 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 127
+    "cantidad": 125
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 17
+    "cantidad": 13
   },
   "09-0010": {
     "producto": "VARILLA ENTORCHADA 1/2 (11.4)",
@@ -16182,7 +16182,7 @@
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 28
+    "cantidad": 27
   },
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
@@ -16972,7 +16972,7 @@
   "10-0198": {
     "producto": "PEGAMENTO P/CERAMICA PEGADURO 20KG",
     "departamento": "CERAMICAS",
-    "cantidad": 96
+    "cantidad": 94
   },
   "10-0200-CAJA": {
     "producto": "CERAMICA HISPACENSA CALPE#1 BLANCO 20X30.CM, 1 MTS, 17 PZS X CAJA",
@@ -20567,7 +20567,7 @@
   "10-0625": {
     "producto": "PEGA PORCELANATO PSP PEGADURO 20Kg",
     "departamento": "CERAMICAS",
-    "cantidad": 69
+    "cantidad": 66
   },
   "10-0626": {
     "producto": "FRAGUADOR CHOCOLATE C/A PEGADURO",
@@ -21712,7 +21712,7 @@
   "12-0022": {
     "producto": "CEMENTO ARGOS USO GENERAL BOLSA 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 21
+    "cantidad": 15
   },
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
@@ -21732,7 +21732,7 @@
   "12-0026": {
     "producto": "ADMIX IM1GRIS X SACO",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 4
+    "cantidad": 0
   },
   "12-0026-LB": {
     "producto": "ADMIX IM1GRIS X LIBRA",
@@ -21887,7 +21887,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 67
+    "cantidad": 37
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
@@ -27067,7 +27067,7 @@
   "12-0007": {
     "producto": "CEMENTO BLANCO BOLSA 55L AALBO",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 7
+    "cantidad": -13
   },
   "01-0400": {
     "producto": "CANOA PVC BEIGE P/AGUAS LLUVIA",
