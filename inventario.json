@@ -277,7 +277,7 @@
   "01-0091": {
     "producto": "TUBO PVC 3x6M SDR64 DRENAJE DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 205
+    "cantidad": 202
   },
   "01-0091-PIE": {
     "producto": "TUBO PVC 3 DRENAJE X PIE DURMAN",
@@ -312,7 +312,7 @@
   "01-0107": {
     "producto": "TUBO PVC 4X6M DRENAJE DURMAN SDR64",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 99
+    "cantidad": 129
   },
   "01-0109": {
     "producto": "PEDESTAL ACUACER BONE 103",
@@ -492,7 +492,7 @@
   "01-0160": {
     "producto": "TUBO PVC 6X6M CORRUGADO DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 0
+    "cantidad": -10
   },
   "01-0161": {
     "producto": "CODO 3x45 PVC INYECTADO DURMAN",
@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 119
+    "cantidad": 194
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -1072,7 +1072,7 @@
   "01-0337": {
     "producto": "TUBO CONDUIT PVC 1/2x3 METROS CEDULA 20 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 0
+    "cantidad": 100
   },
   "01-0338": {
     "producto": "TUBO CONDUIT PVC 1 X 3 METROS CEDULA 20 DURMAN",
@@ -1142,7 +1142,7 @@
   "01-0352": {
     "producto": "TUBO PVC 4X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 64
+    "cantidad": 56
   },
   "01-0353": {
     "producto": "TUBO PVC 2X6M SDR64 DRENAJE DURMAN",
@@ -1212,7 +1212,7 @@
   "01-0370": {
     "producto": "TUBO PVC 4x6M SDR26 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 39
+    "cantidad": 59
   },
   "01-0372": {
     "producto": "CODO 3X90 PVC PRESION DURMAN",
@@ -1517,7 +1517,7 @@
   "01-0456": {
     "producto": "TANQUE CISTERNA BICAPA 750 LITROS",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 6
+    "cantidad": 5
   },
   "01-0458": {
     "producto": "REDUCCION 1-1/4 X 1/2\" PVC",
@@ -1642,7 +1642,7 @@
   "01-0492": {
     "producto": "TUBO PVC 3x6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 17
+    "cantidad": 13
   },
   "01-0493": {
     "producto": "TUBO CONDUIT PVC 1-1/2X3 METRO CEDULA 20 DURMAN",
@@ -1677,7 +1677,7 @@
   "01-0500": {
     "producto": "TUBO PVC 2X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 109
+    "cantidad": 99
   },
   "01-0501": {
     "producto": "LLAVE LAVAMANO CORONA PERILLA D",
@@ -1952,7 +1952,7 @@
   "01-0568": {
     "producto": "TUBO PVC 6X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 124
+    "cantidad": 98
   },
   "01-0569": {
     "producto": "REDUCCION PVC PRESION 4X3 DURMAN",
@@ -3832,12 +3832,12 @@
   "02-0071": {
     "producto": "POLIDUCTO DE 1\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 30
+    "cantidad": 28
   },
   "02-0073": {
     "producto": "POLIDUCTO DE 3/4\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 64
+    "cantidad": 61
   },
   "02-0074": {
     "producto": "CINTA AISLANTE 3/4X60 3M TEMPLEX 165 19MMX18.3 METROS",
@@ -3872,7 +3872,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 55
+    "cantidad": 51
   },
   "02-0081": {
     "producto": "BOMBA PM60 1 HP FORAS",
@@ -5952,7 +5952,7 @@
   "03-0034": {
     "producto": "TUBO INGLES 1-1/4X1-1/4 CHAPA 18",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 46
+    "cantidad": 42
   },
   "03-0035": {
     "producto": "LAMINA INDUSTRIAL TROQUE 1/16MM 0.70",
@@ -6062,7 +6062,7 @@
   "03-0061": {
     "producto": "ANGULO DE 1/8x1-1/4",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 122
+    "cantidad": 120
   },
   "03-0063": {
     "producto": "REMACHE POP ALUM.3/16\"X1\"",
@@ -7092,12 +7092,12 @@
   "03-0374": {
     "producto": "RIEL PARA PORTON DE 20 PIES",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 28
+    "cantidad": 27
   },
   "03-0375": {
     "producto": "LAMINA INDUSTRIAL TROQUE 1/16 LG(0.90MM)",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 38
+    "cantidad": 34
   },
   "03-0376": {
     "producto": "DISCO ZIRCONICO 7x9/16x7/8 ZK60",
@@ -7162,7 +7162,7 @@
   "03-0389": {
     "producto": "TUBO GALVANIZADO REDONDO 1-1/2 X 6 MTS CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 232
+    "cantidad": 231
   },
   "03-0390": {
     "producto": "TUBO GALVANIZADO REDONDO 1x6 MTS CHAPA 16 1.30",
@@ -8012,7 +8012,7 @@
   "03-0562": {
     "producto": "TUBO GALVANIZADO 4x4 CHAPA 14 1.80 LEGITIMO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 4
+    "cantidad": 1
   },
   "03-0563": {
     "producto": "DISCO CORTE METAL 7\" OCONOR EXTRA FINO CM19219",
@@ -8967,7 +8967,7 @@
   "04-0054": {
     "producto": "LAMI.ALUZINC NATURAL X PIE CAL. 28 8 CRESTAS GRADO .30",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": 1347
+    "cantidad": 1041
   },
   "04-0055": {
     "producto": "PUNTA DESTORN.2\" PLANO",
@@ -9042,7 +9042,7 @@
   "04-0074-LB": {
     "producto": "CLAVO DE 3\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1086
+    "cantidad": 1074
   },
   "04-0077": {
     "producto": "CLAVO DE ACERO DE 2\"",
@@ -9182,7 +9182,7 @@
   "04-0135-LB": {
     "producto": "CLAVO DE 2-1/2\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1383
+    "cantidad": 1381
   },
   "04-0137": {
     "producto": "MOLDURA P/TABLAYESO ITALSTYL 76",
@@ -9352,7 +9352,7 @@
   "04-0206": {
     "producto": "LAMI.ALUZINC NATURAL x PIE CAL.26 0.35MM",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": 22731
+    "cantidad": 21969
   },
   "04-0207": {
     "producto": "TAPAGOTERA SISTA 1/4 GALON",
@@ -9532,7 +9532,7 @@
   "04-0257": {
     "producto": "CANALETA 2X4 GALVANIZADA LEGITIMA 1.20",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 336
+    "cantidad": 324
   },
   "04-0258": {
     "producto": "CLAVO DE ACERO DE 3-1/2\"",
@@ -9682,7 +9682,7 @@
   "04-0288": {
     "producto": "LAMINA PVC BLANCO BRILLANTE 20CMX5.9MTS",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 238
+    "cantidad": 224
   },
   "04-0289": {
     "producto": "TORNILLO K-LACH PF 8x1/2\"",
@@ -9697,7 +9697,7 @@
   "04-0291": {
     "producto": "UNION P/TABLILLA PVC BLANCA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 9
+    "cantidad": 7
   },
   "04-0292": {
     "producto": "LAMINA PVC MARMOL DIAGONAL 25CMX5.95MTS",
@@ -10227,7 +10227,7 @@
   "04-0392": {
     "producto": "CANALETA 2x4 1.50",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 48
+    "cantidad": 0
   },
   "04-0393": {
     "producto": "AISLANTE TERMOACUSTICO R11 1.22mX15.24m 18.62m2",
@@ -11017,7 +11017,7 @@
   "06-0002": {
     "producto": "MUEBLE AEREO P/COCINA BLANCO",
     "departamento": "MUEBLES",
-    "cantidad": 7
+    "cantidad": 6
   },
   "06-0003": {
     "producto": "ARMARIO AEREO CD208 2 PTAS BLN",
@@ -16172,7 +16172,7 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 6593
+    "cantidad": 6397
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
@@ -16187,7 +16187,7 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 343
+    "cantidad": -677
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
@@ -16197,7 +16197,7 @@
   "09-0010": {
     "producto": "VARILLA ENTORCHADA 1/2 (11.4)",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 0
+    "cantidad": 294
   },
   "09-0016": {
     "producto": "SC SOLERA DE CEDIMENTACION 20X4",
@@ -16222,7 +16222,7 @@
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 2937
+    "cantidad": 1792
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -16267,7 +16267,7 @@
   "09-0036": {
     "producto": "VARILLA CORRUGADA 1/2 (11.0) 9MTS GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 497
+    "cantidad": 492
   },
   "09-0037": {
     "producto": "VARILLA CORRUGADA 3/8 INTERMEDIA 9MTS GRADO 40",
@@ -16332,7 +16332,7 @@
   "09-0049": {
     "producto": "VARILLA CORRUGADA 1/2(12.5) LG GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 2590
+    "cantidad": 2486
   },
   "09-0050": {
     "producto": "VARILLA LISA 5/8\"",
@@ -16352,7 +16352,7 @@
   "09-0054": {
     "producto": "Varilla Lisa 1/2 (12.5)MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 3
+    "cantidad": -47
   },
   "10-0001": {
     "producto": "FRAGUADOR POR BOLSA",
@@ -20607,7 +20607,7 @@
   "10-0625": {
     "producto": "PEGA PORCELANATO PSP PEGADURO 20Kg",
     "departamento": "CERAMICAS",
-    "cantidad": 586
+    "cantidad": 536
   },
   "10-0626": {
     "producto": "FRAGUADOR CHOCOLATE C/A PEGADURO",
@@ -21677,7 +21677,7 @@
   "12-0002": {
     "producto": "CAL 4 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 384
+    "cantidad": 374
   },
   "12-0008": {
     "producto": "ADMIX-600 X GALON",
@@ -21782,7 +21782,7 @@
   "12-0026": {
     "producto": "ADMIX IM1GRIS X SACO",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 0
+    "cantidad": -2
   },
   "12-0026-LB": {
     "producto": "ADMIX IM1GRIS X LIBRA",
@@ -21802,7 +21802,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 5497
+    "cantidad": 5286
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21932,12 +21932,12 @@
   "12-0063": {
     "producto": "CEMENTO ULTRACEM UG 5200 PSI",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 150
+    "cantidad": 72
   },
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 1350
+    "cantidad": 830
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
@@ -27193,5 +27193,10 @@
     "producto": "TUBO GALV 4\"x4\" CHAPA 16 1.35",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
     "cantidad": 72
+  },
+  "04-0458": {
+    "producto": "LAMI.POLICARBONATO TRANS 42x12",
+    "departamento": "ENCIELADO-TECHOS",
+    "cantidad": -1
   }
 }
