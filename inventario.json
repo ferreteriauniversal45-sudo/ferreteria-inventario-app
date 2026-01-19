@@ -7492,7 +7492,7 @@
   "03-0458": {
     "producto": "TUBO GALVANIZADO 4x4 CH14 COMERCIAL 1.50",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 233
+    "cantidad": 201
   },
   "03-0459-LB": {
     "producto": "GRAPA GALVANIZADA 1-1/4X9\" POR LIBRA",
@@ -8147,7 +8147,7 @@
   "03-0589": {
     "producto": "LAMINA ANTIDERRAPANTE 3/16x4x8",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 4
+    "cantidad": 3
   },
   "03-0590": {
     "producto": "ANGULO DE 3/16x1\"",
@@ -9352,7 +9352,7 @@
   "04-0206": {
     "producto": "LAMI.ALUZINC NATURAL x PIE CAL.26 0.35MM",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": 21969
+    "cantidad": 21537
   },
   "04-0207": {
     "producto": "TAPAGOTERA SISTA 1/4 GALON",
@@ -16322,7 +16322,7 @@
   "09-0047": {
     "producto": "VARILLA CORRUGADA 3/4\" GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 10
+    "cantidad": 1
   },
   "09-0048": {
     "producto": "VARILLA CORRUGADA 5/8\" LG GRADO 40",
@@ -21802,7 +21802,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 5266
+    "cantidad": 5265
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -27198,5 +27198,10 @@
     "producto": "LAMI.POLICARBONATO TRANS 42x12",
     "departamento": "ENCIELADO-TECHOS",
     "cantidad": -1
+  },
+  "10-0677": {
+    "producto": "FRAGUADOR GRIS PERLA S/A PEGAS",
+    "departamento": "FRAGUADORES",
+    "cantidad": -9
   }
 }
