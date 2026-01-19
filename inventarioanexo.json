@@ -297,7 +297,7 @@
   "01-0099": {
     "producto": "TUBO CPVC 1/2X6 METRO DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 4
+    "cantidad": 1
   },
   "01-0101": {
     "producto": "UNION CPVC LISA 1/2 DURMAN",
@@ -1147,7 +1147,7 @@
   "01-0353": {
     "producto": "TUBO PVC 2X6M SDR64 DRENAJE DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 4
+    "cantidad": 1
   },
   "01-0353-PIE": {
     "producto": "TUBO PVC 2 SDR64 X PIE DURMAN",
@@ -16137,7 +16137,7 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 226
+    "cantidad": 221
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
@@ -16182,12 +16182,12 @@
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 27
+    "cantidad": 22
   },
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 20
+    "cantidad": 15
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -20567,7 +20567,7 @@
   "10-0625": {
     "producto": "PEGA PORCELANATO PSP PEGADURO 20Kg",
     "departamento": "CERAMICAS",
-    "cantidad": 66
+    "cantidad": 65
   },
   "10-0626": {
     "producto": "FRAGUADOR CHOCOLATE C/A PEGADURO",
@@ -21752,7 +21752,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 32
+    "cantidad": 21
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21887,7 +21887,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 37
+    "cantidad": 8
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
