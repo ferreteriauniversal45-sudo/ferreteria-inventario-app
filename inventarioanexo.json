@@ -1307,7 +1307,7 @@
   "01-0401": {
     "producto": "TUBO PVC 1/2 PRESION SDR 13.5 POR METRO DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0402-MTS": {
     "producto": "TUBO PVC 4 SDR26 X METRO DURMAN",
@@ -21727,7 +21727,7 @@
   "12-0024": {
     "producto": "CEMENTO ECO ARGOS MULTIPROPOSITO 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": -6
+    "cantidad": 0
   },
   "12-0026": {
     "producto": "ADMIX IM1GRIS X SACO",
@@ -27067,7 +27067,7 @@
   "12-0007": {
     "producto": "CEMENTO BLANCO BOLSA 55L AALBO",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -13
+    "cantidad": 0
   },
   "01-0400": {
     "producto": "CANOA PVC BEIGE P/AGUAS LLUVIA",
