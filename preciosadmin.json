@@ -47253,10 +47253,10 @@
     "precio": 450.0,
     "precioA": 416.0,
     "precioB": 400.0,
-    "precioC": 384.0,
-    "mayoreo": 384.0,
+    "precioC": 365.0,
+    "mayoreo": 355.0,
     "costo": 267.64,
-    "limite": 349.0
+    "limite": 344.0
   },
   "04-0257": {
     "precio": 471.0,
