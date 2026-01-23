@@ -982,7 +982,7 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 12
+    "cantidad": 11
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
@@ -1677,7 +1677,7 @@
   "01-0500": {
     "producto": "TUBO PVC 2X6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 6
+    "cantidad": 5
   },
   "01-0501": {
     "producto": "LLAVE LAVAMANO CORONA PERILLA D",
@@ -3732,7 +3732,7 @@
   "02-0047": {
     "producto": "CABLE ACOMETIDA#6 POR METROS",
     "departamento": "ELECTRICIDAD-CABLE ELECTRICO-CABLE ELECTRICO",
-    "cantidad": 332
+    "cantidad": 282
   },
   "02-0048": {
     "producto": "ENCHUFE POLARIZADO 1707 EAGLE",
@@ -3862,7 +3862,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 13
+    "cantidad": 8
   },
   "02-0081": {
     "producto": "BOMBA PM60 1 HP FORAS",
@@ -6507,7 +6507,7 @@
   "03-0170": {
     "producto": "TELA METALICA 42 X PIE",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 0
+    "cantidad": -3
   },
   "03-0172": {
     "producto": "TUBO GALVANIZADO REDONDO 1-1/2 CHAPA 18",
@@ -6812,7 +6812,7 @@
   "03-0303": {
     "producto": "LAMINA ESPANDIDA DE 1/2 DE 4X8",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 9
+    "cantidad": 4
   },
   "03-0304": {
     "producto": "RODO GALVANIZADO PARA PORTON 4\"",
@@ -7957,7 +7957,7 @@
   "03-0553": {
     "producto": "TELA ZARANDA 1/4\"x42\" POR PIE RHINO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 502
+    "cantidad": 484
   },
   "03-0554": {
     "producto": "ANGULO DE 1/4x1-1/2",
@@ -8847,7 +8847,7 @@
   "04-0026": {
     "producto": "ALAMBRE GALVANIZADO CALIBRE 16 POR LIBRA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 194
+    "cantidad": 168
   },
   "04-0028": {
     "producto": "ANGULO TABLA YESO 1X1X10 FT",
@@ -14412,7 +14412,7 @@
   "08-0534-CUBE": {
     "producto": "PINT.ESMALTE (ACEITE) BLANCO CORONA DURA POR CUBETA",
     "departamento": "PINTURAS",
-    "cantidad": 0
+    "cantidad": -2
   },
   "08-0535-GL": {
     "producto": "PINT.ESMALTE (ACEITE) BLANCO CORONA DURA X GALON",
@@ -16137,12 +16137,12 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 221
+    "cantidad": 210
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 38
+    "cantidad": 18
   },
   "09-0006": {
     "producto": "VARILLA CORRUGADA 1/2 (11.4)",
@@ -16182,7 +16182,7 @@
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 22
+    "cantidad": 16
   },
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
@@ -20567,7 +20567,7 @@
   "10-0625": {
     "producto": "PEGA PORCELANATO PSP PEGADURO 20Kg",
     "departamento": "CERAMICAS",
-    "cantidad": 65
+    "cantidad": 55
   },
   "10-0626": {
     "producto": "FRAGUADOR CHOCOLATE C/A PEGADURO",
@@ -21627,7 +21627,7 @@
   "12-0002": {
     "producto": "CAL 4 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 3
+    "cantidad": 1
   },
   "12-0008": {
     "producto": "ADMIX-600 X GALON",
@@ -21712,7 +21712,7 @@
   "12-0022": {
     "producto": "CEMENTO ARGOS USO GENERAL BOLSA 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 15
+    "cantidad": 14
   },
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
@@ -21752,7 +21752,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 21
+    "cantidad": 19
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21887,7 +21887,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 8
+    "cantidad": -109
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
@@ -24937,7 +24937,7 @@
   "15-0911-YARDA": {
     "producto": "NAYLON NEGRO 72X6FT X YARDA",
     "departamento": "HERRAMIENTAS",
-    "cantidad": 10
+    "cantidad": -72
   },
   "15-0912": {
     "producto": "PULIDORA TRUPER ESMA 4-1/2-N MAS DISCO PARA PULIR METAL TRUPER 4-1/2\"",
@@ -27092,6 +27092,6 @@
   "12-0007-LB": {
     "producto": "CEMENTO BLANCO X LIBRA AALBORG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 0
+    "cantidad": -15
   }
 }
