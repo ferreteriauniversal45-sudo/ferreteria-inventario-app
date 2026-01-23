@@ -307,12 +307,12 @@
   "01-0104": {
     "producto": "LAVAMANO ACUACER BONE 103",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 30
+    "cantidad": 29
   },
   "01-0107": {
     "producto": "TUBO PVC 4X6M DRENAJE DURMAN SDR64",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 72
+    "cantidad": 70
   },
   "01-0109": {
     "producto": "PEDESTAL ACUACER BONE 103",
@@ -712,12 +712,12 @@
   "01-0221": {
     "producto": "PEDESTAL CORONA ACUACER BLANCO",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 14
+    "cantidad": 18
   },
   "01-0222": {
     "producto": "LAVAMANO CORONA ACUACER BLANCO",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 21
+    "cantidad": 25
   },
   "01-0223": {
     "producto": "TAPADERA ACUACER BLANCO 100",
@@ -982,12 +982,12 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2x6METROS SDR 13.5 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 169
+    "cantidad": 99
   },
   "01-0310": {
     "producto": "TUBO PVC 2x6M SDR26 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 138
+    "cantidad": -96
   },
   "01-0312": {
     "producto": "TANQUE CISTERNA TRICAPA 1100 LITROS",
@@ -997,7 +997,7 @@
   "01-0313": {
     "producto": "INODORO ACUACER CORONA BLANCO CON ACCESORIOS",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 17
+    "cantidad": 21
   },
   "01-0314": {
     "producto": "TUBO ABASTO COFLEX PARA SANITARIO VINILO",
@@ -1642,7 +1642,7 @@
   "01-0492": {
     "producto": "TUBO PVC 3x6M SDR41 DURMAN",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 36
+    "cantidad": 33
   },
   "01-0493": {
     "producto": "TUBO CONDUIT PVC 1-1/2X3 METRO CEDULA 20 DURMAN",
@@ -3517,7 +3517,7 @@
   "01-0985": {
     "producto": "TANQUE CISTERNA BICAPA 450L",
     "departamento": "FONTANERIA -PVC",
-    "cantidad": 4
+    "cantidad": 3
   },
   "01-1016": {
     "producto": "MAXICANAL PERFIL CANOA PVC 6M",
@@ -3872,7 +3872,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": 47
+    "cantidad": 49
   },
   "02-0081": {
     "producto": "BOMBA PM60 1 HP FORAS",
@@ -6062,7 +6062,7 @@
   "03-0061": {
     "producto": "ANGULO DE 1/8x1-1/4",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 120
+    "cantidad": 119
   },
   "03-0063": {
     "producto": "REMACHE POP ALUM.3/16\"X1\"",
@@ -6887,7 +6887,7 @@
   "03-0328": {
     "producto": "MALLA CICLON DE 8x100 x ROLLO CAL. 13",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 10
+    "cantidad": 17
   },
   "03-0329": {
     "producto": "TUBO INGLES 1-1/4x1-1/4 CHAPA 14 1.80",
@@ -6897,7 +6897,7 @@
   "03-0331": {
     "producto": "MALLA ELECTROSOLDADA 6/6 6Mx2.35M CORRUGADA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS",
-    "cantidad": 24
+    "cantidad": 21
   },
   "03-0332": {
     "producto": "TUBO HG 4 CHAPA 14 LEGITIMO",
@@ -7292,7 +7292,7 @@
   "03-0415": {
     "producto": "TUBO GALVANIZADO 3x3 CHAPA 16 1.50",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 0
+    "cantidad": -2
   },
   "03-0416": {
     "producto": "LAMINA INDUSTRIAL LISA 1/8 4X8 CALIBRE 11",
@@ -7457,7 +7457,7 @@
   "03-0450": {
     "producto": "TUBO INGLES 1x1 CHAPA 18 1.00",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 184
+    "cantidad": 182
   },
   "03-0451": {
     "producto": "DISCO C/M 4-1/2X3/64X7/8 TRUPER",
@@ -7492,7 +7492,7 @@
   "03-0458": {
     "producto": "TUBO GALVANIZADO 4x4 CH14 COMERCIAL 1.50",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 201
+    "cantidad": 200
   },
   "03-0459-LB": {
     "producto": "GRAPA GALVANIZADA 1-1/4X9\" POR LIBRA",
@@ -8702,7 +8702,7 @@
   "03-0700": {
     "producto": "TUBO GALVANIZADO 2x4 CHAPA 16 LEGITIMO",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-GALVANIZADO",
-    "cantidad": 200
+    "cantidad": 144
   },
   "03-0701": {
     "producto": "MALLA CICLON C/FORRO VERDE 5FT 100FT 30M",
@@ -8877,7 +8877,7 @@
   "04-0028": {
     "producto": "ANGULO TABLA YESO 1X1X10 FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 140
+    "cantidad": 80
   },
   "04-0029": {
     "producto": "CANAL FURRIN 12\" C28 SIN PESTAÑA",
@@ -8967,7 +8967,7 @@
   "04-0054": {
     "producto": "LAMI.ALUZINC NATURAL X PIE CAL. 28 8 CRESTAS GRADO .30",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": 1041
+    "cantidad": 783
   },
   "04-0055": {
     "producto": "PUNTA DESTORN.2\" PLANO",
@@ -8992,17 +8992,17 @@
   "04-0060": {
     "producto": "SKYLINE ANGULO P/CIELO 10X15/16",
     "departamento": "CERAMICAS-SEPARADORES",
-    "cantidad": 366
+    "cantidad": 346
   },
   "04-0061": {
     "producto": "SKYLINE CROSS TEE 4X15/16 BLANCO",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 1005
+    "cantidad": 956
   },
   "04-0062": {
     "producto": "SKYLINE MAIN TEE 12X15/16 BLANCO",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 434
+    "cantidad": 391
   },
   "04-0065": {
     "producto": "TAPAGOTERA CAMPEON 1/4 GALON",
@@ -9042,7 +9042,7 @@
   "04-0074-LB": {
     "producto": "CLAVO DE 3\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1009
+    "cantidad": 979
   },
   "04-0077": {
     "producto": "CLAVO DE ACERO DE 2\"",
@@ -9182,7 +9182,7 @@
   "04-0135-LB": {
     "producto": "CLAVO DE 2-1/2\" POR LIBRA",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TORNILLERIA Y FIJASIONES",
-    "cantidad": 1378
+    "cantidad": 1368
   },
   "04-0137": {
     "producto": "MOLDURA P/TABLAYESO ITALSTYL 76",
@@ -9352,7 +9352,7 @@
   "04-0206": {
     "producto": "LAMI.ALUZINC NATURAL x PIE CAL.26 0.35MM",
     "departamento": "ENCIELADO-TECHOS-GALVANIZADO",
-    "cantidad": 21057
+    "cantidad": 20813
   },
   "04-0207": {
     "producto": "TAPAGOTERA SISTA 1/4 GALON",
@@ -9532,7 +9532,7 @@
   "04-0257": {
     "producto": "CANALETA 2X4 GALVANIZADA LEGITIMA 1.20",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 324
+    "cantidad": 318
   },
   "04-0258": {
     "producto": "CLAVO DE ACERO DE 3-1/2\"",
@@ -9567,7 +9567,7 @@
   "04-0265": {
     "producto": "LAMINA PVC NOGAL 25CMX19PIES",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 8
+    "cantidad": -2
   },
   "04-0266": {
     "producto": "LAMINA PVC CAOBA 25CMX19PIES",
@@ -9667,7 +9667,7 @@
   "04-0285": {
     "producto": "POSTE 10FT STUD2-1/2C28 0.30MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 132
+    "cantidad": 102
   },
   "04-0286": {
     "producto": "DISCO LIJA #60",
@@ -9927,7 +9927,7 @@
   "04-0336": {
     "producto": "CANAL FURRIN 12\" C28 CON PESTAÑA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": 430
+    "cantidad": 370
   },
   "04-0337": {
     "producto": "AISLANTE TERMICO 3MM 4'X125'",
@@ -10242,7 +10242,7 @@
   "04-0431": {
     "producto": "CANALETA GALV 2X4 COMERCIAL",
     "departamento": "ENCIELADO-TECHOS-CANALETAS",
-    "cantidad": 756
+    "cantidad": 750
   },
   "04-0449": {
     "producto": "MOLDURA PVC BLANCA 5.80MTS",
@@ -11122,17 +11122,17 @@
   "07-0024": {
     "producto": "PUERTA BOSTANIAN 36x80x1-3/8",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 77
+    "cantidad": 74
   },
   "07-0025": {
     "producto": "PUERTA METALICA 36x80",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 15
+    "cantidad": 13
   },
   "07-0026": {
     "producto": "PUERTA METALICA MED LUNA 36X80",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 5
+    "cantidad": -1
   },
   "07-0027": {
     "producto": "LLAVIN PUE/PRINC HERMEX LATON A",
@@ -11157,7 +11157,7 @@
   "07-0032": {
     "producto": "PUERTA BOSTONIAN 32x80x1-3/8",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 8
+    "cantidad": 6
   },
   "07-0034": {
     "producto": "BROCA P/CONCRETO 3/8\" DEWALT",
@@ -11202,7 +11202,7 @@
   "07-0042": {
     "producto": "CONTRAMARCO DE 2X7X7 CON MOCHETA",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 86
+    "cantidad": 98
   },
   "07-0043": {
     "producto": "LLAVIN SAPO DE CHAPA HERMEX 2 L",
@@ -12347,7 +12347,7 @@
   "07-0295": {
     "producto": "PUERTA TERMOFORMADA 30x80",
     "departamento": "PUERTAS -VENTANAS-ACCESORIOS",
-    "cantidad": 1
+    "cantidad": 0
   },
   "07-0296": {
     "producto": "PUERTA TERMOFORMADA 26x80",
@@ -16172,12 +16172,12 @@
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 6241
+    "cantidad": 6066
   },
   "09-0005": {
     "producto": "VARILLA CORRUGADA 3/8 (8.0) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 2340
+    "cantidad": 2238
   },
   "09-0006": {
     "producto": "VARILLA CORRUGADA 1/2 (11.4)",
@@ -16187,12 +16187,12 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4 (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -838
+    "cantidad": -895
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1822
+    "cantidad": 1808
   },
   "09-0010": {
     "producto": "VARILLA ENTORCHADA 1/2 (11.4)",
@@ -16217,12 +16217,12 @@
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 966
+    "cantidad": 839
   },
   "09-0022": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 1558
+    "cantidad": 1275
   },
   "09-0024": {
     "producto": "VARILLA CORRUGADA 3/8 (8.7) LG",
@@ -16267,7 +16267,7 @@
   "09-0036": {
     "producto": "VARILLA CORRUGADA 1/2 (11.0) 9MTS GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 653
+    "cantidad": 617
   },
   "09-0037": {
     "producto": "VARILLA CORRUGADA 3/8 INTERMEDIA 9MTS GRADO 40",
@@ -16322,12 +16322,12 @@
   "09-0047": {
     "producto": "VARILLA CORRUGADA 3/4\" GRADO 60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 51
+    "cantidad": 61
   },
   "09-0048": {
     "producto": "VARILLA CORRUGADA 5/8\" LG GRADO 40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": 72
+    "cantidad": 70
   },
   "09-0049": {
     "producto": "VARILLA CORRUGADA 1/2(12.5) LG GRADO 60",
@@ -16577,7 +16577,7 @@
   "10-0057-CAJA": {
     "producto": "CERAMICA HISPACENSA MOSAICO ROSA 33.4X33.4CM, 1 MTS, 9 PZS X CAJA",
     "departamento": "CERAMICAS",
-    "cantidad": 26
+    "cantidad": 24
   },
   "10-0057-MTS": {
     "producto": "CERAMICA HISPACENSA MOSAICO ROSA 33.4X33.4CM, 1 MTS X CAJA",
@@ -16752,7 +16752,7 @@
   "10-0116": {
     "producto": "FRAGUADOR ARENA SIN ARENA PEGASSU",
     "departamento": "FRAGUADORES",
-    "cantidad": 15
+    "cantidad": 14
   },
   "10-0125": {
     "producto": "FRAGUADOR ARENA CON ARENA PEGASSU",
@@ -17012,7 +17012,7 @@
   "10-0198": {
     "producto": "PEGAMENTO P/CERAMICA PEGADURO 20KG",
     "departamento": "CERAMICAS",
-    "cantidad": 207
+    "cantidad": 203
   },
   "10-0200-CAJA": {
     "producto": "CERAMICA HISPACENSA CALPE#1 BLANCO 20X30.CM, 1 MTS, 17 PZS X CAJA",
@@ -20607,7 +20607,7 @@
   "10-0625": {
     "producto": "PEGA PORCELANATO PSP PEGADURO 20Kg",
     "departamento": "CERAMICAS",
-    "cantidad": 536
+    "cantidad": 457
   },
   "10-0626": {
     "producto": "FRAGUADOR CHOCOLATE C/A PEGADURO",
@@ -21052,7 +21052,7 @@
   "11-0018": {
     "producto": "REGLA DE 1X3X10FT PINO",
     "departamento": "MADERAS",
-    "cantidad": 89
+    "cantidad": 79
   },
   "11-0019": {
     "producto": "MACHIMBRE DE 1X6X16",
@@ -21112,7 +21112,7 @@
   "11-0030": {
     "producto": "LAMINA MASONITE 4x8",
     "departamento": "MADERAS",
-    "cantidad": 23
+    "cantidad": 22
   },
   "11-0031": {
     "producto": "TABLA DE 1X10X11 FT DE PINO",
@@ -21762,12 +21762,12 @@
   "12-0022": {
     "producto": "CEMENTO ARGOS USO GENERAL BOLSA 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 108
+    "cantidad": 302
   },
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 65
+    "cantidad": 265
   },
   "12-0023-LB": {
     "producto": "CEMENTO UNO X LIBRA",
@@ -21777,7 +21777,7 @@
   "12-0024": {
     "producto": "CEMENTO ECO ARGOS MULTIPROPOSITO 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 72
+    "cantidad": 272
   },
   "12-0026": {
     "producto": "ADMIX IM1GRIS X SACO",
@@ -21802,7 +21802,7 @@
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": 5260
+    "cantidad": 4518
   },
   "12-0030-LB": {
     "producto": "SUPER PULIDO PEGADURO X LIBRA",
@@ -21937,7 +21937,7 @@
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 PSI 42.5KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION-CEMENTO",
-    "cantidad": 1234
+    "cantidad": 1725
   },
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm",
@@ -26447,7 +26447,7 @@
   "19-0001-CAJA": {
     "producto": "PORCELANATO PLAIN IVORY 60x60CM 1.44M 4 PIEZAS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": 1018
+    "cantidad": 818
   },
   "19-0002-CAJA": {
     "producto": "PORCELANATO STRIPE 60x60CM 1.44M 4 PIEZAS",
@@ -26582,12 +26582,12 @@
   "19-0028-CAJA": {
     "producto": "CERAMICA 1407-LT 30x60CM 0.90M 5 PIEZAS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": 25
+    "cantidad": 19
   },
   "19-0029-CAJA": {
     "producto": "CERAMICA 1407-DK 30x60CM 0.90M 5 PIEZAS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": 65
+    "cantidad": 64
   },
   "19-0030-CAJA": {
     "producto": "CERAMICA 1407-HL1-A 30x60CM 0.90M 5 PIEZAS",
@@ -27157,7 +27157,7 @@
   "08-0049-GL": {
     "producto": "PINT. ACEITE BLANCA SG X GL",
     "departamento": "PINTURAS-ACEITE",
-    "cantidad": 0
+    "cantidad": -2
   },
   "10-0713-CAJA": {
     "producto": "CERA. FACHALETA AMAZONA-004 30X60",
@@ -27172,7 +27172,7 @@
   "03-0756": {
     "producto": "TUBO INGLES 2x2 CH 16 1.30",
     "departamento": "ESTRUCTURA METALICA Y ACCESORIOS-TUBOS Y PERFILES",
-    "cantidad": 26
+    "cantidad": 20
   },
   "10-0705-CAJA": {
     "producto": "CERA.NATURAL MARINA HUESO",
