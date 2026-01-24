@@ -57,7 +57,7 @@
   "01-0032": {
     "producto": "VALVULA RECTA 1/2X3/8 P/SANITA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0036": {
     "producto": "VALVULA P/BAÑO GRIVEN WA009",
@@ -222,12 +222,12 @@
   "01-0086": {
     "producto": "CANOA PVC P/AGUAS 06MTS BEIGE",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -6
+    "cantidad": 0
   },
   "01-0087": {
     "producto": "CINTA TEFLON 3/4x7M TRUPER",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -11
+    "cantidad": 0
   },
   "01-0088": {
     "producto": "GAZA P/CANOA PVC BEIGE DURMAN",
@@ -252,7 +252,7 @@
   "01-0099": {
     "producto": "TUBO CPVC 1/2X6M DURMAN",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -16
+    "cantidad": 0
   },
   "01-0101": {
     "producto": "UNION CPVC LISA 1/2 DURMAN",
@@ -397,7 +397,7 @@
   "01-0160": {
     "producto": "TUBO PVC 6\" F949 CORRUGADO DUR",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -10
+    "cantidad": 0
   },
   "01-0161": {
     "producto": "CODO PVC INYECTADO 3x45 DURMAN",
@@ -457,7 +457,7 @@
   "01-0184": {
     "producto": "PEDESTAL ACUACER AZUL OSC 118",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0185": {
     "producto": "LAVABO ACUACER CORONA AZUL OSC",
@@ -507,12 +507,12 @@
   "01-0208": {
     "producto": "SIFON BOTELLA RB1 P/LAVATRASTO",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -5
+    "cantidad": 0
   },
   "01-0209": {
     "producto": "TUBO PVC 1-1/2\" SDR26 PRES DUR",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -7
+    "cantidad": 0
   },
   "01-0209-PIE": {
     "producto": "TUBO PVC 1-1/2\" SDR26 PRES DUR",
@@ -532,17 +532,17 @@
   "01-0217": {
     "producto": "TAPON PVC HECHIZO 2\"",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0221": {
     "producto": "PEDESTAL ACUACER CORONA BLANCO",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -4
+    "cantidad": 0
   },
   "01-0222": {
     "producto": "LAVABO ACUACER CORONA BLANCO",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -4
+    "cantidad": 0
   },
   "01-0226": {
     "producto": "TE PVC LISA PRESION 1-1/4\" DUR",
@@ -607,7 +607,7 @@
   "01-0271": {
     "producto": "TUBO HG 2\" C/R",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -11
+    "cantidad": 0
   },
   "01-0272": {
     "producto": "VALVULA P/BAÑO ITAP 1/2",
@@ -632,7 +632,7 @@
   "01-0279": {
     "producto": "VALVULA DOBLE SALIDA VYG",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-0280": {
     "producto": "UNION PVC UNIVERSAL 1 DURMAN",
@@ -682,7 +682,7 @@
   "01-0291": {
     "producto": "TUBO PVC 3/4\" SDR26 PRESION DU",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -89
+    "cantidad": 0
   },
   "01-0294": {
     "producto": "SIFON 1-1/2 FLEXIBLE F1",
@@ -712,22 +712,22 @@
   "01-0309": {
     "producto": "TUBO PVC 1/2\" SDR13.5 PRESION",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -63
+    "cantidad": 0
   },
   "01-0310": {
     "producto": "TUBO PVC 2\" SDR26 PRESION DURM",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -313
+    "cantidad": 0
   },
   "01-0312": {
     "producto": "TANQUE CISTERNA TRICAPA 1100L",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0313": {
     "producto": "INOD.ACUACER CORONA BLANCO",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -4
+    "cantidad": 0
   },
   "01-0314": {
     "producto": "TUBO ABAST P/SANIT VINILO COFl",
@@ -792,7 +792,7 @@
   "01-0338": {
     "producto": "TUBO COND PVC 1X3M C20 DURMAN",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -12
+    "cantidad": 0
   },
   "01-0339": {
     "producto": "CODO CPVC 1/2\"x45 DURMAN",
@@ -817,7 +817,7 @@
   "01-0344": {
     "producto": "CURVA PVC CONDUIT 3/4\" C-20",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -98
+    "cantidad": 0
   },
   "01-0346": {
     "producto": "TE CPVC LISA 3/4\" DURMAN",
@@ -842,7 +842,7 @@
   "01-0353": {
     "producto": "TUBO PVC 2\" SDR64 DRENAJE DURM",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -16
+    "cantidad": 0
   },
   "01-0354": {
     "producto": "TE PVC C/RED 1-1/2\"-1/2\" DURMA",
@@ -907,7 +907,7 @@
   "01-0373": {
     "producto": "TUBO PVC 3\" SDR26 PRESION DURM",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -4
+    "cantidad": 0
   },
   "01-0374": {
     "producto": "TAPON PVC LISO PRESION 2\" DURM",
@@ -947,12 +947,12 @@
   "01-0397-MTS": {
     "producto": "TUBO PVC 4\" SDR41 SEMIPRES DUR",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-0401-MTS": {
     "producto": "TUBO PVC 1/2\" SDR13.5 PRESION",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -6
+    "cantidad": 0
   },
   "01-0403": {
     "producto": "UNION PVC LISA 1-1/2",
@@ -977,7 +977,7 @@
   "01-0414-MTS": {
     "producto": "TUBO PVC 2\" SDR64 DURMAN X MTS",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "01-0415-MTS": {
     "producto": "TUBO CPVC 1/2 X METRO DURMAN",
@@ -992,7 +992,7 @@
   "01-0428": {
     "producto": "TUBO PVC 6\" SDR64 DRENAJE DURM",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -8
+    "cantidad": 0
   },
   "01-0433": {
     "producto": "CINTA TEFLON 1/2x13M TRUPER",
@@ -1007,7 +1007,7 @@
   "01-0439": {
     "producto": "TUBO PVC 1-1/4\" SDR26 PRES DUR",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -21
+    "cantidad": 0
   },
   "01-0439-PIE": {
     "producto": "TUBO PVC 1-1/4\" SDR26 PRES DUR",
@@ -1107,17 +1107,17 @@
   "01-0489-MTS": {
     "producto": "TUBO PVC 2\" SDR26 PRESION DURM",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "01-0492": {
     "producto": "TUBO PVC 3\" SDR41 SEMIPRES DUR",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -11
+    "cantidad": 0
   },
   "01-0493": {
     "producto": "TUBO COND PVC 1-1/2 X3M C20 DU",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -10
+    "cantidad": 0
   },
   "01-0494": {
     "producto": "ADAP CONDUIT MACHO 1 C-40 DURM",
@@ -1197,7 +1197,7 @@
   "01-0539": {
     "producto": "TUBO PVC 10\" F949 CORRUGADO DU",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0541": {
     "producto": "TANQUE P/BOMBA TRUPER 50LTS",
@@ -1257,7 +1257,7 @@
   "01-0568": {
     "producto": "TUBO PVC 6\" SDR41 SEMIPRES DUR",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -19
+    "cantidad": 0
   },
   "01-0569": {
     "producto": "REDUCCION PVC 4\"X3\" PRES DURMA",
@@ -1352,12 +1352,12 @@
   "01-0625": {
     "producto": "ADAP CONDUIT MACHO 1/2 C-40 DU",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -60
+    "cantidad": 0
   },
   "01-0626": {
     "producto": "CANOA PVC P/AGUAS 06MTS BLANCA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-0627": {
     "producto": "UNION P/CANOA PVC BLANCA DURMA",
@@ -1457,7 +1457,7 @@
   "01-0669": {
     "producto": "LLAVE PILA 1/2 FOSET 49085",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0670": {
     "producto": "CHUPON FOSET 2",
@@ -1567,7 +1567,7 @@
   "01-0700": {
     "producto": "VALVULA P/BAÑO GRIVEN WA105",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "01-0702": {
     "producto": "UÑA DOBLE P/LAVAMANO",
@@ -1677,7 +1677,7 @@
   "01-0734": {
     "producto": "SIFON PLASTI CUADR 4X4 IMACA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-0735": {
     "producto": "LLAVE PILA C/PALANCA 1/2 C/AD",
@@ -1692,7 +1692,7 @@
   "01-0737": {
     "producto": "CAJA PVC RECT 2X4 MIXTA GRIS C",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -9
+    "cantidad": 0
   },
   "01-0738": {
     "producto": "VALVULA P/BAÑO CROMADA 013-CSV",
@@ -1767,7 +1767,7 @@
   "01-0765": {
     "producto": "TAPADERA P/INODORO BLANCO BTH",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0766": {
     "producto": "LAVATRASTO IZQ. OCONOR S/ACCES",
@@ -1822,12 +1822,12 @@
   "01-0789": {
     "producto": "VALVULA P/BAÑO GRIVEN FT006",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0790": {
     "producto": "LLAVE P/DUCHA GRIVEN WA025",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-0791": {
     "producto": "DESAGUE P/PISO MET PUSH 4X4 GR",
@@ -1837,7 +1837,7 @@
   "01-0792": {
     "producto": "DESAGUE P/BAÑO GRIVEN PUSH RED",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "01-0795": {
     "producto": "SIFON 1-1/4 P/LAVAM C/DESAGUE",
@@ -1902,7 +1902,7 @@
   "01-0813": {
     "producto": "LLAVE PILA 1/2 TEKA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -4
+    "cantidad": 0
   },
   "01-0815": {
     "producto": "CURVA PVC CONDUIT 1-1/2\" C-20",
@@ -2007,7 +2007,7 @@
   "01-0845": {
     "producto": "EMPAQUE DE HULE P/MANGUERA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -5
+    "cantidad": 0
   },
   "01-0846": {
     "producto": "TAPON CPVC LISO 3/4\"",
@@ -2062,7 +2062,7 @@
   "01-0860": {
     "producto": "LLAVE PILA 1/2 VYG DORADA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0861": {
     "producto": "VALVULA PIE FILTRO 1\" VYG",
@@ -2167,7 +2167,7 @@
   "01-0892": {
     "producto": "PEGAMENTO CONDUIT TANGIT 1/8",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0893": {
     "producto": "PASTA SILICON SISTA",
@@ -2192,7 +2192,7 @@
   "01-0898": {
     "producto": "TUBO COND PVC 1-1/4x3.05M CD40",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "01-0899": {
     "producto": "CODO HECHIZO 3x90",
@@ -2437,7 +2437,7 @@
   "01-0963": {
     "producto": "VALVULA C/FLOTADOR FOSET",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-0964": {
     "producto": "EMPAQUE DE HULE P/SANITARIO",
@@ -2547,7 +2547,7 @@
   "01-0993": {
     "producto": "LLAVE P/LAVAM GRIVEN D8510",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "01-0994": {
     "producto": "LLAVE P/LAVAM GRIVEN GV-DFZ-2",
@@ -2562,7 +2562,7 @@
   "01-0996": {
     "producto": "LLAVE P/LAVAM GRIVEN SH880",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -1
+    "cantidad": 0
   },
   "01-0997": {
     "producto": "LLAVE P/LAVAM GRIVEN TSBF-2",
@@ -2602,7 +2602,7 @@
   "01-1010": {
     "producto": "TAPADERA PVC MAXICANAL DERECHA",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -2
+    "cantidad": 0
   },
   "01-1011": {
     "producto": "TAPADERA PVC MAXICANAL IZQUIER",
@@ -2627,7 +2627,7 @@
   "01-1016": {
     "producto": "MAXICANAL PERFIL CANOA PVC 6M",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -4
+    "cantidad": 0
   },
   "01-1017": {
     "producto": "UNION BAJANTE MAXICANAL PVC 4\"",
@@ -2966,12 +2966,12 @@
   },
   "01-1305": {
     "producto": "LLAVE PILA 1/2 GRIVEN D/CHORRO",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 10
   },
   "01-1306": {
     "producto": "TUBO ABAST P/LAVAT GRIVEN 1/2\"",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 24
   },
   "01-1307": {
@@ -3097,7 +3097,7 @@
   "02-0047": {
     "producto": "CABLE ACOMETIDA 3 x 6 x METRO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -14
+    "cantidad": 0
   },
   "02-0048": {
     "producto": "ENCHUFE EAGLE POLARIZADO 1707",
@@ -3157,12 +3157,12 @@
   "02-0071": {
     "producto": "POLIDUCTO DE 1\" ROLLO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -25
+    "cantidad": 0
   },
   "02-0073": {
     "producto": "POLIDUCTO DE 3/4\" ROLLO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -55
+    "cantidad": 0
   },
   "02-0077": {
     "producto": "CANALETA PLASTICA 1/2\" BLANCA",
@@ -3177,7 +3177,7 @@
   "02-0080": {
     "producto": "POLIDUCTO DE 1/2\" ROLLO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -90
+    "cantidad": 0
   },
   "02-0081": {
     "producto": "BOMBA PM60 1.0 HP FORAS PE100",
@@ -3192,7 +3192,7 @@
   "02-0084": {
     "producto": "PLACA P/TOMA DOBLE ELECTRIC",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -14
+    "cantidad": 0
   },
   "02-0085": {
     "producto": "GRAPA P/CABLE 6MM VOLTECK NEGR",
@@ -3302,7 +3302,7 @@
   "02-0132": {
     "producto": "TAPADERA REDUC. 4 A 2",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -1
+    "cantidad": 0
   },
   "02-0133": {
     "producto": "TOMA DOBLE 20AMP EAGLE 877V",
@@ -3332,7 +3332,7 @@
   "02-0152": {
     "producto": "CABLE ACOMETIDA 3 x 4 x METRO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -199
+    "cantidad": 0
   },
   "02-0157": {
     "producto": "MUFA DE 2\"",
@@ -3347,7 +3347,7 @@
   "02-0159": {
     "producto": "CAJA OCTAGONAL PESADA 4X1-1/2",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -14
+    "cantidad": 0
   },
   "02-0160": {
     "producto": "CAJA METALICA 2X4 PESADA MIXTA",
@@ -3552,7 +3552,7 @@
   "02-0265": {
     "producto": "ROSETA PLASTICA BTICINO OVAL M",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -4
+    "cantidad": 0
   },
   "02-0273": {
     "producto": "PLACA P/TOMA REDONDA",
@@ -3667,12 +3667,12 @@
   "02-0319": {
     "producto": "CAJA METALICA 2X4 PESADA 1/2\"",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -17
+    "cantidad": 0
   },
   "02-0322": {
     "producto": "CABLE #06 ROJO PHELPS X MTS",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -397
+    "cantidad": 0
   },
   "02-0325": {
     "producto": "PLACA CIEGA PLASTICA 2X4 EAGLE",
@@ -3742,7 +3742,7 @@
   "02-0345": {
     "producto": "CENTRO CARGA 16 ESP BTICINO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -2
+    "cantidad": 0
   },
   "02-0346": {
     "producto": "CENTRO CARGA 04 ESP BTICINO",
@@ -3947,7 +3947,7 @@
   "02-0420": {
     "producto": "FOCO LED 10W 6500K AMERICAN LI",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -17
+    "cantidad": 0
   },
   "02-0421": {
     "producto": "CAMISA CONDUFLEX PVC 1/2\"",
@@ -4032,12 +4032,12 @@
   "02-0450": {
     "producto": "CABLE SPT 2x14 * PIE PHELPS DO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -79
+    "cantidad": 0
   },
   "02-0451": {
     "producto": "CABLE SPT 2x12 * PIE PHELPS DO",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -4
+    "cantidad": 0
   },
   "02-0455": {
     "producto": "CABLE #14 VERDE PHELPS X MTS",
@@ -4052,7 +4052,7 @@
   "02-0458": {
     "producto": "CAJA METALICA OCTAGONAL SEMI P",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -44
+    "cantidad": 0
   },
   "02-0459": {
     "producto": "TIMBRE INALAMBRICO VOLTECH",
@@ -4062,7 +4062,7 @@
   "02-0460": {
     "producto": "TOMA DOBLE 15AMP LEGRAND S/PLA",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -32
+    "cantidad": 0
   },
   "02-0461": {
     "producto": "CUCHILLA DOBLE DE 2x100 AMP",
@@ -4172,12 +4172,12 @@
   "02-0494": {
     "producto": "CINTA P/DUCTO 4.8CMx30M OCONOR",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -9
+    "cantidad": 0
   },
   "02-0495": {
     "producto": "GRAPA PLASTICA 8MM",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -105
+    "cantidad": 0
   },
   "02-0496": {
     "producto": "GRAPA PLASTICA 12MM",
@@ -4322,7 +4322,7 @@
   "02-0532": {
     "producto": "CABLE #06 AZUL PHELPS X MTS",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -92
+    "cantidad": 0
   },
   "02-0533": {
     "producto": "CABLE #06 VERDE PHELPS X MTS",
@@ -4497,7 +4497,7 @@
   "02-0576": {
     "producto": "CAJA PVC RECT 2x4 MIXTA GRIS",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -23
+    "cantidad": 0
   },
   "02-0577": {
     "producto": "CAJA PVC OCTA MIXTA BLANCA",
@@ -4771,7 +4771,7 @@
   },
   "02-0651": {
     "producto": "CINTA AISLANTE SCOTH 23 3M",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 4
   },
   "02-0652": {
@@ -4792,7 +4792,7 @@
   "03-0011": {
     "producto": "LAMI.ZINC 12FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -796
+    "cantidad": 0
   },
   "03-0019": {
     "producto": "ELECTRODO 6011x1/8 x LB KISWEL",
@@ -4802,12 +4802,12 @@
   "03-0021": {
     "producto": "ANGULO DE 1/8\"x1\" C",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -21
+    "cantidad": 0
   },
   "03-0026": {
     "producto": "LAMI.ZINC 08FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -70
+    "cantidad": 0
   },
   "03-0029": {
     "producto": "CANDADO 50MM YALE",
@@ -4822,27 +4822,27 @@
   "03-0032": {
     "producto": "PLATINA DE 1/8\"x1\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -13
+    "cantidad": 0
   },
   "03-0033": {
     "producto": "PLATINA DE 1/8\"x3/4\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0034": {
     "producto": "TUBO INGLES 1-1/4X1-1/4 CH 18",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -39
+    "cantidad": 0
   },
   "03-0035": {
     "producto": "LAMI.INDUS. TROQUE 1/16MM .70",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -53
+    "cantidad": 0
   },
   "03-0036": {
     "producto": "ANGULO DE 1/8\"x1-1/2\" C",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -25
+    "cantidad": 0
   },
   "03-0041": {
     "producto": "DISC.DIAMA.4-1/2 TRUPER 12977",
@@ -4857,7 +4857,7 @@
   "03-0046": {
     "producto": "REMACHE D/ALUMINIO 3/16X3/4",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -793
+    "cantidad": 0
   },
   "03-0047": {
     "producto": "RIEL P/PORTON DE 08FT CASTOR",
@@ -4877,7 +4877,7 @@
   "03-0055": {
     "producto": "TUERCA DE 1/2 ROSCA FICHA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0057": {
     "producto": "ENDURECEDOR P/MASILLA ROJO 10Z",
@@ -4892,12 +4892,12 @@
   "03-0061": {
     "producto": "ANGULO DE 1/8\"x1-1/4\" COMERCIA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -68
+    "cantidad": 0
   },
   "03-0067": {
     "producto": "ANGULO DE 1/8\"x2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -5
+    "cantidad": 0
   },
   "03-0068": {
     "producto": "LLAVIN PHILLIPS IZQUIERDO 715",
@@ -4912,7 +4912,7 @@
   "03-0071": {
     "producto": "PLATINA DE 1/8\"x2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "03-0074": {
     "producto": "DISCO P/M 9X1/4X7/8 TRUPER",
@@ -4932,7 +4932,7 @@
   "03-0087": {
     "producto": "PLATINA DE 1/2\"x1/8\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "03-0093": {
     "producto": "SOPORTE DE PASAMANOS 27/04",
@@ -4987,12 +4987,12 @@
   "03-0113": {
     "producto": "TUBO INGLES 2x2 CH 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -109
+    "cantidad": 0
   },
   "03-0114": {
     "producto": "TACO ESPANSOR METALICO 1/4",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0119": {
     "producto": "DISCO DIAMANTE 4-1/2\" INGCO LI",
@@ -5017,7 +5017,7 @@
   "03-0132": {
     "producto": "TUBO INGLES 1-1/2\" CH 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -5
+    "cantidad": 0
   },
   "03-0135": {
     "producto": "PERNO UNC G-2 3/8X1-1/2",
@@ -5057,7 +5057,7 @@
   "03-0145": {
     "producto": "ABRAZADERA EMT 3/4\" SENCILLA",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -258
+    "cantidad": 0
   },
   "03-0149": {
     "producto": "ARANDELA PLANA 3/8",
@@ -5072,17 +5072,17 @@
   "03-0155": {
     "producto": "TUBO INGLES 2x2 CH 16 1.40",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -19
+    "cantidad": 0
   },
   "03-0157": {
     "producto": "TUBO INGLES 1x2 CH 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -40
+    "cantidad": 0
   },
   "03-0158": {
     "producto": "DISCO DIAMANTE 4-1/2\" PETRUL",
     "departamento": "ACCES/HEL",
-    "cantidad": -8
+    "cantidad": 0
   },
   "03-0160": {
     "producto": "ELECTRODO 7018x1/8 x LB KISWEL",
@@ -5107,7 +5107,7 @@
   "03-0170": {
     "producto": "TELA METALICA 42 X PIE",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -13
+    "cantidad": 0
   },
   "03-0175": {
     "producto": "DISCO P/M 9x1/4x7/8 DEWALT",
@@ -5122,7 +5122,7 @@
   "03-0180": {
     "producto": "ANGULO DE 3/16\"x1-1/2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -42
+    "cantidad": 0
   },
   "03-0185": {
     "producto": "LAMI.INDUS. LISA 1/16LG 0.90",
@@ -5177,17 +5177,17 @@
   "03-0237": {
     "producto": "ABRAZADERA EMT 3\" SENCILLA",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -82
+    "cantidad": 0
   },
   "03-0238": {
     "producto": "LAMI.ESPANDIDA DE 1/8 DE 3x7",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "03-0242": {
     "producto": "REMACHE D/ALUMINIO 3/16X1/2",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -50
+    "cantidad": 0
   },
   "03-0243": {
     "producto": "PERNO UNC G-2 3/8X2",
@@ -5197,7 +5197,7 @@
   "03-0246": {
     "producto": "TUBO INGLES 3/4x3/4 CH 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -14
+    "cantidad": 0
   },
   "03-0249": {
     "producto": "PEGAMENTO PVC PASTA 50ML TANGI",
@@ -5207,7 +5207,7 @@
   "03-0252": {
     "producto": "TUERCA 1/4\" GRADO 5 * 500 UDS.",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -9
+    "cantidad": 0
   },
   "03-0256": {
     "producto": "CONECTOR EMT ROMEX 3/4\"",
@@ -5257,7 +5257,7 @@
   "03-0297": {
     "producto": "TUBO INGLES 2x2 CH 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -8
+    "cantidad": 0
   },
   "03-0300": {
     "producto": "DISCO SIERRA CIRC 4-1/2 TRUPER",
@@ -5272,7 +5272,7 @@
   "03-0302": {
     "producto": "TUBO EMT 2\" X 10 PIES (3MTS)",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0303": {
     "producto": "LAMI.ESPANDIDA DE 1/2 DE 4x8",
@@ -5292,17 +5292,17 @@
   "03-0311": {
     "producto": "ABRAZADERA ACERO 1/2\"-3/4\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0328": {
     "producto": "MALLA CICLON DE 8x100 x ROLLO",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -9
+    "cantidad": 0
   },
   "03-0329": {
     "producto": "TUBO INGLES 1-1/4 CH 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -120
+    "cantidad": 0
   },
   "03-0331": {
     "producto": "MALLA ELECTROSOLDADA 6X6 6/6 C",
@@ -5312,7 +5312,7 @@
   "03-0335": {
     "producto": "TUBO INGLES 1-1/4 CH 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -44
+    "cantidad": 0
   },
   "03-0338": {
     "producto": "DISCO C/M 9x5/64x7/8 TRUPER",
@@ -5337,7 +5337,7 @@
   "03-0348": {
     "producto": "ANGULO DE 3/16\"x2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -24
+    "cantidad": 0
   },
   "03-0351": {
     "producto": "ALDABA 4\" BTH",
@@ -5367,12 +5367,12 @@
   "03-0361": {
     "producto": "REJA GAL. 2.5x1.5M CAL.26 VERD",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "03-0364": {
     "producto": "MALLA CICLON DE 6x100 X ROLLO",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0365": {
     "producto": "DISCO C/M 7 INGCO MCD311802",
@@ -5382,12 +5382,12 @@
   "03-0374": {
     "producto": "RIEL P/PORTON DE 20FT CASTOR",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0375": {
     "producto": "LAMI.INDUS. TROQUE 1/16 LG .90",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -85
+    "cantidad": 0
   },
   "03-0379": {
     "producto": "ABRAZADERA EMT 4\" DOBLE",
@@ -5412,12 +5412,12 @@
   "03-0391": {
     "producto": "TUBO GALV RED 2\" CHAPA 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4
+    "cantidad": 0
   },
   "03-0392": {
     "producto": "TUBO INGLES 1x2 CH 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0393": {
     "producto": "DISCO DIAMANTE 7\" PRETUL 21000",
@@ -5457,7 +5457,7 @@
   "03-0406": {
     "producto": "RODO P/PORTON 2\" 50MM BTH",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -8
+    "cantidad": 0
   },
   "03-0407": {
     "producto": "CANDADO 40MM YALE",
@@ -5467,7 +5467,7 @@
   "03-0408": {
     "producto": "PLATINA DE 3/16\"x2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "03-0410": {
     "producto": "REMACHE DE ALUMINIO 1/4X5/8",
@@ -5492,12 +5492,12 @@
   "03-0414": {
     "producto": "REMACHE DE ALUMINIO 3/16X3/8",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -41
+    "cantidad": 0
   },
   "03-0415": {
     "producto": "TUBO GALV 3\"x3\" CHAPA 14 1.50",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0426": {
     "producto": "GRAPA P/CABLE ACERO 3/8",
@@ -5517,37 +5517,37 @@
   "03-0431": {
     "producto": "CADENA GALVA 1/8 IMACASA x MTS",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -14
+    "cantidad": 0
   },
   "03-0435": {
     "producto": "TUBO GALV 4\"x4\" CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -89
+    "cantidad": 0
   },
   "03-0439": {
     "producto": "TUBO INGLES 3/4x3/4 CH 16",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -14
+    "cantidad": 0
   },
   "03-0440": {
     "producto": "MALLA CICLON DE 4x100 x ROLLO",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0442": {
     "producto": "ALAMBRE DE PUAS BRAHMAN ROLLO",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0443": {
     "producto": "ALAMBRE DE PUAS ECONOMICO ROLL",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0444": {
     "producto": "TUBO GALV 1\"x2 \"CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0446": {
     "producto": "DISCO C/M 4-1/2X0.40X7/8 FAND",
@@ -5562,12 +5562,12 @@
   "03-0448": {
     "producto": "TUBO INGLES 1-1/2\" CH 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -15
+    "cantidad": 0
   },
   "03-0450": {
     "producto": "TUBO INGLES 1x1 CH 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -19
+    "cantidad": 0
   },
   "03-0451": {
     "producto": "DISCO C/M 4-1/2X3/64X7/8 TRUPE",
@@ -5577,7 +5577,7 @@
   "03-0458": {
     "producto": "TUBO GALV 4\"x4\" CHAPA 14 1.50",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -37
+    "cantidad": 0
   },
   "03-0462": {
     "producto": "DISCO DIAMANTE 4-1/2\" INGCO DE",
@@ -5587,7 +5587,7 @@
   "03-0463-LB": {
     "producto": "GRAPA GALVANIZADA 1X9\" X LIBRA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -12
+    "cantidad": 0
   },
   "03-0465": {
     "producto": "DISCO DIAMANTE 7-1/4\" BTH DENT",
@@ -5607,7 +5607,7 @@
   "03-0470": {
     "producto": "TUBO GALV 1\"x2\" CHAPA 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4
+    "cantidad": 0
   },
   "03-0471": {
     "producto": "CANDADO 25MM DORADO PROVAL",
@@ -5632,17 +5632,17 @@
   "03-0485": {
     "producto": "MALLA CICLON C/FORRO VERD 6FT",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0487": {
     "producto": "DISCO C/M 7X0.45X7/8 DEWALT",
     "departamento": "ACCES/HEL",
-    "cantidad": -36
+    "cantidad": 0
   },
   "03-0488": {
     "producto": "LAMI.INDUS. LISA 1/16MM 0.45",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0490": {
     "producto": "LAMI.INDUS. LISA 1/16LG 1.00",
@@ -5667,12 +5667,12 @@
   "03-0494": {
     "producto": "TUBO INGLES 1x1 CH 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -12
+    "cantidad": 0
   },
   "03-0495": {
     "producto": "TUBO INGLES 1-1/2\" CH 18 1.00",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "03-0496": {
     "producto": "CANDADO 30MM CASTOR DORADO",
@@ -5707,7 +5707,7 @@
   "03-0504": {
     "producto": "TUBO GALV 3\"x3\" CHAPA 16 1.20",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -7
+    "cantidad": 0
   },
   "03-0505": {
     "producto": "DISCO ZIRC 4-1/2\" G.120 IMACAS",
@@ -5722,7 +5722,7 @@
   "03-0511": {
     "producto": "TUBO GALV 2\"x4\" CHAPA 14 1.50",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -71
+    "cantidad": 0
   },
   "03-0516": {
     "producto": "RODO P/PORTON P/SUELO 3\" C/TOR",
@@ -5772,7 +5772,7 @@
   "03-0527": {
     "producto": "ANGULO DE 1/4\"x1-1/4\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0533": {
     "producto": "TORNILLO D/OJO #2 0.7MMSB-865",
@@ -5842,17 +5842,17 @@
   "03-0554": {
     "producto": "ANGULO DE 1/4\"x1-1/2\" C",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0555": {
     "producto": "TUBO GALV 2\"x2\" CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -27
+    "cantidad": 0
   },
   "03-0557": {
     "producto": "DISCO DIAMANTE 7\" INGCO TURBO",
     "departamento": "ACCES/HEL",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0558": {
     "producto": "DISCO P/PULIR METAL 7X1/4 HOTE",
@@ -5867,7 +5867,7 @@
   "03-0562": {
     "producto": "TUBO GALV 4\"x4\" CHAPA 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -80
+    "cantidad": 0
   },
   "03-0563": {
     "producto": "DISCO C/METAL 7\" OCONOR EXTRA",
@@ -5877,7 +5877,7 @@
   "03-0567": {
     "producto": "TUBO EMT 1-1/4\" x 10 PIES (3M)",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0568": {
     "producto": "CANDADO 40MM INGCO",
@@ -5952,7 +5952,7 @@
   "03-0590": {
     "producto": "ANGULO DE 3/16\"x1\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0592": {
     "producto": "DISCO DIAMANTE 7\" SEG OCONOR",
@@ -5962,12 +5962,12 @@
   "03-0596": {
     "producto": "DISCO C/METAL 4-1/2 DEWALT DW",
     "departamento": "ACCES/HEL",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0598": {
     "producto": "PERNO G5 R/G 1/4x1-1/2 HEXAGON",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0599": {
     "producto": "PERNO G5 R/G 1/4x2 HEXAGONAL",
@@ -6007,12 +6007,12 @@
   "03-0607": {
     "producto": "PERNO G5 R/G 3/8x1 HEXAGONAL",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -6
+    "cantidad": 0
   },
   "03-0608": {
     "producto": "PERNO G5 R/G 3/8x1-1/2 HEXAGON",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4
+    "cantidad": 0
   },
   "03-0609": {
     "producto": "PERNO G5 R/G 3/8x2 HEXAGONAL",
@@ -6237,7 +6237,7 @@
   "03-0667": {
     "producto": "CANDADO 50MM LARGO JADEVER",
     "departamento": "CERRAJERIA",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0669": {
     "producto": "DISCO DIAMANTE 4-1/2 MAKITA",
@@ -6282,17 +6282,17 @@
   "03-0687": {
     "producto": "TUBO INGLES 1x1 CH 16 1.40",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -40
+    "cantidad": 0
   },
   "03-0688": {
     "producto": "TUBO INGLES 1x2 CH 16 1.40",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -40
+    "cantidad": 0
   },
   "03-0689": {
     "producto": "TUBO INGLES 2x6 CH 14 1.80",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0692": {
     "producto": "DISCO ZIRCONIO 4-1/2X7/8 G 80",
@@ -6317,7 +6317,7 @@
   "03-0697": {
     "producto": "TUBO GALV 1\"x1\" CHAPA 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -30
+    "cantidad": 0
   },
   "03-0698": {
     "producto": "CONECTOR EMT 1-1/4\"",
@@ -6332,7 +6332,7 @@
   "03-0706": {
     "producto": "TUBO GALV RED 2\" CH 18 1.20 LG",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -97
+    "cantidad": 0
   },
   "03-0707": {
     "producto": "DISCO ZIRC 7 GRANO 60 IMACASA",
@@ -6367,7 +6367,7 @@
   "03-0713": {
     "producto": "CADENA GALVA 5/32 x MTS",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -20
+    "cantidad": 0
   },
   "03-0715": {
     "producto": "TUERCA M6 MILIMETRICA * 500 UD",
@@ -6402,7 +6402,7 @@
   "03-0722": {
     "producto": "RODO P/PORTON P/SUELO V 2.5\" B",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0723": {
     "producto": "ARANDELA PRESION 1/4 BLACK",
@@ -6432,7 +6432,7 @@
   "03-0728": {
     "producto": "CADENA GALVA 5/16 IMACASA x MT",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0729": {
     "producto": "DISCO ZIRCO 7X7/8 GRANO 60 PRE",
@@ -6487,7 +6487,7 @@
   "03-0751": {
     "producto": "DISCO DIAMANTE T/COPA 4\" TRUPE",
     "departamento": "ACCES/HEL",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0752": {
     "producto": "TOMA DOBLE MARFIL LINEA PLATA",
@@ -6502,12 +6502,12 @@
   "03-0756": {
     "producto": "TUBO INGLES 2x2 CH 16 1.30",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -20
+    "cantidad": 0
   },
   "03-0758": {
     "producto": "TUBO INGLES 2x4 CH 16 1.40",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -8
+    "cantidad": 0
   },
   "03-0759": {
     "producto": "CUBO MAGNETICO 5/16 TRUPER",
@@ -6537,7 +6537,7 @@
   "03-0769": {
     "producto": "ANGULO DE 1/4\"x2-1/2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0771": {
     "producto": "ARANDELA PLANA 1/4 NEGRA",
@@ -6552,7 +6552,7 @@
   "03-0773": {
     "producto": "ARANDELA PLANA 7/16 NEGRA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -12
+    "cantidad": 0
   },
   "03-0774": {
     "producto": "CONECTOR EMT 1/2\"",
@@ -6567,7 +6567,7 @@
   "03-0776": {
     "producto": "DISCO C/M 14x1/8x1 TRUPER",
     "departamento": "ACCES/HEL",
-    "cantidad": -1
+    "cantidad": 0
   },
   "03-0778": {
     "producto": "TUBO GALV 4\"x4\" CHAPA 16 1.50",
@@ -6577,7 +6577,7 @@
   "03-0779": {
     "producto": "LAMI.INDUS. TROQUE 1/16  1.0",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -33
+    "cantidad": 0
   },
   "03-0780": {
     "producto": "GANCHO P/ESPEJO FONTANERO B401",
@@ -6592,17 +6592,17 @@
   "03-0786": {
     "producto": "ANGULO DE 1/8\"x1-1/2\" LEGITIMA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -33
+    "cantidad": 0
   },
   "03-0787": {
     "producto": "ANGULO DE 1/8\"x1-1/4\" LEGITIMA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -16
+    "cantidad": 0
   },
   "03-0789": {
     "producto": "ANGULO DE 1/4\"x1-1/2\" LEGITIMA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -11
+    "cantidad": 0
   },
   "03-0790": {
     "producto": "RODO P/PORTON P/SUELO V 2.5\" B",
@@ -6652,7 +6652,7 @@
   "03-0801": {
     "producto": "TUBO EMT 1-1/2\" X 10 PIES",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -2
+    "cantidad": 0
   },
   "03-0803": {
     "producto": "DISCO DIAMANTE 7\" IRWIN",
@@ -6712,7 +6712,7 @@
   "04-0004": {
     "producto": "TORNILLO PB 1/4x3",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1525
+    "cantidad": 0
   },
   "04-0007": {
     "producto": "LIJA P/MADERA FANDELI #100 CO8",
@@ -6737,12 +6737,12 @@
   "04-0014": {
     "producto": "SEPARADOR P/CERAMICA 4MM VYG",
     "departamento": "CERAMICAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "04-0018-LB": {
     "producto": "CLAVO DE 4\" X LIBRA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -296
+    "cantidad": 0
   },
   "04-0019": {
     "producto": "LIJA P/METAL FANDELI #80 C-99",
@@ -6762,7 +6762,7 @@
   "04-0023-LB": {
     "producto": "CLAVO DE 2\" X LIBRA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -54
+    "cantidad": 0
   },
   "04-0024": {
     "producto": "PUNTA P/DESARMADOR PHILLIPS",
@@ -6772,7 +6772,7 @@
   "04-0026": {
     "producto": "ALAMBRE GALVA.CAL 16 X LB",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -175
+    "cantidad": 0
   },
   "04-0028": {
     "producto": "ANGULO TABLA YESO 1x1x10FT C28",
@@ -6782,7 +6782,7 @@
   "04-0029": {
     "producto": "CANAL FURRIN 12\" C28 S/PESTAÑA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -87
+    "cantidad": 0
   },
   "04-0030": {
     "producto": "CANAL D CARGA 5/8 C21 0.60M 16",
@@ -6807,7 +6807,7 @@
   "04-0036-CAJA": {
     "producto": "CLAVO DE 2-1/2\" P/ZINC X CAJA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "04-0036-LB": {
     "producto": "CLAVO DE 2-1/2\" P/ZINC X LIBRA",
@@ -6827,7 +6827,7 @@
   "04-0044": {
     "producto": "CABALLETE ALUZINC VERDE 8 PIES",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "04-0050": {
     "producto": "TORNILLO PB 1/4x2-1/2",
@@ -6852,7 +6852,7 @@
   "04-0059": {
     "producto": "SOLERA 10FT 2-1/2 CAL28 0.38MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -30
+    "cantidad": 0
   },
   "04-0060": {
     "producto": "SKYLINE ANGULO P/CIELO 10X15/1",
@@ -6867,12 +6867,12 @@
   "04-0062": {
     "producto": "SKYLINE CROSS TEE 12X15/16 BLA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -13
+    "cantidad": 0
   },
   "04-0063": {
     "producto": "CLAVO DE ACERO DE 1\" CABEZON",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4209
+    "cantidad": 0
   },
   "04-0066": {
     "producto": "LAMI.CIELO DIAMANTE 2x4x7.5M",
@@ -6887,7 +6887,7 @@
   "04-0074-LB": {
     "producto": "CLAVO DE 3\" X LIBRA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -632
+    "cantidad": 0
   },
   "04-0077": {
     "producto": "CLAVO DE ACERO DE 2\"",
@@ -6897,7 +6897,7 @@
   "04-0084": {
     "producto": "CABALLETE ALUZINC ROJO 08 FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -16
+    "cantidad": 0
   },
   "04-0085": {
     "producto": "TACOFICHER PLAST S-06",
@@ -6907,12 +6907,12 @@
   "04-0089": {
     "producto": "LAMI.ZINC LISA 12FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "04-0096": {
     "producto": "LLAMADOR T/CASTILLO 194MM 693-",
     "departamento": "PINTURAS",
-    "cantidad": -13
+    "cantidad": 0
   },
   "04-0097": {
     "producto": "LIJA P/METAL FANDELI #100 C-99",
@@ -6922,12 +6922,12 @@
   "04-0098": {
     "producto": "CLAVO DE ACERO DE 3\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -1022
+    "cantidad": 0
   },
   "04-0099": {
     "producto": "TORNILLO TABLA YESO PF 6x1 NEG",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -282
+    "cantidad": 0
   },
   "04-0104": {
     "producto": "LIJA P/METAL FANDELI #240",
@@ -6947,7 +6947,7 @@
   "04-0111": {
     "producto": "LAMI.ZINC 10FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -35
+    "cantidad": 0
   },
   "04-0115": {
     "producto": "CLAVO DE ACERO DE 4\"",
@@ -6957,17 +6957,17 @@
   "04-0129": {
     "producto": "CANALETA GALV 2x6 1.50MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -36
+    "cantidad": 0
   },
   "04-0132": {
     "producto": "CLAVO DE ACERO DE 2-1/2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2744
+    "cantidad": 0
   },
   "04-0135-LB": {
     "producto": "CLAVO DE 2-1/2\" X LIBRA",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -546
+    "cantidad": 0
   },
   "04-0139": {
     "producto": "CLAVO DE ACERO DE 1\"",
@@ -6997,7 +6997,7 @@
   "04-0164": {
     "producto": "CLAVO DE ACERO DE 1-1/2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2130
+    "cantidad": 0
   },
   "04-0167-LB": {
     "producto": "CLAVO DE 1\" X LIBRA",
@@ -7032,7 +7032,7 @@
   "04-0202": {
     "producto": "LAMI.ALUZINC ROJO CAL26 G. 35",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -705
+    "cantidad": 0
   },
   "04-0204": {
     "producto": "LIJA P/METAL #1000",
@@ -7062,17 +7062,17 @@
   "04-0226": {
     "producto": "CANALETA GALV 2x4 1.30MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -115
+    "cantidad": 0
   },
   "04-0228": {
     "producto": "TORNILLO K-LACH PB 8x1/2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -5145
+    "cantidad": 0
   },
   "04-0229": {
     "producto": "TORNILLO PB 1/4x1",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -336
+    "cantidad": 0
   },
   "04-0238": {
     "producto": "LIJA P/MADERA FANDELI #180",
@@ -7092,7 +7092,7 @@
   "04-0250": {
     "producto": "LAMI.TRANSPARENT ALUZINC 12 FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "04-0252": {
     "producto": "LIJA P/METAL EXPERT #400",
@@ -7117,7 +7117,7 @@
   "04-0266": {
     "producto": "LAMI.PVC CAOBA 25cmX19PIES",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -18
+    "cantidad": 0
   },
   "04-0274-LB": {
     "producto": "CLAVO DE 6\" X LIBRA",
@@ -7132,12 +7132,12 @@
   "04-0281": {
     "producto": "LAMI.ZINC 06FT CAL.28",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -76
+    "cantidad": 0
   },
   "04-0282": {
     "producto": "TORNILLO TABL YESO PF 6x2-1/2",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -6
+    "cantidad": 0
   },
   "04-0283": {
     "producto": "LIJA DISCO P/METAL FANDELI #36",
@@ -7157,7 +7157,7 @@
   "04-0287": {
     "producto": "CORNISA PVC BLANCA DELGADA",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -12
+    "cantidad": 0
   },
   "04-0288": {
     "producto": "LAMI.PVC BLANCO BRILL 25CMX5.9",
@@ -7177,7 +7177,7 @@
   "04-0293": {
     "producto": "CANALETA GALV 2x4 1.10MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "04-0294": {
     "producto": "TORNILLO K-LACH PF 8x1",
@@ -7192,7 +7192,7 @@
   "04-0296": {
     "producto": "TORNILLO GOLOSO C/PLANA 14X2",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4
+    "cantidad": 0
   },
   "04-0297": {
     "producto": "TORNILLO GOLOSO C/PLANA 14x3",
@@ -7222,7 +7222,7 @@
   "04-0306": {
     "producto": "LAMI.ALUZINC VERDE CAL26 X FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -1393
+    "cantidad": 0
   },
   "04-0307": {
     "producto": "TORNILLO GOLOSO C/PLAN 8x1-1/2",
@@ -7237,7 +7237,7 @@
   "04-0310": {
     "producto": "AISL TERM.ALUM/BLAN (1.22X39.1",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "04-0314": {
     "producto": "TAPAGOTERA SISTA 1/16 GALON",
@@ -7307,7 +7307,7 @@
   "04-0333": {
     "producto": "TORNILLO GOLOSO C/PAN 10X1-1/2",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -7
+    "cantidad": 0
   },
   "04-0335": {
     "producto": "SEPARADOR P/CERAMICA 3MM TRUPE",
@@ -7322,7 +7322,7 @@
   "04-0340": {
     "producto": "CABALLETE ALUZINC VERDE 12 PIE",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -9
+    "cantidad": 0
   },
   "04-0349": {
     "producto": "TORNILLO K-LACH PF 8x1-1/4",
@@ -7337,7 +7337,7 @@
   "04-0358": {
     "producto": "TORNILLO K-LACH PB 8x1-1/4\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -279
+    "cantidad": 0
   },
   "04-0359": {
     "producto": "TORNILLO K-LACH PB 8x3/4",
@@ -7357,7 +7357,7 @@
   "04-0362-ROLLO": {
     "producto": "CINTA TAPAGOTERA #4 FLASHBRAND",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "04-0363": {
     "producto": "TAPAGOTERA GRIS 1/8 GL",
@@ -7427,7 +7427,7 @@
   "04-0383": {
     "producto": "TORNILLO PF 1/4x3\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -9
+    "cantidad": 0
   },
   "04-0387": {
     "producto": "LIJA P/METAL NORTON #150",
@@ -7452,7 +7452,7 @@
   "04-0392": {
     "producto": "CANALETA GALV 2x4 1.50MM",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -305
+    "cantidad": 0
   },
   "04-0397": {
     "producto": "TAPAGOTERAS NEGRO TUBO 300GR",
@@ -7487,7 +7487,7 @@
   "04-0403": {
     "producto": "TORNILLO TABLA YESO 8x1 NEGRO",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "04-0404": {
     "producto": "TORNILLO TABLA YESO 8x1-1/2 NE",
@@ -7557,7 +7557,7 @@
   "04-0420": {
     "producto": "TORNILLO PF 1/4x1\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -300
+    "cantidad": 0
   },
   "04-0421": {
     "producto": "TORNILLO TABLA YESO PB 6x2 NEG",
@@ -7582,7 +7582,7 @@
   "04-0437": {
     "producto": "TACOFICHER PLAST S-10 C/TORNIL",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4
+    "cantidad": 0
   },
   "04-0439": {
     "producto": "TORNILLO GOLOSO C/PAN 10X3",
@@ -7617,12 +7617,12 @@
   "04-0453": {
     "producto": "TORNILLO PF 1/4x1-1/2\"",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -4
+    "cantidad": 0
   },
   "04-0454": {
     "producto": "LAMI.ALUZINC LISA BLANCA 12FT",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -13
+    "cantidad": 0
   },
   "04-0455": {
     "producto": "LIJA P/MADERA FANDELI #60 D081",
@@ -7647,7 +7647,7 @@
   "05-0002": {
     "producto": "LAMP.PARED VOLTECK 47289",
     "departamento": "LAMPARAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "05-0007": {
     "producto": "LAMP.P/EXTERIOR GENOVA WL00",
@@ -7717,7 +7717,7 @@
   "05-0069": {
     "producto": "LAMP.TECHO 2L MUNDI NEGRO/DORA",
     "departamento": "LAMPARAS",
-    "cantidad": -18
+    "cantidad": 0
   },
   "05-0072": {
     "producto": "LAMP.COLGANTE D/TECHO DI-0050",
@@ -7737,7 +7737,7 @@
   "05-0100": {
     "producto": "LAMP.EMP LED REDONDA 12W 6000K",
     "departamento": "LAMPARAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "05-0101": {
     "producto": "LAMP.COLGANTE DE TECHO CRISTAL",
@@ -7757,7 +7757,7 @@
   "05-0108": {
     "producto": "LAMP. TECHO 2L OCONOR CM19161",
     "departamento": "LAMPARAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "05-0109": {
     "producto": "LAMP. TECHO 2L OCONOR CM19157-",
@@ -7777,7 +7777,7 @@
   "05-0116": {
     "producto": "LAMP.LED 18W 40¨¨ /T5",
     "departamento": "LAMPARAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "05-0124": {
     "producto": "LAMP.EMP LED CUADRADA 6W 6000K",
@@ -7792,7 +7792,7 @@
   "05-0127-JGO": {
     "producto": "LAMPARA SOLAR SENTINEL 60W",
     "departamento": "LAMPARAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "05-0131": {
     "producto": "LAMP.PLAFON S/4 13\" BRONCE",
@@ -7977,12 +7977,12 @@
   "06-0002": {
     "producto": "MUEBLE AEREO P/COCINA BLANCO",
     "departamento": "MUEBLES",
-    "cantidad": -21
+    "cantidad": 0
   },
   "07-0006": {
     "producto": "BISAGRA 3x3 DORADA PAR",
     "departamento": "CERRAJERIA",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0007": {
     "producto": "BROCA P/CONCRETO 3/8X5\" TRUPER",
@@ -8032,7 +8032,7 @@
   "07-0026": {
     "producto": "PUERTA METALICA MED LUNA 36X80",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "07-0028": {
     "producto": "BROCA PALETA 1/2\" TRUPER 11372",
@@ -8042,7 +8042,7 @@
   "07-0032": {
     "producto": "PUERTA TERMOFORMAD 32x80x1-3/8",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -3
+    "cantidad": 0
   },
   "07-0036": {
     "producto": "PASTA SILICON TRUPER TRANSPER",
@@ -8097,7 +8097,7 @@
   "07-0066": {
     "producto": "ARANDELA PRESION 3/8",
     "departamento": "ESTRUCTURA METAL/ACCESORIOS2",
-    "cantidad": -12
+    "cantidad": 0
   },
   "07-0068": {
     "producto": "BISAGRA 4x4 HERMEX ACERADA PAR",
@@ -8217,7 +8217,7 @@
   "07-0164": {
     "producto": "GUARDAPOLVO P/PUERTA ALUMINIO",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "07-0168": {
     "producto": "BROCA P/HIERRO 5/16\"",
@@ -8237,7 +8237,7 @@
   "07-0184": {
     "producto": "PUERTA TERMOFORMAD 34x80",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0185": {
     "producto": "BROCA P/HIERRO 1/16\"",
@@ -8382,7 +8382,7 @@
   "07-0237": {
     "producto": "BROCA COPA P/METAL 1-1/4\" INGC",
     "departamento": "ACCES/HEL",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0238": {
     "producto": "BROCA P/HIERRO 1/8\" INGCO",
@@ -8487,7 +8487,7 @@
   "07-0268": {
     "producto": "LLAVIN D/PELOTA YALE YORK 8980",
     "departamento": "CERRAJERIA",
-    "cantidad": -9
+    "cantidad": 0
   },
   "07-0269": {
     "producto": "LLAVIN D/MANIJA YALE DOVER 901",
@@ -8527,7 +8527,7 @@
   "07-0282": {
     "producto": "JUEGO SACABOCADO PETRUL 23550",
     "departamento": "ACCES/HEL",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0283": {
     "producto": "JUEGO SACABOCADO PETRUL 23549",
@@ -8562,7 +8562,7 @@
   "07-0292": {
     "producto": "BROCA P/CONCR 3/8x12\" D-24418",
     "departamento": "ACCES/HEL",
-    "cantidad": -4
+    "cantidad": 0
   },
   "07-0293": {
     "producto": "BROCA P/CONCR 1/2x12\" D-24446",
@@ -8572,7 +8572,7 @@
   "07-0295": {
     "producto": "PUERTA TERMOFORMAD 30x80",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -2
+    "cantidad": 0
   },
   "07-0299": {
     "producto": "LLAVIN D/PELOTA S/LLAVE FONT C",
@@ -8712,7 +8712,7 @@
   "07-0332": {
     "producto": "LLAMADOR 6\" COBRE BTH",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0333": {
     "producto": "LLAVIN P/GABETA BTH",
@@ -8772,7 +8772,7 @@
   "07-0344": {
     "producto": "PASADOR 4\" HERMEX NEGRO MATTE",
     "departamento": "CERRAJERIA",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0345": {
     "producto": "MADEROL TRANSPARENTE 08 1L",
@@ -8807,7 +8807,7 @@
   "07-0351": {
     "producto": "LLAMADOR 6\" VERDE ANTIGUO BTH",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0352": {
     "producto": "BISAGRA 2x2 HERMEX  PAR 43249",
@@ -8837,7 +8837,7 @@
   "07-0358": {
     "producto": "SOPORTE P/CORTINERO MADE CAOBA",
     "departamento": "CERRAJERIA",
-    "cantidad": -1
+    "cantidad": 0
   },
   "07-0360": {
     "producto": "JUEGO SACABOCADO TRUPER 100816",
@@ -9007,7 +9007,7 @@
   "08-0001": {
     "producto": "BROCHA PRETUL 2\"",
     "departamento": "PINTURAS",
-    "cantidad": -23
+    "cantidad": 0
   },
   "08-0002": {
     "producto": "BROCHA PRETUL 3\" M/PLASTICO",
@@ -9067,7 +9067,7 @@
   "08-0089": {
     "producto": "MASCARILLA DESECHABLE IMACASA",
     "departamento": "PINTURAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "08-0099": {
     "producto": "REMOVED. GRAFFITI BESTV 400ML",
@@ -9097,7 +9097,7 @@
   "08-0204": {
     "producto": "ESPATULA DE 5\" INGCO",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0214": {
     "producto": "THINNER SINTETICO EXPERT 600ML",
@@ -9132,7 +9132,7 @@
   "08-0285-GL": {
     "producto": "PINT.LATEX MATE X GALON (PA)",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0292": {
     "producto": "BROCHA EMTOP PROFESIONAL 3\"",
@@ -9182,7 +9182,7 @@
   "08-0337-CUBE": {
     "producto": "PRIMER LATEX BLANCO PARA INTER",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0342": {
     "producto": "PINTURA SPRAY ACUARIO ORO RICO",
@@ -9217,7 +9217,7 @@
   "08-0355": {
     "producto": "ESPATULA DE 4\" EMTOP",
     "departamento": "PINTURAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "08-0358": {
     "producto": "PINT.SPRAY AODALIN ORO BRILLAN",
@@ -9267,12 +9267,12 @@
   "08-0391": {
     "producto": "ANTICORROSIVO ROJO OXIDO X GAL",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0393": {
     "producto": "BROCHA INGCO 1-1/2\"",
     "departamento": "PINTURAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "08-0394": {
     "producto": "BROCHA INGCO DE 4\"",
@@ -9282,12 +9282,12 @@
   "08-0396": {
     "producto": "ESPATULA INDUS 3\" INGCO",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0397": {
     "producto": "ESPATULA INDUS 4\" INGCO",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0399-GL": {
     "producto": "PINT.ESMALTE MENTA CORONA DURA",
@@ -9297,7 +9297,7 @@
   "08-0403-CUBE": {
     "producto": "PINT.ESMALTE BLANCO HUESO CORO",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0403-GL": {
     "producto": "PINT.ESMALTE BLANCO HUESO CORO",
@@ -9362,7 +9362,7 @@
   "08-0423-CUBE": {
     "producto": "PINT.LATEX MARFIL CORONA DURA",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0427-GL": {
     "producto": "ANTICORR DURA NEGRO 1GL",
@@ -9377,7 +9377,7 @@
   "08-0429-GL": {
     "producto": "ANTICORROSIVO GRIS CORONA DURA",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0430-GL": {
     "producto": "ANTICORROSIVO ROJO CORONA DURA",
@@ -9397,7 +9397,7 @@
   "08-0433-GL": {
     "producto": "ANTICORROSIVO VERDE CORONA",
     "departamento": "PINTURAS",
-    "cantidad": -7
+    "cantidad": 0
   },
   "08-0438-1/4": {
     "producto": "ANTICORROSIVO NEGRO CORONA",
@@ -9422,7 +9422,7 @@
   "08-0442-GL": {
     "producto": "PINT.ESMALTE ROJO CEREZA CORON",
     "departamento": "PINTURAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "08-0443-GL": {
     "producto": "PINT.ESMALTE AQUA CORONA DURA",
@@ -9462,7 +9462,7 @@
   "08-0455-CUBE": {
     "producto": "PINT.LATEX AMARILLO MOSTAZA C.",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0456": {
     "producto": "BROCHA EXPERT TODAY 1\"",
@@ -9547,12 +9547,12 @@
   "08-0473": {
     "producto": "BROCHA ELITE PRO 1\"",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0474": {
     "producto": "BROCHA ELITE PRO 1.5\"",
     "departamento": "PINTURAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "08-0475": {
     "producto": "BROCHA ELITE PRO 2\"",
@@ -9632,7 +9632,7 @@
   "08-0498": {
     "producto": "FELPA 9x1-1/4\" EXPERT",
     "departamento": "PINTURAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "08-0499": {
     "producto": "KIT P/PINTAR 3PZC STANDARD EXP",
@@ -9652,7 +9652,7 @@
   "08-0505": {
     "producto": "MASKING TAPE 48X27 EXPERT",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0506": {
     "producto": "MASKING TAPE 12X1/2 VERDE",
@@ -9682,7 +9682,7 @@
   "08-0511": {
     "producto": "FELPA 9X1/2\" EXPERT ANTIGOTEO",
     "departamento": "PINTURAS",
-    "cantidad": -50
+    "cantidad": 0
   },
   "08-0512-GL": {
     "producto": "PINT.LATEX NARANJA DULCE CORON",
@@ -9732,7 +9732,7 @@
   "08-0526-CUBE": {
     "producto": "SELLADOR P/CONCRETO CORONA",
     "departamento": "PINTURAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "08-0528": {
     "producto": "PINT.SPRAY CORONA BLANCO MATE",
@@ -9762,7 +9762,7 @@
   "08-0534-CUBE": {
     "producto": "PINT.ESMALTE BLANCO CORONA DUR",
     "departamento": "PINTURAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "08-0535-GL": {
     "producto": "PINT.ESMALTE BLANCO CORONA DUR",
@@ -9787,7 +9787,7 @@
   "08-0539": {
     "producto": "DILUYENTE MINERAL TIGRE 24OZ",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0540-CUBE": {
     "producto": "PINT.LATEX BLANC PROTECT CUBE",
@@ -9832,7 +9832,7 @@
   "08-0549-GL": {
     "producto": "ANTICORR BLANCO ICO 890 X GALO",
     "departamento": "PINTURAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "08-0550": {
     "producto": "ANTICORR GRIS ICO 894 1/4 GAL",
@@ -10172,17 +10172,17 @@
   "08-0630-CUBE": {
     "producto": "PINT.LATEX BASE SAT BLAN 2210C",
     "departamento": "PINTURAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "08-0631-GL": {
     "producto": "PINT.LATEX BASE SAT BLAN 2210G",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0633-CUBE": {
     "producto": "PINT.LATEX BASE SAT DEEP 2270C",
     "departamento": "PINTURAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "08-0634-GL": {
     "producto": "PINT.LATEX BLANCO MATE PRO GAL",
@@ -10252,7 +10252,7 @@
   "08-0653-1/4": {
     "producto": "PINT.ESMAL BASE ACCEN 190 1/4",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0654-GL": {
     "producto": "PINT.ESMAL BASE ACCEN 190 GAL",
@@ -10267,7 +10267,7 @@
   "08-0656": {
     "producto": "PINT.LATEX BASE KAT BLAN 1300C",
     "departamento": "PINTURAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "08-0657-GL": {
     "producto": "PINT.LATEX BASE KAT BLAN 1300G",
@@ -10307,7 +10307,7 @@
   "08-0669-CUBE": {
     "producto": "PINT.ESMAL BASE PRO 2170 CUBET",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0670-GL": {
     "producto": "PINT.ESMAL BASE PRO 2170 GALON",
@@ -10497,7 +10497,7 @@
   "08-0731": {
     "producto": "PINT.SPRAY CORONA NEGRO TEMP",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0732": {
     "producto": "PINT.SPRAY CORONA CROMO BRILLA",
@@ -10552,7 +10552,7 @@
   "08-0747": {
     "producto": "PINT.LATEX BASE SAT DEEP 2270G",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0748-GL": {
     "producto": "PINT.LATEX BASE SAT INTE 2260G",
@@ -10627,7 +10627,7 @@
   "08-0765": {
     "producto": "SELLADOR P/CONCRETO PROTECTO",
     "departamento": "PINTURAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "08-0766": {
     "producto": "PINT.ESMALTE CLASICA DORADO",
@@ -10707,7 +10707,7 @@
   "08-0783": {
     "producto": "CORROSTYL BLANCO SUR 1/4 GAL",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0784": {
     "producto": "PINT.SPRAY CORONA LACA FASTDRY",
@@ -10822,7 +10822,7 @@
   "08-0810": {
     "producto": "ANTICORR VERDE SHERWIN WILLIAM",
     "departamento": "PINTURAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "08-0813-GL": {
     "producto": "PINT.ACEI PRO 970 BLANCO X GAL",
@@ -10962,7 +10962,7 @@
   "08-0848": {
     "producto": "PINT.SPRAY CORONA NEGRO MATE A",
     "departamento": "PINTURAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "08-0849": {
     "producto": "PINT.SPRAY CORONA VERDE FLUORE",
@@ -11132,7 +11132,7 @@
   "08-0894": {
     "producto": "PINT.LATEX FUCSIA ICO 8085 CUB",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0897": {
     "producto": "COLORANTE EXPERT 1L POLVO ROJO",
@@ -11162,7 +11162,7 @@
   "08-0905": {
     "producto": "BARNIZ TRANSPARENTE ULTRA 1GAL",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0906": {
     "producto": "SELLADOR ACRILICO LANCO BLANCO",
@@ -11177,7 +11177,7 @@
   "08-0911-CUBE": {
     "producto": "PINT.ESMALTE FUCSIA DURA CUBET",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0915-CUBE": {
     "producto": "PINT.LATEX ROSA SALMON DURA CU",
@@ -11377,7 +11377,7 @@
   "08-0964": {
     "producto": "PINT.LATEX BASE KAT PAST 9018C",
     "departamento": "PINTURAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "08-0966": {
     "producto": "FASTYL IMPERM ELASTOMERICO 1/4",
@@ -11522,7 +11522,7 @@
   "09-0002": {
     "producto": "SERPENTINA 18x9MTS X ROLLO",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -7
+    "cantidad": 0
   },
   "09-0004-LB": {
     "producto": "ALAMBRE DE AMARRE X LIBRA",
@@ -11537,7 +11537,7 @@
   "09-0008": {
     "producto": "VARILLA LISA 1/4\" (5.5) LG",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -7422
+    "cantidad": 0
   },
   "09-0009": {
     "producto": "VARILLA CORRUGADA 3/8 (7.5) MM",
@@ -11547,12 +11547,12 @@
   "09-0010": {
     "producto": "VARILLA ENTORCHADA 1/2 (11.4)",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -14
+    "cantidad": 0
   },
   "09-0020": {
     "producto": "VARILLA CORRUGADA 5/8 LEG G60",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -41
+    "cantidad": 0
   },
   "09-0021": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)G40",
@@ -11567,7 +11567,7 @@
   "09-0036": {
     "producto": "VARILLA CORRUGADA 1/2 (11.0)",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -247
+    "cantidad": 0
   },
   "09-0039": {
     "producto": "VARILLA POLO TIE 1/2X4 S/ABRAZ",
@@ -11577,7 +11577,7 @@
   "09-0040": {
     "producto": "VARILLA CORRUGADA 3/8 (9.5) G6",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -120
+    "cantidad": 0
   },
   "09-0043": {
     "producto": "VARILLA POLO TIE 3/8X4 S/ABRAZ",
@@ -11592,7 +11592,7 @@
   "09-0048": {
     "producto": "VARILLA CORRUGADA 5/8 LEG G40",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -43
+    "cantidad": 0
   },
   "09-0049": {
     "producto": "VARILLA CORRUGADA 1/2(12.5)G60",
@@ -11602,12 +11602,12 @@
   "09-0054": {
     "producto": "VARILLA LISA 1/2\" (12.5)MM",
     "departamento": "HIERRO-VARILLAS",
-    "cantidad": -53
+    "cantidad": 0
   },
   "10-0018": {
     "producto": "FRAGUADOR PEGADURO S/A BLANCO",
     "departamento": "FRAGUADORES",
-    "cantidad": -2
+    "cantidad": 0
   },
   "10-0026": {
     "producto": "FRAGUADOR PEGASSU S/A CREMA",
@@ -11617,12 +11617,12 @@
   "10-0038": {
     "producto": "FRAGUADOR PEGADURO C/A GRIS CL",
     "departamento": "FRAGUADORES",
-    "cantidad": -2
+    "cantidad": 0
   },
   "10-0043": {
     "producto": "SEPARADOR P/CERAMICA 3MM TILE",
     "departamento": "CERAMICAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "10-0046": {
     "producto": "FRAGUADOR PEGADURO S/A BEIGE O",
@@ -11637,7 +11637,7 @@
   "10-0092": {
     "producto": "FRAGUADOR PEGADURO C/A NEGRO",
     "departamento": "FRAGUADORES",
-    "cantidad": -3
+    "cantidad": 0
   },
   "10-0094": {
     "producto": "FRAGUADOR PEGASSU S/A GRIS CLA",
@@ -11657,12 +11657,12 @@
   "10-0174": {
     "producto": "FRAGUADOR PEGADURO C/A GRIS OS",
     "departamento": "FRAGUADORES",
-    "cantidad": -10
+    "cantidad": 0
   },
   "10-0198": {
     "producto": "PEGA CERA PEGADURO 20KG",
     "departamento": "CERAMICAS",
-    "cantidad": -1324
+    "cantidad": 0
   },
   "10-0260": {
     "producto": "SEPARADOR P/CERAMICA 6MM",
@@ -11672,7 +11672,7 @@
   "10-0309-CAJA": {
     "producto": "CERA.HISPA.ALCALA AZUL33.4X33.",
     "departamento": "CERAMICAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "10-0424-PIE": {
     "producto": "MALLA GALLINA 6x150x1-1/2 ACER",
@@ -11682,12 +11682,12 @@
   "10-0424-ROLLO": {
     "producto": "MALLA GALLINA 6x150x1-1/2 ACER",
     "departamento": "CERAMICAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "10-0501-CAJA": {
     "producto": "CERA.CIMA CARRARA PLATA 45X45",
     "departamento": "CERAMICAS",
-    "cantidad": -5
+    "cantidad": 0
   },
   "10-0501-MTS": {
     "producto": "CERA.CIMA CARRARA PLATA 45X45",
@@ -11697,7 +11697,7 @@
   "10-0503-CAJA": {
     "producto": "CERA.HISPA.BALEA MARFIL20X30",
     "departamento": "CERAMICAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "10-0506-CAJA": {
     "producto": "CERA.HISPA.SEVILLA CREMA 45X45",
@@ -11707,7 +11707,7 @@
   "10-0527-CAJA": {
     "producto": "CERA.HISPA.JATOBA.BRILLA 20X60",
     "departamento": "CERAMICAS",
-    "cantidad": -7
+    "cantidad": 0
   },
   "10-0533-CAJA": {
     "producto": "CERA.HISPA.RODAS OXIDO 29x49.5",
@@ -11717,7 +11717,7 @@
   "10-0537-CAJA": {
     "producto": "CERA.BRASILIA CHIA BEIGE 20X31",
     "departamento": "CERAMICAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "10-0553-CAJA": {
     "producto": "CERA.HISPA.SORRE.MARRO 33X33",
@@ -11727,7 +11727,7 @@
   "10-0568-CAJA": {
     "producto": "CERA.HISPA.TURIA AZUL33.4X33.4",
     "departamento": "CERAMICAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "10-0577": {
     "producto": "SEPARADOR P/CERAMICA 5MM BTH",
@@ -11772,12 +11772,12 @@
   "10-0622": {
     "producto": "FRAGUADOR PEGASSU S/A BRONCE",
     "departamento": "FRAGUADORES",
-    "cantidad": -3
+    "cantidad": 0
   },
   "10-0625": {
     "producto": "PEGA PORCE PSP PEGADURO",
     "departamento": "CERAMICAS",
-    "cantidad": -389
+    "cantidad": 0
   },
   "10-0628": {
     "producto": "FRAGUADOR PEGADURO S/A GRIS CL",
@@ -11797,7 +11797,7 @@
   "10-0637-CAJA": {
     "producto": "CERA.FACH WOOD PLUS 30 X 45",
     "departamento": "CERAMICAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "10-0639": {
     "producto": "MASTER MIX SOBRE PISO PSP 66LB",
@@ -11817,12 +11817,12 @@
   "10-0645-CAJA": {
     "producto": "CERA.1105-HL 30x45CM 1M",
     "departamento": "CERAMICAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "10-0649-CAJA": {
     "producto": "CERA.GALA ARIELLE TERRA 46x46",
     "departamento": "CERAMICAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "10-0659": {
     "producto": "PERFIL/MOLD P/CERA.2.6M CROMAD",
@@ -11837,7 +11837,7 @@
   "10-0666": {
     "producto": "FRAGUADOR PEGADURO ARENA C/ARE",
     "departamento": "FRAGUADORES",
-    "cantidad": -3
+    "cantidad": 0
   },
   "10-0670": {
     "producto": "CERAMIC DESMACHA 900ML",
@@ -11862,17 +11862,17 @@
   "10-0683-CAJA": {
     "producto": "CERA.HISPA.TURIA MAR 33.4X33.4",
     "departamento": "CERAMICAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "10-0688": {
     "producto": "SEPARADOR P/CERAMICA 4MM TILE",
     "departamento": "CERAMICAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "10-0689": {
     "producto": "SEPARADOR P/CERAMICA 2MM TILE",
     "departamento": "CERAMICAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "10-0691": {
     "producto": "FRAGUADOR PEGASSU S/A GRIS ACE",
@@ -11966,7 +11966,7 @@
   },
   "10-0719-CAJA": {
     "producto": "CERA.HISPA.EBRO GRAFITO 33x33",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 0
   },
   "10-0720": {
@@ -11982,32 +11982,32 @@
   "11-0007": {
     "producto": "TABLA DE 01x12x12 FT DE PINO",
     "departamento": "MADERAS",
-    "cantidad": -31
+    "cantidad": 0
   },
   "11-0014": {
     "producto": "MOCHETAS DE 7 PIES X UND",
     "departamento": "MADERAS",
-    "cantidad": -11
+    "cantidad": 0
   },
   "11-0018": {
     "producto": "REGLA DE 01x03x10 FT DE PINO",
     "departamento": "MADERAS",
-    "cantidad": -105
+    "cantidad": 0
   },
   "11-0023": {
     "producto": "REGLA DE 01x03x12 FT DE PINO",
     "departamento": "MADERAS",
-    "cantidad": -151
+    "cantidad": 0
   },
   "11-0030": {
     "producto": "LAMI.MAZONITE CORRUG 2.5MM 4x8",
     "departamento": "MADERAS",
-    "cantidad": -11
+    "cantidad": 0
   },
   "11-0034": {
     "producto": "TABLA DE 01x10x10 FT DE PINO",
     "departamento": "MADERAS",
-    "cantidad": -96
+    "cantidad": 0
   },
   "11-0038": {
     "producto": "TABLA DE 01x06x10 FT DE PINO",
@@ -12017,7 +12017,7 @@
   "11-0041": {
     "producto": "REGLA DE 01x03x14 FT DE PINO",
     "departamento": "MADERAS",
-    "cantidad": -5
+    "cantidad": 0
   },
   "11-0042": {
     "producto": "TABLA DE 01x10x12 FT DE PINO",
@@ -12027,7 +12027,7 @@
   "11-0078": {
     "producto": "TABLA DE 01x06x12 FT DE PINO",
     "departamento": "MADERAS",
-    "cantidad": -7
+    "cantidad": 0
   },
   "11-0080": {
     "producto": "CUARTON DE 02x04x07 FT DE PINO",
@@ -12072,7 +12072,7 @@
   "12-0002": {
     "producto": "CAL 4 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -96
+    "cantidad": 0
   },
   "12-0007-LB": {
     "producto": "CEMENTO BLANCO X LIBRA AALBORG",
@@ -12087,7 +12087,7 @@
   "12-0010-CUBE": {
     "producto": "ADMIX TECHO 3 BLANCO X CUBETA",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -2
+    "cantidad": 0
   },
   "12-0015": {
     "producto": "REMOVED. CONCRETO 1GL HQ-300",
@@ -12107,7 +12107,7 @@
   "12-0023": {
     "producto": "CEMENTO UNO BOLSA 42.5 KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -83
+    "cantidad": 0
   },
   "12-0023-LB": {
     "producto": "CEMENTO UNO X LIBRA",
@@ -12122,22 +12122,22 @@
   "12-0026": {
     "producto": "ADMIX IM1 GRIS X SACO",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -4
+    "cantidad": 0
   },
   "12-0028": {
     "producto": "CAL 5 ESTRELLAS",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -647
+    "cantidad": 0
   },
   "12-0030": {
     "producto": "SUPER PULIDO PEGADURO 30KG",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -1113
+    "cantidad": 0
   },
   "12-0032-BARRIL": {
     "producto": "CURADOR CONCRETO KURAD P1000",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -1
+    "cantidad": 0
   },
   "12-0032-GL": {
     "producto": "CURADOR CONCRETO KURAD P1000",
@@ -12147,7 +12147,7 @@
   "12-0040-BARRIL": {
     "producto": "ADMIX EMULSION X BARRIL",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -1
+    "cantidad": 0
   },
   "12-0040-CUBE": {
     "producto": "ADMIX EMULSION X CUBETA",
@@ -12157,7 +12157,7 @@
   "12-0045": {
     "producto": "MASTER PEGACERAMICA 44LB",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -66
+    "cantidad": 0
   },
   "12-0048": {
     "producto": "ACELCRETO P/CONCRETO X 1 GALON",
@@ -12177,7 +12177,7 @@
   "12-0063": {
     "producto": "CEMENTO DURACEM UG 5200 PSI",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -4755
+    "cantidad": 0
   },
   "12-0065": {
     "producto": "CEMENTO DURACEM UG 4060 42.5KG",
@@ -12192,7 +12192,7 @@
   "12-0067": {
     "producto": "CONCRETO POR METRO CUBICO",
     "departamento": "CEMENTICIOS-CONSTRUCCION",
-    "cantidad": -7
+    "cantidad": 0
   },
   "12-0068": {
     "producto": "IPERCRETO P/CONCRETO X 1 GALON",
@@ -12202,22 +12202,22 @@
   "13-0001": {
     "producto": "BLOQUE #5 (12x20x40)cm INDUSTR",
     "departamento": "PETREOS",
-    "cantidad": -22482
+    "cantidad": 0
   },
   "13-0002": {
     "producto": "ARENA (RIO, TRITURADA) x METRO",
     "departamento": "PETREOS",
-    "cantidad": -656
+    "cantidad": 0
   },
   "13-0003": {
     "producto": "MIXTO POR METRO",
     "departamento": "PETREOS",
-    "cantidad": -383
+    "cantidad": 0
   },
   "13-0005": {
     "producto": "PIEDRA POR METRO",
     "departamento": "PETREOS",
-    "cantidad": -165
+    "cantidad": 0
   },
   "13-0011": {
     "producto": "BLOQUE #6 (15x20x40)Cm INDUSTR",
@@ -12227,12 +12227,12 @@
   "13-0012": {
     "producto": "GRAVA TRITURADA DE 3/4 X METRO",
     "departamento": "PETREOS",
-    "cantidad": -28
+    "cantidad": 0
   },
   "13-0014": {
     "producto": "BLOQUE #8 (20x20x40)cm INDUSTR",
     "departamento": "PETREOS",
-    "cantidad": -82
+    "cantidad": 0
   },
   "13-0018": {
     "producto": "LADRILLO RAFON 3x5x10-1/2",
@@ -12242,7 +12242,7 @@
   "13-0024": {
     "producto": "SELECTO POR METRO",
     "departamento": "PETREOS",
-    "cantidad": -492
+    "cantidad": 0
   },
   "15-0001": {
     "producto": "SIERRA CIRCULAR TRUPER 7-1/4 T",
@@ -12397,7 +12397,7 @@
   "15-0129": {
     "producto": "ESCALERA TIPO A 10FT FIBRA",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0138": {
     "producto": "HACHA C/MANGO TRUPER 1.5 LBS",
@@ -12422,7 +12422,7 @@
   "15-0155": {
     "producto": "TANQUE CISTERNA NEGRO 450L",
     "departamento": "FONTANERIA-PVC",
-    "cantidad": -3
+    "cantidad": 0
   },
   "15-0159": {
     "producto": "AZADON IMACASA C/MANGO DE MAD",
@@ -12627,7 +12627,7 @@
   "15-0409": {
     "producto": "COMPRESOR IMACASA 50LT 2-1/2HP",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0413": {
     "producto": "JUEGO D/CUBOS 1/2\" INGCO 25PCS",
@@ -12662,7 +12662,7 @@
   "15-0447": {
     "producto": "CUCHARA PARA ALBAÑIL OCONOR #7",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0461": {
     "producto": "CALIBRADOR DE AIRE 120PSI BEST",
@@ -12681,7 +12681,7 @@
   },
   "15-0476": {
     "producto": "JUEGO D/DESARMA EMTOP 6PZS",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 2
   },
   "15-0477": {
@@ -12697,7 +12697,7 @@
   "15-0482": {
     "producto": "ESCALERA TIPO A 7FT ALUMINIO",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0483": {
     "producto": "PLANA D/CAUCHO M/MADERA TRUPER",
@@ -12712,7 +12712,7 @@
   "15-0485": {
     "producto": "PLANA D/ESPONJA SANTUL LISA",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0487": {
     "producto": "BARRA DE ACERO 1.25 MTS TRUPER",
@@ -12987,7 +12987,7 @@
   "15-0598": {
     "producto": "HACHA C/MANGO IMACASA 3.5 LBS",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0599": {
     "producto": "TOLDO PLASTICO 12x16 IMACASA",
@@ -13047,12 +13047,12 @@
   "15-0619": {
     "producto": "CHALECO SEGU REFLEC AMARI BTH",
     "departamento": "SUMINISTROS OPERATIVOS",
-    "cantidad": -20
+    "cantidad": 0
   },
   "15-0620": {
     "producto": "CHALECO SEGU REFLEC ANARA BTH",
     "departamento": "SUMINISTROS OPERATIVOS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "15-0624": {
     "producto": "TALADRO 3/8 MAKITA M0600B",
@@ -13152,7 +13152,7 @@
   "15-0651": {
     "producto": "RASTRILLO PLAST 22 DIENTES IMA",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0652": {
     "producto": "ROCIADORA PRESION 2LT IMACASA",
@@ -13172,7 +13172,7 @@
   "15-0655": {
     "producto": "SEGUETA 18 DIENTES X 12\" IMACA",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "15-0656": {
     "producto": "SEGUETA 24 DIENTES X 12\" IMACA",
@@ -13517,7 +13517,7 @@
   "15-0799": {
     "producto": "EXTENSION EXPERT 3.4MTS D/META",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -2
+    "cantidad": 0
   },
   "15-0800": {
     "producto": "EXTENSION EXPERT 2MTS D/ALUMIN",
@@ -13557,7 +13557,7 @@
   "15-0813": {
     "producto": "CUÑA P/NIVELAR CERAMICA TRUPER",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -285
+    "cantidad": 0
   },
   "15-0814": {
     "producto": "DESBROZADORA GASOLINA 33CC IMA",
@@ -13622,7 +13622,7 @@
   "15-0827": {
     "producto": "PICO PIOCHA IMACASA 2.5LBS M/M",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0829": {
     "producto": "MANGUERA P/JARDIN 1/2X7.62MTS",
@@ -13987,12 +13987,12 @@
   "15-0958": {
     "producto": "GUANTE D/LATEX M PETRUL 23260",
     "departamento": "SUMINISTROS OPERATIVOS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "15-0959": {
     "producto": "CUCHARA P/ALBAÑIL 8\" PETRUL",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "15-0961": {
     "producto": "MARCO C/SEGUETA PRETUL 12\"",
@@ -14007,7 +14007,7 @@
   "15-0964": {
     "producto": "CINTA METRICA PETRUL 8 MTS ROJ",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "15-0967": {
     "producto": "JUEGO D/DESARMADORES PETRUL 8",
@@ -14022,7 +14022,7 @@
   "15-0972": {
     "producto": "MANERAL C/RATCH PETRUL 1/2\"",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-0975": {
     "producto": "BOQUILLA P/AIRE 1/4\" PETRUL",
@@ -14192,7 +14192,7 @@
   "15-1025": {
     "producto": "CINTA REFLECTIVA AMBAR x PIE",
     "departamento": "SEGURIDAD INDUSTRIAL",
-    "cantidad": -291
+    "cantidad": 0
   },
   "15-1026": {
     "producto": "PITON P/MANGUERA PRETUL",
@@ -14237,7 +14237,7 @@
   "15-1046": {
     "producto": "MANGUERA P/JARDIN 1/2x10M PRET",
     "departamento": "JARDINERIA",
-    "cantidad": -2
+    "cantidad": 0
   },
   "15-1048": {
     "producto": "MANGUERA P/JARDIN 1/2x20M PRET",
@@ -14277,7 +14277,7 @@
   "15-1059": {
     "producto": "GUANTE D/CARNAZA UNITALLA OCO",
     "departamento": "SUMINISTROS OPERATIVOS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "15-1060": {
     "producto": "PICOLETA MARTILLO P/SOLDADOR",
@@ -14302,7 +14302,7 @@
   "15-1067": {
     "producto": "VIDRIO P/SOLDADURA #12 ANGELIT",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-1068": {
     "producto": "TALADRO 1/2 TRUPER INALAMB MAX",
@@ -14367,7 +14367,7 @@
   "15-1096": {
     "producto": "CUCHARA P/ALBAÑIL 8\"",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-1097": {
     "producto": "TRIANGULO EMERGENCIA",
@@ -14512,7 +14512,7 @@
   "15-1141": {
     "producto": "LENTES D/SEGUR TRUPER GRIS AJU",
     "departamento": "SUMINISTROS OPERATIVOS",
-    "cantidad": -10
+    "cantidad": 0
   },
   "15-1142": {
     "producto": "CIZADOR TRUPER 15424",
@@ -14627,12 +14627,12 @@
   "15-1171": {
     "producto": "ESLABON MOSQUETON 3/16 FIERO",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "15-1172": {
     "producto": "ESLABON MOSQUETON 1/4 FIERO",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "15-1173": {
     "producto": "ESLABON MOSQUETON 3/8 FIERO",
@@ -14762,7 +14762,7 @@
   "15-1214": {
     "producto": "ACEITE MULTIUSOS LIDER 1 ONZ",
     "departamento": "AUTOMOTRIZ",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-1215": {
     "producto": "CUCHARA P/ALBAÑIL 8\" BTH",
@@ -14807,7 +14807,7 @@
   "15-1224": {
     "producto": "EXTENSION ELEC VOLTECK 08MTS",
     "departamento": "ELECTRICIDAD",
-    "cantidad": -2
+    "cantidad": 0
   },
   "15-1225": {
     "producto": "LLAVE MIXTA 10MM PRETUL 21904",
@@ -15067,7 +15067,7 @@
   "15-1285": {
     "producto": "CINTA METRICA PETRUL 8 MTS AZU",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-1286": {
     "producto": "FORMON PRETUL 3/8\" 21653",
@@ -15077,7 +15077,7 @@
   "15-1287": {
     "producto": "FORMON PRETUL 1/2\" 21656",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-1290": {
     "producto": "MULTIMETRO DIGITAL TRUPE 10404",
@@ -15222,7 +15222,7 @@
   "15-1323": {
     "producto": "TOLDO PLASTICO 20x24 AZUL HUNT",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -1
+    "cantidad": 0
   },
   "15-1324": {
     "producto": "TOLDO PLASTICO 18x24 AZUL HUNT",
@@ -15467,7 +15467,7 @@
   "15-1386": {
     "producto": "SERRUCHO INDUSTRIAL 18\" INGCO",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "15-1387": {
     "producto": "SOLDADORA INGCO INVERTER 200A",
@@ -15492,7 +15492,7 @@
   "15-1392": {
     "producto": "CINTA PANEL DE YESO",
     "departamento": "ENCIELADO-TECHOS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "15-1393": {
     "producto": "LAZO COLOR VARIADO X 12 MTS DE",
@@ -15502,7 +15502,7 @@
   "15-1395": {
     "producto": "LAZO COLOR VARIADO X 08 MTS GR",
     "departamento": "HERRAMIENTAS",
-    "cantidad": -8
+    "cantidad": 0
   },
   "15-1396": {
     "producto": "PINZA D/PRESION TRUPER 07\"",
@@ -15866,7 +15866,7 @@
   },
   "15-1478": {
     "producto": "SISTEMA DE NIVELACION DE LOSET",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 3
   },
   "15-1479": {
@@ -15972,7 +15972,7 @@
   "17-0015": {
     "producto": "CINTA DOBLE CARA JINGONG",
     "departamento": "EQUIPO DE OFICINA",
-    "cantidad": -1
+    "cantidad": 0
   },
   "17-0018": {
     "producto": "VENTILADOR D/TECHO 52\" WESTING",
@@ -16017,72 +16017,72 @@
   "17-0029": {
     "producto": "SILLA PLASTICA SANCHIA",
     "departamento": "EQUIPO DE OFICINA",
-    "cantidad": -50
+    "cantidad": 0
   },
   "19-0001-CAJA": {
     "producto": "PORCE PLAIN IVORY 60x60 1.44M",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -1203
+    "cantidad": 0
   },
   "19-0004-CAJA": {
     "producto": "CERA.23210 40x40CM 0.96M 6PZS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -114
+    "cantidad": 0
   },
   "19-0006-CAJA": {
     "producto": "CERA.23257 40x40CM 0.99M 6PZS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -64
+    "cantidad": 0
   },
   "19-0007-CAJA": {
     "producto": "CERA.23215 40x40CM 0.96M 6PZS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "19-0014-CAJA": {
     "producto": "CERA.SERIE 1292HL-1 25x37.5CM",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -5
+    "cantidad": 0
   },
   "19-0016-CAJA": {
     "producto": "CERA.1269-L 30x60CM 0.90M 5PZS",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "19-0021-CAJA": {
     "producto": "CERA.1397-LK-1 30x60CM 0.90M 5",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -2
+    "cantidad": 0
   },
   "19-0028-CAJA": {
     "producto": "CERA.1407-LT 30x60CM 0.90M 5PZ",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -53
+    "cantidad": 0
   },
   "19-0029-CAJA": {
     "producto": "CERA.1407-DK 30x60CM 0.90M 5PZ",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -7
+    "cantidad": 0
   },
   "19-0034-CAJA": {
     "producto": "CERA.K-01LT 25x37.5CM 0.75M 8P",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -27
+    "cantidad": 0
   },
   "19-0036-CAJA": {
     "producto": "CERA.K-08LT 25x37.5CM 0.75M 8P",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -6
+    "cantidad": 0
   },
   "19-0037-CAJA": {
     "producto": "CERA.K-08-HL-1 25x37.5CM 0.75M",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -4
+    "cantidad": 0
   },
   "19-0038-CAJA": {
     "producto": "CERA.K-61LT 25x37.5CM 0.75M 8P",
     "departamento": "CERAMICAS IMPORTADAS",
-    "cantidad": -30
+    "cantidad": 0
   },
   "19-0041-CAJA": {
     "producto": "PORCE JORDAN DARK GREY PREMIUM",
@@ -16211,7 +16211,7 @@
   },
   "20-0068": {
     "producto": "GAS REFRIGERANTE 134A-12OZ 1LB",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 18
   },
   "20-0069": {
@@ -16266,7 +16266,7 @@
   },
   "20-0083": {
     "producto": "ALUMINOX CUERO X 450ML",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 16
   },
   "20-0084": {
@@ -16382,7 +16382,7 @@
   "20-0107": {
     "producto": "PEGATODO AMARILLO 1/16",
     "departamento": "PUERTAS-VENTANAS-ACCESORIOS2",
-    "cantidad": -1
+    "cantidad": 0
   },
   "20-0108": {
     "producto": "SANITREX DESMANCHADOR 700ML",
@@ -16482,7 +16482,7 @@
   "20-0128-GL": {
     "producto": "SELLADOR IMPER CAMPEON BLAN GL",
     "departamento": "PINTURAS",
-    "cantidad": -3
+    "cantidad": 0
   },
   "20-0129": {
     "producto": "ACEITE ROJO P/MADERA 240ML",
@@ -16571,12 +16571,12 @@
   },
   "20-0148": {
     "producto": "ALUMINOX FOCOS X 450ML",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 23
   },
   "20-0149": {
     "producto": "RECIPIENTE PLASTICO 5L P/GASOL",
-    "departamento": "nan",
+    "departamento": "0",
     "cantidad": 2
   },
   "20-0150": {
