@@ -1,1 +1,947 @@
-
+{
+  "01-0040": {
+    "cantidad": 1
+  },
+  "01-0043": {
+    "cantidad": 56
+  },
+  "01-0045": {
+    "cantidad": 19
+  },
+  "01-0049": {
+    "cantidad": 2
+  },
+  "01-0053": {
+    "cantidad": 26
+  },
+  "01-0064": {
+    "cantidad": 13
+  },
+  "01-0065": {
+    "cantidad": 14
+  },
+  "01-0076": {
+    "cantidad": 5
+  },
+  "01-0086": {
+    "cantidad": 7
+  },
+  "01-0091": {
+    "cantidad": 1
+  },
+  "01-0099": {
+    "cantidad": 1
+  },
+  "01-0104": {
+    "cantidad": 1
+  },
+  "01-0107": {
+    "cantidad": 9
+  },
+  "01-0109": {
+    "cantidad": 2
+  },
+  "01-0121": {
+    "cantidad": 5
+  },
+  "01-0128": {
+    "cantidad": 9
+  },
+  "01-0149": {
+    "cantidad": 3
+  },
+  "01-0153": {
+    "cantidad": 9
+  },
+  "01-0155-UND": {
+    "cantidad": 6
+  },
+  "01-0161": {
+    "cantidad": 22
+  },
+  "01-0172": {
+    "cantidad": 2
+  },
+  "01-0180": {
+    "cantidad": 1
+  },
+  "01-0209-UND": {
+    "cantidad": 34
+  },
+  "01-0221": {
+    "cantidad": 2
+  },
+  "01-0222": {
+    "cantidad": 2
+  },
+  "01-0235": {
+    "cantidad": 22
+  },
+  "01-0245": {
+    "cantidad": 2
+  },
+  "01-0280": {
+    "cantidad": 4
+  },
+  "01-0281": {
+    "cantidad": 4
+  },
+  "01-0282": {
+    "cantidad": 2
+  },
+  "01-0291": {
+    "cantidad": -1
+  },
+  "01-0297": {
+    "cantidad": 19
+  },
+  "01-0304": {
+    "cantidad": 14
+  },
+  "01-0309": {
+    "cantidad": 11
+  },
+  "01-0310": {
+    "cantidad": 8
+  },
+  "01-0322": {
+    "cantidad": 16
+  },
+  "01-0337": {
+    "cantidad": 157
+  },
+  "01-0338": {
+    "cantidad": 77
+  },
+  "01-0342": {
+    "cantidad": 85
+  },
+  "01-0352": {
+    "cantidad": 3
+  },
+  "01-0353": {
+    "cantidad": 1
+  },
+  "01-0369": {
+    "cantidad": 2
+  },
+  "01-0370": {
+    "cantidad": 1
+  },
+  "01-0373": {
+    "cantidad": 7
+  },
+  "01-0385": {
+    "cantidad": 2
+  },
+  "01-0401": {
+    "cantidad": -1
+  },
+  "01-0408-MTS": {
+    "cantidad": 6
+  },
+  "01-0423": {
+    "cantidad": 3
+  },
+  "01-0439": {
+    "cantidad": 83
+  },
+  "01-0453": {
+    "cantidad": 3
+  },
+  "01-0470": {
+    "cantidad": 5
+  },
+  "01-0492": {
+    "cantidad": 6
+  },
+  "01-0493": {
+    "cantidad": 32
+  },
+  "01-0499": {
+    "cantidad": 52
+  },
+  "01-0500": {
+    "cantidad": 5
+  },
+  "01-0509": {
+    "cantidad": 1
+  },
+  "01-0569": {
+    "cantidad": 7
+  },
+  "01-0573": {
+    "cantidad": 6
+  },
+  "01-0587": {
+    "cantidad": 22
+  },
+  "01-0626": {
+    "cantidad": 2
+  },
+  "01-0653": {
+    "cantidad": 50
+  },
+  "01-0692": {
+    "cantidad": 95
+  },
+  "01-0693": {
+    "cantidad": 57
+  },
+  "01-0857": {
+    "cantidad": 3
+  },
+  "01-0898": {
+    "cantidad": 11
+  },
+  "02-0008": {
+    "cantidad": 80
+  },
+  "02-0047": {
+    "cantidad": 282
+  },
+  "02-0071": {
+    "cantidad": 13
+  },
+  "02-0073": {
+    "cantidad": 15
+  },
+  "02-0080": {
+    "cantidad": 2
+  },
+  "02-0102": {
+    "cantidad": 2
+  },
+  "02-0219": {
+    "cantidad": 500
+  },
+  "02-0351": {
+    "cantidad": 2
+  },
+  "03-0011": {
+    "cantidad": 13
+  },
+  "03-0012": {
+    "cantidad": 13
+  },
+  "03-0016": {
+    "cantidad": 8
+  },
+  "03-0021": {
+    "cantidad": 9
+  },
+  "03-0032": {
+    "cantidad": 6
+  },
+  "03-0033": {
+    "cantidad": 2
+  },
+  "03-0036": {
+    "cantidad": 2
+  },
+  "03-0047": {
+    "cantidad": 3
+  },
+  "03-0067": {
+    "cantidad": 1
+  },
+  "03-0071": {
+    "cantidad": 4
+  },
+  "03-0087": {
+    "cantidad": 2
+  },
+  "03-0094": {
+    "cantidad": 12
+  },
+  "03-0106": {
+    "cantidad": 25
+  },
+  "03-0111": {
+    "cantidad": 300
+  },
+  "03-0127": {
+    "cantidad": 1
+  },
+  "03-0136": {
+    "cantidad": 36
+  },
+  "03-0143": {
+    "cantidad": 20
+  },
+  "03-0170": {
+    "cantidad": -3
+  },
+  "03-0177": {
+    "cantidad": 6
+  },
+  "03-0181": {
+    "cantidad": 5
+  },
+  "03-0213": {
+    "cantidad": 13
+  },
+  "03-0238": {
+    "cantidad": 35
+  },
+  "03-0302": {
+    "cantidad": 6
+  },
+  "03-0303": {
+    "cantidad": 4
+  },
+  "03-0305": {
+    "cantidad": 1
+  },
+  "03-0318": {
+    "cantidad": 2
+  },
+  "03-0375": {
+    "cantidad": 1
+  },
+  "03-0389": {
+    "cantidad": 3
+  },
+  "03-0408": {
+    "cantidad": 4
+  },
+  "03-0442": {
+    "cantidad": 1
+  },
+  "03-0444": {
+    "cantidad": 1
+  },
+  "03-0553": {
+    "cantidad": 6
+  },
+  "03-0590": {
+    "cantidad": 5
+  },
+  "03-0701": {
+    "cantidad": 3
+  },
+  "03-0705": {
+    "cantidad": 1
+  },
+  "03-0706": {
+    "cantidad": 9
+  },
+  "03-0739": {
+    "cantidad": 12
+  },
+  "04-0026": {
+    "cantidad": 165
+  },
+  "04-0028": {
+    "cantidad": 5
+  },
+  "04-0043": {
+    "cantidad": 14
+  },
+  "04-0062": {
+    "cantidad": 2
+  },
+  "04-0111": {
+    "cantidad": 4
+  },
+  "04-0257": {
+    "cantidad": 1
+  },
+  "04-0268": {
+    "cantidad": 66
+  },
+  "04-0290": {
+    "cantidad": 4
+  },
+  "04-0293": {
+    "cantidad": 5
+  },
+  "04-0299": {
+    "cantidad": 20
+  },
+  "04-0304": {
+    "cantidad": 27
+  },
+  "04-0336": {
+    "cantidad": 1
+  },
+  "04-0355": {
+    "cantidad": 5
+  },
+  "04-0392": {
+    "cantidad": 12
+  },
+  "07-0024": {
+    "cantidad": 1
+  },
+  "07-0032": {
+    "cantidad": 1
+  },
+  "07-0122": {
+    "cantidad": 1
+  },
+  "07-0309": {
+    "cantidad": 2
+  },
+  "08-0078-CUBE": {
+    "cantidad": 2
+  },
+  "08-0081": {
+    "cantidad": 320
+  },
+  "08-0270": {
+    "cantidad": 8
+  },
+  "08-0329-CUBE": {
+    "cantidad": 1
+  },
+  "08-0329-GL": {
+    "cantidad": 2
+  },
+  "08-0401-CUBE": {
+    "cantidad": 2
+  },
+  "08-0403-CUBE": {
+    "cantidad": 3
+  },
+  "08-0404-CUBE": {
+    "cantidad": 2
+  },
+  "08-0405-1/4 GAL": {
+    "cantidad": 6
+  },
+  "08-0405-CUBE": {
+    "cantidad": 1
+  },
+  "08-0406-CUBE": {
+    "cantidad": 1
+  },
+  "08-0407-CUBE": {
+    "cantidad": 1
+  },
+  "08-0408-CUBE": {
+    "cantidad": 2
+  },
+  "08-0409-CUBE": {
+    "cantidad": 1
+  },
+  "08-0410-GL": {
+    "cantidad": 3
+  },
+  "08-0412-GL": {
+    "cantidad": 8
+  },
+  "08-0413-GL": {
+    "cantidad": 8
+  },
+  "08-0414-GL": {
+    "cantidad": 5
+  },
+  "08-0417-GL": {
+    "cantidad": 8
+  },
+  "08-0419-GL": {
+    "cantidad": 8
+  },
+  "08-0423-CUBE": {
+    "cantidad": 2
+  },
+  "08-0423-GL": {
+    "cantidad": 19
+  },
+  "08-0424-CUBE": {
+    "cantidad": 2
+  },
+  "08-0425-CUBE": {
+    "cantidad": 5
+  },
+  "08-0426-CUBE": {
+    "cantidad": 1
+  },
+  "08-0427-GL": {
+    "cantidad": 1
+  },
+  "08-0429-GL": {
+    "cantidad": 8
+  },
+  "08-0430-GL": {
+    "cantidad": 4
+  },
+  "08-0431-GL": {
+    "cantidad": 12
+  },
+  "08-0433-GL": {
+    "cantidad": 12
+  },
+  "08-0435-CUBE": {
+    "cantidad": 6
+  },
+  "08-0436-CUBE": {
+    "cantidad": 5
+  },
+  "08-0437-CUBE": {
+    "cantidad": 1
+  },
+  "08-0440-1/4": {
+    "cantidad": 6
+  },
+  "08-0441-GL": {
+    "cantidad": 4
+  },
+  "08-0444-GL": {
+    "cantidad": 12
+  },
+  "08-0445-GL": {
+    "cantidad": 2
+  },
+  "08-0448-GL": {
+    "cantidad": 5
+  },
+  "08-0449-GL": {
+    "cantidad": 8
+  },
+  "08-0451-GL": {
+    "cantidad": 15
+  },
+  "08-0452-CUBE": {
+    "cantidad": 2
+  },
+  "08-0452-GL": {
+    "cantidad": 4
+  },
+  "08-0453-CUBE": {
+    "cantidad": 2
+  },
+  "08-0488": {
+    "cantidad": 50
+  },
+  "08-0489": {
+    "cantidad": 60
+  },
+  "08-0492": {
+    "cantidad": 216
+  },
+  "08-0511": {
+    "cantidad": 360
+  },
+  "08-0512-GL": {
+    "cantidad": 12
+  },
+  "08-0514-GL": {
+    "cantidad": 12
+  },
+  "08-0526-CUBE": {
+    "cantidad": 7
+  },
+  "08-0527-GL": {
+    "cantidad": 1
+  },
+  "08-0530-GL": {
+    "cantidad": 36
+  },
+  "08-0531-GL": {
+    "cantidad": 1
+  },
+  "08-0532-CUBE": {
+    "cantidad": 2
+  },
+  "08-0534-CUBE": {
+    "cantidad": -2
+  },
+  "08-0540-CUBE": {
+    "cantidad": 1
+  },
+  "08-0541-GL": {
+    "cantidad": 5
+  },
+  "08-0544-CUBE": {
+    "cantidad": 11
+  },
+  "08-0545-CUBE": {
+    "cantidad": 22
+  },
+  "08-0549-GL": {
+    "cantidad": 12
+  },
+  "08-0555-GL": {
+    "cantidad": 2
+  },
+  "08-0559-GL": {
+    "cantidad": 4
+  },
+  "08-0567-GL": {
+    "cantidad": 8
+  },
+  "08-0579-GL": {
+    "cantidad": 3
+  },
+  "08-0580": {
+    "cantidad": 12
+  },
+  "08-0624-CUBE": {
+    "cantidad": 2
+  },
+  "08-0628": {
+    "cantidad": 3
+  },
+  "08-0630-CUBE": {
+    "cantidad": 4
+  },
+  "08-0632-CUBE": {
+    "cantidad": 11
+  },
+  "08-0633-CUBE": {
+    "cantidad": 5
+  },
+  "08-0635-CUBE": {
+    "cantidad": 3
+  },
+  "08-0648": {
+    "cantidad": 2
+  },
+  "08-0649": {
+    "cantidad": 2
+  },
+  "08-0650-GL": {
+    "cantidad": 4
+  },
+  "08-0652": {
+    "cantidad": 2
+  },
+  "08-0656": {
+    "cantidad": 3
+  },
+  "08-0658-CUBE": {
+    "cantidad": 2
+  },
+  "08-0662-CUBE": {
+    "cantidad": 2
+  },
+  "08-0665-CUBE": {
+    "cantidad": 3
+  },
+  "08-0667-CUBE": {
+    "cantidad": 2
+  },
+  "08-0669-CUBE": {
+    "cantidad": 2
+  },
+  "08-0675-GL": {
+    "cantidad": 3
+  },
+  "08-0676-GL": {
+    "cantidad": 7
+  },
+  "08-0677-GL": {
+    "cantidad": 8
+  },
+  "08-0678-GL": {
+    "cantidad": 8
+  },
+  "08-0679-GL": {
+    "cantidad": 8
+  },
+  "08-0680-GL": {
+    "cantidad": 4
+  },
+  "08-0681-GL": {
+    "cantidad": 8
+  },
+  "08-0682-GL": {
+    "cantidad": 8
+  },
+  "08-0683-GL": {
+    "cantidad": 4
+  },
+  "08-0684-GL": {
+    "cantidad": 8
+  },
+  "08-0685-GL": {
+    "cantidad": 8
+  },
+  "08-0686-GL": {
+    "cantidad": 8
+  },
+  "08-0687-GL": {
+    "cantidad": 4
+  },
+  "08-0688-GL": {
+    "cantidad": 8
+  },
+  "08-0689-GL": {
+    "cantidad": 4
+  },
+  "08-0691-GL": {
+    "cantidad": 8
+  },
+  "08-0692-GL": {
+    "cantidad": 4
+  },
+  "08-0693-GL": {
+    "cantidad": 5
+  },
+  "08-0694-CUBE": {
+    "cantidad": 1
+  },
+  "08-0695-GL": {
+    "cantidad": 8
+  },
+  "08-0696-GL": {
+    "cantidad": 4
+  },
+  "08-0698-GL": {
+    "cantidad": 8
+  },
+  "08-0700-GL": {
+    "cantidad": 4
+  },
+  "08-0701-GL": {
+    "cantidad": 4
+  },
+  "08-0702-GL": {
+    "cantidad": 4
+  },
+  "08-0703-CUBE": {
+    "cantidad": 1
+  },
+  "08-0704-GL": {
+    "cantidad": 8
+  },
+  "08-0706-GL": {
+    "cantidad": 4
+  },
+  "08-0710-GL": {
+    "cantidad": 8
+  },
+  "08-0711-CUBE": {
+    "cantidad": 4
+  },
+  "08-0712-CUBE": {
+    "cantidad": 5
+  },
+  "08-0715-GL": {
+    "cantidad": 12
+  },
+  "08-0735-GL": {
+    "cantidad": 7
+  },
+  "08-0736-GL": {
+    "cantidad": 12
+  },
+  "08-0737-GL": {
+    "cantidad": 15
+  },
+  "08-0739": {
+    "cantidad": 6
+  },
+  "08-0740": {
+    "cantidad": 9
+  },
+  "08-0744": {
+    "cantidad": 8
+  },
+  "08-0745": {
+    "cantidad": 12
+  },
+  "08-0746": {
+    "cantidad": 1
+  },
+  "08-0749": {
+    "cantidad": 7
+  },
+  "08-0750": {
+    "cantidad": 8
+  },
+  "08-0751": {
+    "cantidad": 15
+  },
+  "08-0756": {
+    "cantidad": 6
+  },
+  "08-0777-CUBE": {
+    "cantidad": 10
+  },
+  "08-0831": {
+    "cantidad": 3
+  },
+  "08-0832": {
+    "cantidad": 1
+  },
+  "08-0833": {
+    "cantidad": 3
+  },
+  "08-0834": {
+    "cantidad": 11
+  },
+  "08-0870": {
+    "cantidad": 2
+  },
+  "08-0885": {
+    "cantidad": 1
+  },
+  "08-0886": {
+    "cantidad": 3
+  },
+  "08-0887": {
+    "cantidad": 1
+  },
+  "08-0888": {
+    "cantidad": 2
+  },
+  "08-0889": {
+    "cantidad": 3
+  },
+  "08-0890": {
+    "cantidad": 2
+  },
+  "08-0891": {
+    "cantidad": 2
+  },
+  "08-0893": {
+    "cantidad": 2
+  },
+  "08-0894": {
+    "cantidad": 2
+  },
+  "08-0895": {
+    "cantidad": 2
+  },
+  "08-0896": {
+    "cantidad": 2
+  },
+  "08-0905": {
+    "cantidad": 4
+  },
+  "08-0908": {
+    "cantidad": 2
+  },
+  "08-0909": {
+    "cantidad": 2
+  },
+  "08-0910": {
+    "cantidad": 2
+  },
+  "08-0964": {
+    "cantidad": 3
+  },
+  "08-0965": {
+    "cantidad": 2
+  },
+  "09-0002": {
+    "cantidad": 25
+  },
+  "09-0004-LB": {
+    "cantidad": 210
+  },
+  "09-0005": {
+    "cantidad": 18
+  },
+  "09-0008": {
+    "cantidad": 125
+  },
+  "09-0009": {
+    "cantidad": 14
+  },
+  "09-0021": {
+    "cantidad": 16
+  },
+  "09-0022": {
+    "cantidad": 15
+  },
+  "09-0028": {
+    "cantidad": 30
+  },
+  "10-0018": {
+    "cantidad": 1
+  },
+  "10-0198": {
+    "cantidad": 25
+  },
+  "10-0424-PIE": {
+    "cantidad": 100
+  },
+  "10-0424-ROLLO": {
+    "cantidad": 2
+  },
+  "10-0569": {
+    "cantidad": 2
+  },
+  "10-0625": {
+    "cantidad": 55
+  },
+  "10-0640": {
+    "cantidad": 1
+  },
+  "12-0002": {
+    "cantidad": 1
+  },
+  "12-0022": {
+    "cantidad": 1
+  },
+  "12-0023": {
+    "cantidad": 36
+  },
+  "12-0026": {
+    "cantidad": 4
+  },
+  "12-0028": {
+    "cantidad": 3
+  },
+  "12-0030": {
+    "cantidad": 19
+  },
+  "12-0045": {
+    "cantidad": 1
+  },
+  "15-0040": {
+    "cantidad": 7
+  },
+  "15-0129": {
+    "cantidad": 1
+  },
+  "15-0409": {
+    "cantidad": 1
+  },
+  "15-0477": {
+    "cantidad": 1
+  },
+  "15-0480": {
+    "cantidad": 2
+  },
+  "15-0482": {
+    "cantidad": 2
+  },
+  "15-0593": {
+    "cantidad": 1
+  },
+  "15-0605-MTS": {
+    "cantidad": 12
+  },
+  "15-0801": {
+    "cantidad": 3
+  },
+  "15-0810": {
+    "cantidad": 2
+  },
+  "15-0871": {
+    "cantidad": 1
+  },
+  "15-0911-YARDA": {
+    "cantidad": -72
+  },
+  "01-0400": {
+    "cantidad": 7
+  },
+  "01-0306": {
+    "cantidad": 3
+  },
+  "03-0253": {
+    "cantidad": 2
+  },
+  "03-0732": {
+    "cantidad": 53
+  },
+  "12-0007-LB": {
+    "cantidad": 5
+  }
+}
