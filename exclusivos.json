@@ -1,0 +1,14 @@
+{
+  "01-1305": {
+    "Producto": "AZADON",
+    "precio": 117.0,
+    "precioA": 109.0,
+    "precioB": 104.0,
+    "precioC": 100.0,
+    "mayoreo": 0.0,
+    "costo": 86.4547,
+    "limite": 90.0,
+    "Exonerado": "Si",
+    "Imp. incl.": 95251
+  }
+}
