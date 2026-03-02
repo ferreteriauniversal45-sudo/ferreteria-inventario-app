@@ -5,9 +5,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 159.3,
+    "mayoreo": 175.23000000000002,
     "costo": 159.3,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 159.3,
     "limite": 0.0
   },
   "15-1501": {
@@ -16,9 +16,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 149.86,
+    "mayoreo": 164.84600000000003,
     "costo": 149.86,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 149.86,
     "limite": 0.0
   },
   "15-0863": {
@@ -27,9 +27,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 756.01,
+    "mayoreo": 831.6110000000001,
     "costo": 756.01,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 756.01,
     "limite": 0.0
   },
   "15-0582": {
@@ -38,9 +38,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 62.1,
+    "mayoreo": 68.31,
     "costo": 62.1,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 62.1,
     "limite": 0.0
   },
   "15-0580": {
@@ -49,9 +49,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 128.25,
+    "mayoreo": 141.07500000000002,
     "costo": 128.25,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 128.25,
     "limite": 0.0
   },
   "15-0581": {
@@ -60,9 +60,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 152.55,
+    "mayoreo": 167.80500000000004,
     "costo": 152.55,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 152.55,
     "limite": 0.0
   },
   "15-1502": {
@@ -71,9 +71,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 55.89,
-    "costo": 48.6,
-    "costoSinImpt": 0.0,
+    "mayoreo": 61.479000000000006,
+    "costo": 55.89,
+    "costoSinImpt": 48.6,
     "limite": 0.0
   },
   "01-0658": {
@@ -82,9 +82,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 20.8035,
-    "costo": 18.09,
-    "costoSinImpt": 0.0,
+    "mayoreo": 22.883850000000002,
+    "costo": 20.8035,
+    "costoSinImpt": 18.09,
     "limite": 0.0
   },
   "01-0732": {
@@ -93,9 +93,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 20.8035,
-    "costo": 18.09,
-    "costoSinImpt": 0.0,
+    "mayoreo": 22.883850000000002,
+    "costo": 20.8035,
+    "costoSinImpt": 18.09,
     "limite": 0.0
   },
   "01-0844": {
@@ -104,9 +104,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 49.68000000000001,
-    "costo": 43.2,
-    "costoSinImpt": 0.0,
+    "mayoreo": 54.648,
+    "costo": 49.68,
+    "costoSinImpt": 43.2,
     "limite": 0.0
   },
   "15-1503": {
@@ -115,9 +115,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 104.0175,
-    "costo": 90.45,
-    "costoSinImpt": 0.0,
+    "mayoreo": 114.41925,
+    "costo": 104.0175,
+    "costoSinImpt": 90.45,
     "limite": 0.0
   },
   "15-1504": {
@@ -126,9 +126,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 133.515,
-    "costo": 116.1,
-    "costoSinImpt": 0.0,
+    "mayoreo": 146.8665,
+    "costo": 133.515,
+    "costoSinImpt": 116.1,
     "limite": 0.0
   },
   "15-1505": {
@@ -137,9 +137,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 236.25,
+    "mayoreo": 259.875,
     "costo": 236.25,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 236.25,
     "limite": 0.0
   },
   "15-1506": {
@@ -148,9 +148,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 247.05,
+    "mayoreo": 271.75500000000005,
     "costo": 247.05,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 247.05,
     "limite": 0.0
   },
   "15-0604": {
@@ -159,9 +159,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-0603": {
@@ -170,9 +170,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-1498": {
@@ -181,9 +181,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-0991": {
@@ -192,9 +192,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 135.0,
+    "mayoreo": 148.5,
     "costo": 135.0,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 135.0,
     "limite": 0.0
   },
   "15-0651": {
@@ -203,9 +203,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 133.515,
-    "costo": 116.1,
-    "costoSinImpt": 0.0,
+    "mayoreo": 146.8665,
+    "costo": 133.515,
+    "costoSinImpt": 116.1,
     "limite": 0.0
   },
   "01-0633": {
@@ -214,9 +214,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 29.509,
-    "costo": 25.66,
-    "costoSinImpt": 0.0,
+    "mayoreo": 32.4599,
+    "costo": 29.508999999999997,
+    "costoSinImpt": 25.66,
     "limite": 0.0
   },
   "01-0634": {
@@ -225,9 +225,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 34.155,
-    "costo": 29.7,
-    "costoSinImpt": 0.0,
+    "mayoreo": 37.570499999999996,
+    "costo": 34.154999999999994,
+    "costoSinImpt": 29.7,
     "limite": 0.0
   },
   "01-1312": {
@@ -236,9 +236,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 24.840000000000003,
-    "costo": 21.6,
-    "costoSinImpt": 0.0,
+    "mayoreo": 27.324,
+    "costo": 24.84,
+    "costoSinImpt": 21.6,
     "limite": 0.0
   },
   "15-0032": {
@@ -247,9 +247,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 27.945,
-    "costo": 24.3,
-    "costoSinImpt": 0.0,
+    "mayoreo": 30.739500000000003,
+    "costo": 27.945,
+    "costoSinImpt": 24.3,
     "limite": 0.0
   },
   "15-0329": {
@@ -258,9 +258,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-0584": {
@@ -269,9 +269,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 310.5,
+    "mayoreo": 341.55,
     "costo": 310.5,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 310.5,
     "limite": 0.0
   },
   "15-0591": {
@@ -280,9 +280,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-0816": {
@@ -291,9 +291,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 206.48250000000002,
-    "costo": 179.55,
-    "costoSinImpt": 0.0,
+    "mayoreo": 227.13075,
+    "costo": 206.4825,
+    "costoSinImpt": 179.55,
     "limite": 0.0
   },
   "15-0824": {
@@ -302,9 +302,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 186.3,
+    "mayoreo": 204.93000000000004,
     "costo": 186.3,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 186.3,
     "limite": 0.0
   },
   "15-1122": {
@@ -313,9 +313,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 90.045,
-    "costo": 78.3,
-    "costoSinImpt": 0.0,
+    "mayoreo": 99.0495,
+    "costo": 90.04499999999999,
+    "costoSinImpt": 78.3,
     "limite": 0.0
   },
   "15-1499": {
@@ -324,9 +324,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-1507": {
@@ -335,9 +335,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 261.9,
+    "mayoreo": 288.09,
     "costo": 261.9,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 261.9,
     "limite": 0.0
   },
   "15-1508": {
@@ -346,9 +346,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 274.05,
+    "mayoreo": 301.45500000000004,
     "costo": 274.05,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 274.05,
     "limite": 0.0
   },
   "15-1509": {
@@ -357,9 +357,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 90.45,
+    "mayoreo": 99.495,
     "costo": 90.45,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 90.45,
     "limite": 0.0
   },
   "15-1510": {
@@ -368,9 +368,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 101.26,
+    "mayoreo": 111.38600000000001,
     "costo": 101.26,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 101.26,
     "limite": 0.0
   },
   "15-1511": {
@@ -379,9 +379,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 159.3,
+    "mayoreo": 175.23000000000002,
     "costo": 159.3,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 159.3,
     "limite": 0.0
   },
   "15-1512": {
@@ -390,9 +390,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 106.65,
+    "mayoreo": 117.31500000000001,
     "costo": 106.65,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 106.65,
     "limite": 0.0
   },
   "15-1513": {
@@ -401,9 +401,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 182.25,
+    "mayoreo": 200.47500000000002,
     "costo": 182.25,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 182.25,
     "limite": 0.0
   },
   "15-1514": {
@@ -412,9 +412,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 235.98,
-    "costo": 205.2,
-    "costoSinImpt": 0.0,
+    "mayoreo": 259.578,
+    "costo": 235.97999999999996,
+    "costoSinImpt": 205.2,
     "limite": 0.0
   },
   "15-1515": {
@@ -423,9 +423,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 93.15,
+    "mayoreo": 102.46500000000002,
     "costo": 93.15,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 93.15,
     "limite": 0.0
   },
   "15-1516": {
@@ -434,9 +434,9 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 140.4,
+    "mayoreo": 154.44000000000003,
     "costo": 140.4,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 140.4,
     "limite": 0.0
   },
   "15-1517": {
@@ -445,9 +445,1120 @@
     "precioA": 0.0,
     "precioB": 0.0,
     "precioC": 0.0,
-    "mayoreo": 140.4,
+    "mayoreo": 154.44000000000003,
     "costo": 140.4,
-    "costoSinImpt": 0.0,
+    "costoSinImpt": 140.4,
+    "limite": 0.0
+  },
+  "20-0168": {
+    "producto": "ACEITE TRANSMISION ABRO 1/4GL",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 81.16239999999999,
+    "costo": 73.78399999999999,
+    "costoSinImpt": 64.16,
+    "limite": 0.0
+  },
+  "01-1321": {
+    "producto": "CAJA REGISTRO PVC 08X08X02",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 112.95185000000001,
+    "costo": 102.6835,
+    "costoSinImpt": 89.29,
+    "limite": 0.0
+  },
+  "15-0304": {
+    "producto": "CEPILLO D/ALAMBRE COPA 4 BOXER",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 79.45465,
+    "costo": 72.2315,
+    "costoSinImpt": 62.81,
+    "limite": 0.0
+  },
+  "15-1537": {
+    "producto": "DESARMADOR STANLEY 4PCS 69169",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 268.52155000000005,
+    "costo": 244.1105,
+    "costoSinImpt": 212.27,
+    "limite": 0.0
+  },
+  "15-1538": {
+    "producto": "DESARMADOR STANLEY 6PCS 69170",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 424.31895,
+    "costo": 385.74449999999996,
+    "costoSinImpt": 335.43,
+    "limite": 0.0
+  },
+  "15-1541": {
+    "producto": "DESARMADOR VIKINGO ESTRELLA",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 25.1482,
+    "costo": 22.862,
+    "costoSinImpt": 19.88,
+    "limite": 0.0
+  },
+  "15-1536": {
+    "producto": "DESENGRASANTE MULTIUSOS ABRO G",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 211.1538,
+    "costo": 191.95799999999997,
+    "costoSinImpt": 166.92,
+    "limite": 0.0
+  },
+  "20-0158": {
+    "producto": "EPOXI CLEAR ABRO TRANSPARENTE",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 48.917550000000006,
+    "costo": 44.4705,
+    "costoSinImpt": 38.67,
+    "limite": 0.0
+  },
+  "20-0159": {
+    "producto": "EPOXI STEEL ABRO METAL 2 OZ",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 45.3629,
+    "costo": 41.239,
+    "costoSinImpt": 35.86,
+    "limite": 0.0
+  },
+  "02-0679": {
+    "producto": "FOCO LED 12W 6500K VIKINGO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 26.704150000000002,
+    "costo": 24.2765,
+    "costoSinImpt": 21.11,
+    "limite": 0.0
+  },
+  "02-0677": {
+    "producto": "FOCO LED 15W D/EMERG MUNDI-LIT",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 111.73745000000001,
+    "costo": 101.5795,
+    "costoSinImpt": 88.33,
+    "limite": 0.0
+  },
+  "02-0678": {
+    "producto": "FOCO LED 90W D/EMERG MUNDI-LIT",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 84.9068,
+    "costo": 77.188,
+    "costoSinImpt": 67.12,
+    "limite": 0.0
+  },
+  "03-0022": {
+    "producto": "FORJA DECOR FLOR INDIA 8*8*250",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 76.64635000000001,
+    "costo": 69.6785,
+    "costoSinImpt": 60.59,
+    "limite": 0.0
+  },
+  "03-0825": {
+    "producto": "FORJA DECOR HOJA 40*105MM",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 9.1839,
+    "costo": 8.348999999999998,
+    "costoSinImpt": 7.26,
+    "limite": 0.0
+  },
+  "03-0095": {
+    "producto": "FORJA DECOR LANZA 70*135MM",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 18.6461,
+    "costo": 16.951,
+    "costoSinImpt": 14.74,
+    "limite": 0.0
+  },
+  "03-0823": {
+    "producto": "FORJA DECOR PIÑA 60*125 19/07",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 15.72395,
+    "costo": 14.2945,
+    "costoSinImpt": 12.43,
+    "limite": 0.0
+  },
+  "03-0824": {
+    "producto": "FORJA DECOR PIÑA 60*125 19/13",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 22.4917,
+    "costo": 20.447,
+    "costoSinImpt": 17.78,
+    "limite": 0.0
+  },
+  "15-1540": {
+    "producto": "JUEGO D/LLAVE MIXTA 14PCS STAN",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 1356.4721499999998,
+    "costo": 1233.1564999999998,
+    "costoSinImpt": 1072.31,
+    "limite": 0.0
+  },
+  "05-0177": {
+    "producto": "LAMP.PANEL LED 18W CUADR MUNDI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 62.048249999999996,
+    "costo": 56.40749999999999,
+    "costoSinImpt": 49.05,
+    "limite": 0.0
+  },
+  "05-0179": {
+    "producto": "LAMP.PANEL LED 18W CUADR MUNDI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 79.63175000000001,
+    "costo": 72.3925,
+    "costoSinImpt": 62.95,
+    "limite": 0.0
+  },
+  "05-0178": {
+    "producto": "LAMP.PANEL LED 25W CUADR MUNDI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 113.54640000000002,
+    "costo": 103.224,
+    "costoSinImpt": 89.76,
+    "limite": 0.0
+  },
+  "05-0098": {
+    "producto": "LAMP.TECHO 2L MUNDI NEGRO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 215.48010000000002,
+    "costo": 195.891,
+    "costoSinImpt": 170.34,
+    "limite": 0.0
+  },
+  "05-0091": {
+    "producto": "LAMP.TECHO 2L MUNDI ROJO ANTIG",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 219.35100000000003,
+    "costo": 199.41,
+    "costoSinImpt": 173.4,
+    "limite": 0.0
+  },
+  "05-0096": {
+    "producto": "LAMP.TECHO 2L MUNDI ROJO RUSTI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 215.48010000000002,
+    "costo": 195.891,
+    "costoSinImpt": 170.34,
+    "limite": 0.0
+  },
+  "20-0163": {
+    "producto": "LIMPIADOR ELECTRICO ABRO 210ML",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 62.3645,
+    "costo": 56.69499999999999,
+    "costoSinImpt": 49.3,
+    "limite": 0.0
+  },
+  "20-0167": {
+    "producto": "LIQUIDO DE FRENO ABRO 300ML",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 39.936049999999994,
+    "costo": 36.305499999999995,
+    "costoSinImpt": 31.57,
+    "limite": 0.0
+  },
+  "20-0162": {
+    "producto": "LUBRICANTE SILICON WD-40 11 Oz",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 209.02859999999998,
+    "costo": 190.02599999999998,
+    "costoSinImpt": 165.24,
+    "limite": 0.0
+  },
+  "17-0032": {
+    "producto": "MASKING TAPE BLANCO 1\"X30Y ABR",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 12.397,
+    "costo": 11.27,
+    "costoSinImpt": 9.8,
+    "limite": 0.0
+  },
+  "17-0031": {
+    "producto": "MASKING TAPE BLANCO 2\"X50Y ABR",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 34.11705,
+    "costo": 31.015499999999996,
+    "costoSinImpt": 26.97,
+    "limite": 0.0
+  },
+  "20-0165": {
+    "producto": "NEOMATICO P/BICICLETA #24 KEND",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 37.355450000000005,
+    "costo": 33.9595,
+    "costoSinImpt": 29.53,
+    "limite": 0.0
+  },
+  "20-0166": {
+    "producto": "NEOMATICO P/BICICLETA #26 KEND",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 42.4534,
+    "costo": 38.594,
+    "costoSinImpt": 33.56,
+    "limite": 0.0
+  },
+  "20-0164": {
+    "producto": "PARCHO PACK C/PEGAMENTO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 10.8537,
+    "costo": 9.866999999999999,
+    "costoSinImpt": 8.58,
+    "limite": 0.0
+  },
+  "07-0217": {
+    "producto": "PASADOR 4\" BOXER C/PORTCANDADO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 88.56265,
+    "costo": 80.5115,
+    "costoSinImpt": 70.01,
+    "limite": 0.0
+  },
+  "04-0095": {
+    "producto": "PASADOR 4\" VIKINGO C/PORTACAND",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 38.72165,
+    "costo": 35.201499999999996,
+    "costoSinImpt": 30.61,
+    "limite": 0.0
+  },
+  "07-0400": {
+    "producto": "PASADOR 5\" BOXER DORADO NT1378",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 38.9367,
+    "costo": 35.397,
+    "costoSinImpt": 30.78,
+    "limite": 0.0
+  },
+  "04-0462": {
+    "producto": "PASADOR 5\" VIKINGO C/PORTACAND",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 43.870200000000004,
+    "costo": 39.882,
+    "costoSinImpt": 34.68,
+    "limite": 0.0
+  },
+  "20-0169": {
+    "producto": "REFRIGERANTE P/RADIADOR ABRO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 43.22505,
+    "costo": 39.2955,
+    "costoSinImpt": 34.17,
+    "limite": 0.0
+  },
+  "08-1004": {
+    "producto": "SELLADOR ACRILICO BLANCO TRU",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 46.4002,
+    "costo": 42.181999999999995,
+    "costoSinImpt": 36.68,
+    "limite": 0.0
+  },
+  "20-0160": {
+    "producto": "SILICON ABRO GRIS 85GR 9-AB",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 36.3814,
+    "costo": 33.074,
+    "costoSinImpt": 28.76,
+    "limite": 0.0
+  },
+  "20-0161": {
+    "producto": "SILICON ABRO TRANSP 85GR 13-AB",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 36.3814,
+    "costo": 33.074,
+    "costoSinImpt": 28.76,
+    "limite": 0.0
+  },
+  "17-0033": {
+    "producto": "TAPE TRANSPARENTE 3\"X100Y ABRO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 25.489749999999997,
+    "costo": 23.172499999999996,
+    "costoSinImpt": 20.15,
+    "limite": 0.0
+  },
+  "15-1539": {
+    "producto": "TIRALINEA STANLEY C/REPUESTO A",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 245.5365,
+    "costo": 223.21499999999997,
+    "costoSinImpt": 194.1,
+    "limite": 0.0
+  },
+  "15-1542": {
+    "producto": "TOLDO PLASTICO 20x24 AZUL DIVE",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 484.38115000000005,
+    "costo": 440.3465,
+    "costoSinImpt": 382.91,
+    "limite": 0.0
+  },
+  "15-1543": {
+    "producto": "TOLDO PLASTICO 20x24 NEGR DIVE",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 956.32735,
+    "costo": 869.3884999999999,
+    "costoSinImpt": 755.99,
+    "limite": 0.0
+  },
+  "01-1320": {
+    "producto": "VALVULA P/BAÑO VIKINGO SVMZ",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 228.2313,
+    "costo": 207.48299999999998,
+    "costoSinImpt": 180.42,
+    "limite": 0.0
+  },
+  "15-1535": {
+    "producto": "ZAPATO WADFOW C/CUBO #41 3541",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 448.5690000000001,
+    "costo": 407.79,
+    "costoSinImpt": 354.6,
+    "limite": 0.0
+  },
+  "02-0340": {
+    "producto": "BREAKER SENCILLO 1X15 BTICINO",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 126.9807,
+    "costo": 115.43699999999998,
+    "costoSinImpt": 100.38,
+    "limite": 0.0
+  },
+  "02-0048": {
+    "producto": "ENCHUFE EAGLE POLARIZADO 1707",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 39.0379,
+    "costo": 35.489,
+    "costoSinImpt": 30.86,
+    "limite": 0.0
+  },
+  "02-0026": {
+    "producto": "ENCHUFE EAGLE POLARIZADO 1709",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 25.99575,
+    "costo": 23.6325,
+    "costoSinImpt": 20.55,
+    "limite": 0.0
+  },
+  "02-0671": {
+    "producto": "ENCHUFE EAGLE POLARIZADO 1711",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 38.316849999999995,
+    "costo": 34.833499999999994,
+    "costoSinImpt": 30.29,
+    "limite": 0.0
+  },
+  "02-0672": {
+    "producto": "ENCHUFE EAGLE POLARIZADO 1723",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 25.94515,
+    "costo": 23.5865,
+    "costoSinImpt": 20.51,
+    "limite": 0.0
+  },
+  "02-0673": {
+    "producto": "INTER EAGLE SENC PLATA MARFIL",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 44.616550000000004,
+    "costo": 40.5605,
+    "costoSinImpt": 35.27,
+    "limite": 0.0
+  },
+  "03-0719": {
+    "producto": "INTER EAGLE SENC PLATA MARFIL",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 39.65775000000001,
+    "costo": 36.0525,
+    "costoSinImpt": 31.35,
+    "limite": 0.0
+  },
+  "02-0540": {
+    "producto": "INTER EAGLE TRIPLE PLATA MARFI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 94.67260000000002,
+    "costo": 86.066,
+    "costoSinImpt": 74.84,
+    "limite": 0.0
+  },
+  "02-0563": {
+    "producto": "ROSETA EAGLE MARFIL 1175-V",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 24.857249999999997,
+    "costo": 22.597499999999997,
+    "costoSinImpt": 19.65,
+    "limite": 0.0
+  },
+  "02-0093": {
+    "producto": "TOMA DOBLE EAGLE MARFIL 270 V",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 21.188750000000002,
+    "costo": 19.2625,
+    "costoSinImpt": 16.75,
+    "limite": 0.0
+  },
+  "02-0091": {
+    "producto": "TOMA P/ESTUFA 50AMP EAGLE 32",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 84.59055,
+    "costo": 76.9005,
+    "costoSinImpt": 66.87,
+    "limite": 0.0
+  },
+  "03-0826": {
+    "producto": "DISCO C/METAL 4-1/2 DEWALT DW4",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 31.25815,
+    "costo": 28.4165,
+    "costoSinImpt": 24.71,
+    "limite": 0.0
+  },
+  "03-0487": {
+    "producto": "DISCO C/METAL 7 DEWALT DW8427",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 60.542899999999996,
+    "costo": 55.038999999999994,
+    "costoSinImpt": 47.86,
+    "limite": 0.0
+  },
+  "07-0404": {
+    "producto": "LLAVIN D/CHAPA FANAL 90470-001",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 212.10255,
+    "costo": 192.82049999999998,
+    "costoSinImpt": 167.67,
+    "limite": 0.0
+  },
+  "07-0403": {
+    "producto": "LLAVIN D/MANIJA FANAL 0450-042",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 270.3558,
+    "costo": 245.778,
+    "costoSinImpt": 213.72,
+    "limite": 0.0
+  },
+  "07-0409": {
+    "producto": "LLAVIN D/PELOTA C/LLAVE A/I FA",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 158.06175000000002,
+    "costo": 143.6925,
+    "costoSinImpt": 124.95,
+    "limite": 0.0
+  },
+  "07-0402": {
+    "producto": "LLAVIN D/PELOTA C/LLAVE B A FA",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 167.59985,
+    "costo": 152.3635,
+    "costoSinImpt": 132.49,
+    "limite": 0.0
+  },
+  "07-0410": {
+    "producto": "LLAVIN D/PELOTA C/LLAVE LAT FA",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 184.94299999999998,
+    "costo": 168.12999999999997,
+    "costoSinImpt": 146.2,
+    "limite": 0.0
+  },
+  "07-0401": {
+    "producto": "LLAVIN D/PELOTA C/LLAVE SAT FA",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 144.58950000000002,
+    "costo": 131.445,
+    "costoSinImpt": 114.3,
+    "limite": 0.0
+  },
+  "07-0407": {
+    "producto": "LLAVIN FANAL DERECHO 91660-004",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 185.38575,
+    "costo": 168.5325,
+    "costoSinImpt": 146.55,
+    "limite": 0.0
+  },
+  "07-0408": {
+    "producto": "LLAVIN FANAL IZQUIER 91660-005",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 193.2667,
+    "costo": 175.69699999999997,
+    "costoSinImpt": 152.78,
+    "limite": 0.0
+  },
+  "07-0406": {
+    "producto": "LLAVIN PRINCIPAL FANAL B A",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 818.4676499999999,
+    "costo": 744.0614999999999,
+    "costoSinImpt": 647.01,
+    "limite": 0.0
+  },
+  "07-0405": {
+    "producto": "LLAVIN PRINCIPAL FANAL NIQUEL",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 818.4676499999999,
+    "costo": 744.0614999999999,
+    "costoSinImpt": 647.01,
+    "limite": 0.0
+  },
+  "15-1527": {
+    "producto": "COMPRESOR AIRE TOTAL 2.0HP 24L",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 2818.0152,
+    "costo": 2561.8319999999994,
+    "costoSinImpt": 2227.68,
+    "limite": 0.0
+  },
+  "15-1528": {
+    "producto": "COMPRESOR AIRE TOTAL 2.5HP 50L",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 3629.72775,
+    "costo": 3299.7524999999996,
+    "costoSinImpt": 2869.35,
+    "limite": 0.0
+  },
+  "15-1526": {
+    "producto": "DESENGRASANTE MULTIUSOS ABRO 1",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 109.802,
+    "costo": 99.82,
+    "costoSinImpt": 86.8,
+    "limite": 0.0
+  },
+  "02-0511": {
+    "producto": "GENERA ELECTR EMTOP 0800W 4LT",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 17548.08,
+    "costo": 15952.8,
+    "costoSinImpt": 13872.0,
+    "limite": 0.0
+  },
+  "02-0675": {
+    "producto": "GENERA ELECTR TOTAL 10000W",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 18451.29,
+    "costo": 16773.899999999998,
+    "costoSinImpt": 14586.0,
+    "limite": 0.0
+  },
+  "02-0674": {
+    "producto": "GENERA ELECTR TOTAL 15000W 21H",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 50033.06495000001,
+    "costo": 45484.6045,
+    "costoSinImpt": 39551.83,
+    "limite": 0.0
+  },
+  "02-0676": {
+    "producto": "GENERA ELECTR TOTAL 6500W 13HP",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 15524.80105,
+    "costo": 14113.455499999998,
+    "costoSinImpt": 12272.57,
+    "limite": 0.0
+  },
+  "15-1531": {
+    "producto": "GUANTE D/CUERO TOTAL 10\"",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 141.74325,
+    "costo": 128.8575,
+    "costoSinImpt": 112.05,
+    "limite": 0.0
+  },
+  "15-1532": {
+    "producto": "GUANTE D/CUERO TOTAL 16\" SOLDA",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 244.63834999999997,
+    "costo": 222.39849999999996,
+    "costoSinImpt": 193.39,
+    "limite": 0.0
+  },
+  "15-1530": {
+    "producto": "GUANTE D/NITRILO \"XL\" TOTAL",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 56.128049999999995,
+    "costo": 51.025499999999994,
+    "costoSinImpt": 44.37,
+    "limite": 0.0
+  },
+  "15-1533": {
+    "producto": "HIDROLAVADORA TOTAL 1900 PSI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 1638.6810000000003,
+    "costo": 1489.71,
+    "costoSinImpt": 1295.4,
+    "limite": 0.0
+  },
+  "15-1534": {
+    "producto": "LENTES D/SEGUR TOTAL TRANSPARE",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 28.2854,
+    "costo": 25.714,
+    "costoSinImpt": 22.36,
+    "limite": 0.0
+  },
+  "04-0007": {
+    "producto": "LIJA P/MADERA FANDELI #100 CO8",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 4.9334999999999996,
+    "costo": 4.484999999999999,
+    "costoSinImpt": 3.9,
+    "limite": 0.0
+  },
+  "04-0238": {
+    "producto": "LIJA P/MADERA FANDELI #180 C08",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 4.9334999999999996,
+    "costo": 4.484999999999999,
+    "costoSinImpt": 3.9,
+    "limite": 0.0
+  },
+  "04-0422": {
+    "producto": "LIJA P/MADERA FANDELI #36 D081",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 13.0042,
+    "costo": 11.822,
+    "costoSinImpt": 10.28,
+    "limite": 0.0
+  },
+  "04-0008": {
+    "producto": "LIJA P/MADERA FANDELI #80 D081",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 7.6152999999999995,
+    "costo": 6.922999999999999,
+    "costoSinImpt": 6.02,
+    "limite": 0.0
+  },
+  "04-0442": {
+    "producto": "LIJA P/METAL FANDELI #180 C-99",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 8.51345,
+    "costo": 7.7395,
+    "costoSinImpt": 6.73,
+    "limite": 0.0
+  },
+  "04-0021": {
+    "producto": "LIJA P/METAL FANDELI #220 A-99",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 8.51345,
+    "costo": 7.7395,
+    "costoSinImpt": 6.73,
+    "limite": 0.0
+  },
+  "04-0440": {
+    "producto": "LIJA P/METAL FANDELI #320 A-99",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 8.51345,
+    "costo": 7.7395,
+    "costoSinImpt": 6.73,
+    "limite": 0.0
+  },
+  "04-0110": {
+    "producto": "LIJA P/METAL FANDELI #360 A-99",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 8.51345,
+    "costo": 7.7395,
+    "costoSinImpt": 6.73,
+    "limite": 0.0
+  },
+  "04-0252": {
+    "producto": "LIJA P/METAL FANDELI #400 A-99",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 8.51345,
+    "costo": 7.7395,
+    "costoSinImpt": 6.73,
+    "limite": 0.0
+  },
+  "15-1525": {
+    "producto": "SOLDADORA TOTAL INVERTER 160A",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 3130.6473000000005,
+    "costo": 2846.043,
+    "costoSinImpt": 2474.82,
+    "limite": 0.0
+  },
+  "15-1524": {
+    "producto": "SOLDADORA TOTAL INVERTER 200A",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 3446.1383,
+    "costo": 3132.8529999999996,
+    "costoSinImpt": 2724.22,
+    "limite": 0.0
+  },
+  "15-1529": {
+    "producto": "ZAPATO TOTAL C/CUBO #41 TSP227",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 1159.9797,
+    "costo": 1054.527,
+    "costoSinImpt": 916.98,
+    "limite": 0.0
+  },
+  "02-0670": {
+    "producto": "MOTOR GASOLINA TOTAL 4T 6.5HP",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 3142.72805,
+    "costo": 2857.0254999999997,
+    "costoSinImpt": 2484.37,
+    "limite": 0.0
+  },
+  "03-0691": {
+    "producto": "CORTINERO METAL 66-120\" SAT NI",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 332.89740000000006,
+    "costo": 302.634,
+    "costoSinImpt": 263.16,
+    "limite": 0.0
+  },
+  "15-1523": {
+    "producto": "EXTINTOR ABRO 05 LB RECARGABLE",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 496.33540000000005,
+    "costo": 451.214,
+    "costoSinImpt": 392.36,
+    "limite": 0.0
+  },
+  "15-1013": {
+    "producto": "EXTINTOR ABRO 10 LB RECARGABLE",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 741.9225,
+    "costo": 674.4749999999999,
+    "costoSinImpt": 586.5,
+    "limite": 0.0
+  },
+  "12-0072": {
+    "producto": "GRASA BASE ABRO 16OZ RG-303",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 85.1598,
+    "costo": 77.41799999999999,
+    "costoSinImpt": 67.32,
+    "limite": 0.0
+  },
+  "12-0035": {
+    "producto": "GRASA LITIO ABRO 16OZ LG-857",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 96.77250000000001,
+    "costo": 87.975,
+    "costoSinImpt": 76.5,
+    "limite": 0.0
+  },
+  "12-0073": {
+    "producto": "GRASA LITIO ABRO 16OZ LG-920",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 96.77250000000001,
+    "costo": 87.975,
+    "costoSinImpt": 76.5,
+    "limite": 0.0
+  },
+  "15-1544": {
+    "producto": "ARNES D/SEGURIDAD TOTAL 501415",
+    "precio": 0.0,
+    "precioA": 0.0,
+    "precioB": 0.0,
+    "precioC": 0.0,
+    "mayoreo": 392.5295,
+    "costo": 356.84499999999997,
+    "costoSinImpt": 310.3,
     "limite": 0.0
   }
 }
